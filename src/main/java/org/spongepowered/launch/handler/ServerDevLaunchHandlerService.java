@@ -28,21 +28,18 @@ import cpw.mods.gross.Java9ClassLoaderUtil;
 import cpw.mods.modlauncher.api.ILaunchHandlerService;
 import cpw.mods.modlauncher.api.ITransformingClassLoader;
 import cpw.mods.modlauncher.api.ITransformingClassLoaderBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.spongepowered.launch.Launcher;
 
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
-public final class DevelopmentLaunchHandlerService implements ILaunchHandlerService {
-
-    private final Logger logger = LogManager.getLogger("Sponge");
+public final class ServerDevLaunchHandlerService implements ILaunchHandlerService {
 
     @Override
     public String name() {
-        return "sponge_development";
+        return "sponge_server_dev";
     }
 
     @Override
@@ -59,7 +56,7 @@ public final class DevelopmentLaunchHandlerService implements ILaunchHandlerServ
 
     @Override
     public Callable<Void> launchService(final String[] arguments, final ITransformingClassLoader launchClassLoader) {
-        this.logger.info("Bootstrapping Minecraft Server...");
+        Launcher.getLogger().info("Bootstrapping Minecraft Server...");
 
         return () -> {
             Class.forName("net.minecraft.server.MinecraftServer", true, launchClassLoader.getInstance()).getMethod("main", String[].class).invoke(null, (Object)arguments);

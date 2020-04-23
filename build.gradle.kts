@@ -25,7 +25,8 @@ minecraft {
     mappings("snapshot", "20200119-1.14.3")
     runs {
         create("server") {
-            workingDirectory( project.file("../run"))
+            workingDirectory( project.file("./run"))
+            args.addAll(listOf("nogui", "--launchTarget", "sponge_server_dev"))
             main = "org.spongepowered.launch.Main"
         }
     }
