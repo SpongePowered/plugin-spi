@@ -117,7 +117,7 @@ public final class PluginDiscovererService implements ITransformationService {
 
             try {
                 next = iter.next();
-                this.pluginEnvironment.getLogger().info("Plugin language '{}' found.", next.getName());
+                this.pluginEnvironment.getLogger().info("Plugin language loader '{}' found.", next.getName());
             } catch (final ServiceConfigurationError e) {
                 this.pluginEnvironment.getLogger().error("Error encountered initializing plugin loader service!", e);
                 continue;

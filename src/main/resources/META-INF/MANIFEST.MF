@@ -1,2 +1,2 @@
-Loader: java
+Loader: java_sponge
 MixinConfigs: mixins.json

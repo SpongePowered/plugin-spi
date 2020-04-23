@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public final class JavaPluginLanguageService extends JDKPluginLanguageService {
 
-    private final static String NAME = "java";
+    private final static String NAME = "java_sponge";
 
     @Override
     public String getName() {
