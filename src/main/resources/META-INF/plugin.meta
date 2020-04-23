@@ -1,0 +1,8 @@
+{
+	"plugins": [{
+		"id": "tester",
+		"name": "Tester",
+		"version": 1.0,
+		"author": "SpongePowered"
+	}]
+}
