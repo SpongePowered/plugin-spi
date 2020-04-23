@@ -31,6 +31,8 @@ public interface PluginLanguageService {
     /**
      * Gets the name of this service.
      *
+     * <p>This should be given to plugin makers using this service to indicate that intention.</p>
+     *
      * @return The name
      */
     String getName();
@@ -47,6 +49,7 @@ public interface PluginLanguageService {
      *
      * <p>No plugins should be classloaded whatsoever at this point.</p>
      *
+     * @param environment The environment
      * @return The discovered plugins
      */
     Collection<PluginArtifact> discoverPlugins(final PluginEnvironment environment);
@@ -54,6 +57,7 @@ public interface PluginLanguageService {
     /**
      * Creates {@link PluginContainer plugins} from their {@link PluginArtifact}.
      *
+     * @param environment The environment
      * @param targetClassloader The classloader to load the plugin into
      * @return The plugins
      */

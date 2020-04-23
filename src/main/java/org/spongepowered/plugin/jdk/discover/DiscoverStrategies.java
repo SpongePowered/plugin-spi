@@ -25,9 +25,9 @@
 package org.spongepowered.plugin.jdk.discover;
 
 import org.spongepowered.plugin.PluginArtifact;
-import org.spongepowered.plugin.PluginConstants;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginMetadataContainer;
+import org.spongepowered.plugin.jdk.JDKConstants;
 import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
 import org.spongepowered.plugin.PluginMetadata;
 import org.spongepowered.plugin.util.ManifestUtils;
@@ -64,7 +64,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
             final Enumeration<URL> resources;
             try {
-                resources = ClassLoader.getSystemClassLoader().getResources(PluginConstants.Manifest.LOCATION);
+                resources = ClassLoader.getSystemClassLoader().getResources(JDKConstants.Manifest.LOCATION);
             } catch (final IOException e) {
                 throw new RuntimeException("Failed to enumerate classloader resources!");
             }
@@ -140,7 +140,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
                     try {
                         path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0,
-                            uri.getRawSchemeSpecificPart().length() - (PluginConstants.Manifest.LOCATION.length()))));
+                            uri.getRawSchemeSpecificPart().length() - (JDKConstants.Manifest.LOCATION.length()))));
                     } catch (final URISyntaxException e) {
                         environment.getLogger().error("Error creating root URI for '{}' when traversing classloader resources for plugin "
                             + "discovery! Skipping...", url, e);

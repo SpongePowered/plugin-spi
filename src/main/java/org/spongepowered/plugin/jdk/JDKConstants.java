@@ -22,11 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.jdk;
 
-public final class PluginConstants {
+public final class JDKConstants {
 
-    private PluginConstants() {
+    private JDKConstants() {
     }
 
     public static final class Manifest {
