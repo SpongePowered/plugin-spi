@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.launch.plugin;
+package org.spongepowered.launch.plugin.config;
 
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.json.JSONConfigurationLoader;
@@ -31,6 +31,7 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.launch.Launcher;
+import org.spongepowered.launch.plugin.config.section.PluginSection;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,26 +63,26 @@ public final class PluginMetadataConfiguration {
             configuration = MAPPER.bindToNew().populate(node);
 
             // Plugin validation checks
-            final Iterator<PluginMetadataEntry> iter = configuration.pluginMetadataEntries.iterator();
+            final Iterator<PluginSection> iter = configuration.pluginSections.iterator();
             while (iter.hasNext()) {
-                final PluginMetadataEntry pluginMetadataEntry = iter.next();
+                final PluginSection pluginSection = iter.next();
 
-                if (pluginMetadataEntry.getId() == null) {
+                if (pluginSection.getId() == null) {
                     // TODO Use regex to check for malformed plugin id, this will do for the moment
                     Launcher.getLogger().error("Plugin specified with no id in '{}'. This plugin will be skipped...", fileName);
                     iter.remove();
                     continue;
                 }
 
-                if (pluginMetadataEntry.getVersion() == null) {
+                if (pluginSection.getVersion() == null) {
                     // TODO Enforce sane versioning...maybe
-                    Launcher.getLogger().error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginMetadataEntry.getId());
+                    Launcher.getLogger().error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginSection.getId());
                     iter.remove();
                 }
 
-                if (pluginMetadataEntry.getName() == null) {
-                    Launcher.getLogger().error("Plugin '{}' has no name specified. Using the id instead...", pluginMetadataEntry.getId());
-                    pluginMetadataEntry.setName(pluginMetadataEntry.getId());
+                if (pluginSection.getName() == null) {
+                    Launcher.getLogger().error("Plugin '{}' has no name specified. Using the id instead...", pluginSection.getId());
+                    pluginSection.setName(pluginSection.getId());
                 }
             }
         }
@@ -90,9 +91,9 @@ public final class PluginMetadataConfiguration {
     }
 
     @Setting(value = "plugins")
-    private List<PluginMetadataEntry> pluginMetadataEntries = new ArrayList<>();
+    private List<PluginSection> pluginSections = new ArrayList<>();
 
-    public List<PluginMetadataEntry> getPluginMetadataEntries() {
-        return this.pluginMetadataEntries;
+    public List<PluginSection> getPluginSections() {
+        return this.pluginSections;
     }
 }

@@ -22,13 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.launch.plugin;
+package org.spongepowered.launch.plugin.config.section;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.launch.LauncherConstants;
 
 @ConfigSerializable
-public final class PluginMetadataEntry {
+public final class PluginSection {
 
     @Setting(value = "id")
     private String id;
@@ -40,10 +41,13 @@ public final class PluginMetadataEntry {
     private String version;
 
     @Setting(value = "description")
-    private String description = "<not specified>";
+    private String description = LauncherConstants.Plugin.Metadata.UNKNOWN_STRING_VALUE;
 
     @Setting(value = "author")
-    private String author = "<not specified>";
+    private String author = LauncherConstants.Plugin.Metadata.UNKNOWN_STRING_VALUE;
+
+    @Setting(value = "links")
+    private LinksSection linksSection;
 
     public String getId() {
         return this.id;
@@ -63,6 +67,10 @@ public final class PluginMetadataEntry {
 
     public String getAuthor() {
         return this.author;
+    }
+
+    public LinksSection getLinksSection() {
+        return this.linksSection;
     }
 
     public void setName(String id) {

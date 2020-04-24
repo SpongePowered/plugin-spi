@@ -3,6 +3,11 @@
 		"id": "tester",
 		"name": "Tester",
 		"version": 1.0,
-		"author": "SpongePowered"
+		"author": "SpongePowered",
+		"links": {
+			"homepage": "https://www.spongepowered.org",
+			"source": "https://www.spongepowered.org/the_source",
+			"issues": "https://www.spongepowered.org/issues"
+		}
 	}]
 }

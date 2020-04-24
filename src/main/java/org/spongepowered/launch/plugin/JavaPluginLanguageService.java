@@ -25,6 +25,9 @@
 package org.spongepowered.launch.plugin;
 
 import org.spongepowered.launch.LauncherConstants;
+import org.spongepowered.launch.plugin.config.PluginMetadataConfiguration;
+import org.spongepowered.launch.plugin.config.section.LinksSection;
+import org.spongepowered.launch.plugin.config.section.PluginSection;
 import org.spongepowered.plugin.PluginArtifact;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginMetadataContainer;
@@ -61,14 +64,22 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
         }
 
         final List<PluginMetadata> pluginMetadata = new ArrayList<>();
-        for (final PluginMetadataEntry pluginMetadataEntry : configuration.getPluginMetadataEntries()) {
+        for (final PluginSection pluginSection : configuration.getPluginSections()) {
             final PluginMetadata.Builder builder = PluginMetadata.builder();
             builder
-                .setId(pluginMetadataEntry.getId())
-                .setName(pluginMetadataEntry.getName())
-                .setVersion(pluginMetadataEntry.getVersion())
-                .setDescription(pluginMetadataEntry.getDescription())
-                .setAuthor(pluginMetadataEntry.getAuthor());
+                .setId(pluginSection.getId())
+                .setName(pluginSection.getName())
+                .setVersion(pluginSection.getVersion())
+                .setDescription(pluginSection.getDescription())
+                .setAuthor(pluginSection.getAuthor());
+
+            final LinksSection linksSection = pluginSection.getLinksSection();
+            if (linksSection != null) {
+                builder.setHomepageURL(linksSection.getHomepage());
+                builder.setSourceURL(linksSection.getSource());
+                builder.setIssuesURL(linksSection.getIssues());
+            }
+
             pluginMetadata.add(builder.build());
         }
 

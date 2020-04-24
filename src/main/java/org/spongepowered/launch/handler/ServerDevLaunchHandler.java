@@ -35,7 +35,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
-public final class ServerDevLaunchHandlerService implements ILaunchHandlerService {
+public final class ServerDevLaunchHandler implements ILaunchHandlerService {
 
     @Override
     public String name() {

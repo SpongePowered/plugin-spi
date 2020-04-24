@@ -27,17 +27,16 @@ package org.spongepowered.plugin;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
+import java.net.URL;
+
 public final class PluginMetadata {
 
     public static Builder builder() {
         return new Builder();
     }
 
-    private final String id;
-    private final String name;
-    private final String version;
-    private final String description;
-    private final String author;
+    private final String id, name, version, description, author;
+    private final URL homepageURL, sourceURL, issuesURL;
 
     private PluginMetadata(final Builder builder) {
         Preconditions.checkNotNull(builder);
@@ -47,6 +46,9 @@ public final class PluginMetadata {
         this.version = builder.version;
         this.author = builder.author;
         this.description = builder.description;
+        this.homepageURL = builder.homepageURL;
+        this.sourceURL = builder.sourceURL;
+        this.issuesURL = builder.issuesURL;
     }
 
     public String getId() {
@@ -69,6 +71,18 @@ public final class PluginMetadata {
         return this.author;
     }
 
+    public URL getHomepageURL() {
+        return this.homepageURL;
+    }
+
+    public URL getSourceURL() {
+        return this.sourceURL;
+    }
+
+    public URL getIssuesURL() {
+        return this.issuesURL;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -77,11 +91,16 @@ public final class PluginMetadata {
             .add("version", this.version)
             .add("author", this.author)
             .add("description", this.description)
+            .add("homepageURL", this.homepageURL)
+            .add("sourceURL", this.sourceURL)
+            .add("issuesURL", this.issuesURL)
             .toString();
     }
 
     public static final class Builder {
+
         String id, name, version, description, author;
+        URL homepageURL, sourceURL, issuesURL;
 
         public Builder setId(final String id) {
             this.id = id;
@@ -105,6 +124,21 @@ public final class PluginMetadata {
 
         public Builder setAuthor(final String author) {
             this.author = author;
+            return this;
+        }
+
+        public Builder setHomepageURL(final URL homepageURL) {
+            this.homepageURL = homepageURL;
+            return this;
+        }
+
+        public Builder setSourceURL(final URL sourceURL) {
+            this.sourceURL = sourceURL;
+            return this;
+        }
+
+        public Builder setIssuesURL(final URL issuesURL) {
+            this.issuesURL = issuesURL;
             return this;
         }
 

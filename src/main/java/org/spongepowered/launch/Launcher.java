@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 public final class Launcher {
 
-    private static final Logger logger = LogManager.getLogger("Sponge");
+    public static final Logger logger = LogManager.getLogger("Sponge");
 
     public static Logger getLogger() {
         return Launcher.logger;

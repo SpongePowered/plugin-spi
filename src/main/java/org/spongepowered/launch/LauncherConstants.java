@@ -51,6 +51,8 @@ public final class LauncherConstants {
 
         public static final class Metadata {
 
+            public static final String UNKNOWN_STRING_VALUE = "<not specified>";
+
             public static final String FILENAME = "META-INF/plugin.meta";
 
             private Metadata() {

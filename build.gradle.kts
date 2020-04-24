@@ -29,6 +29,12 @@ minecraft {
             args.addAll(listOf("nogui", "--launchTarget", "sponge_server_dev"))
             main = "org.spongepowered.launch.Main"
         }
+
+        create("client") {
+            workingDirectory( project.file("./run"))
+            args.addAll(listOf("--launchTarget", "sponge_client_dev", "--version", "1.14.4", "--accessToken", "0"))
+            main = "org.spongepowered.launch.Main"
+        }
     }
 }
 
@@ -52,10 +58,10 @@ license {
 }
 
 dependencies {
-    minecraft("net.minecraft:server:1.14.4")
+    minecraft("net.minecraft:joined:1.14.4")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("net.minecrell.licenser:net.minecrell.licenser.gradle.plugin:0.4.1")
-    implementation("com.google.guava:guava:28.0-jre")
+    implementation("com.google.guava:guava:21.0")
     implementation("cpw.mods:modlauncher:4.1.+")
     implementation("org.ow2.asm:asm-commons:6.2")
     implementation("cpw.mods:grossjava9hacks:1.1.+")
