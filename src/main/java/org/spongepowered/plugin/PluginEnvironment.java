@@ -27,10 +27,14 @@ package org.spongepowered.plugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
+import java.util.Map;
+
 public final class PluginEnvironment {
 
     private final Logger logger;
     private final Blackboard blackboard;
+    private Map<String, PluginLanguageService> languageServices;
 
     public PluginEnvironment() {
         this.logger = LogManager.getLogger("Plugin");
@@ -43,5 +47,17 @@ public final class PluginEnvironment {
 
     public Blackboard getBlackboard() {
         return this.blackboard;
+    }
+
+    public Map<String, PluginLanguageService> getLanguageServices() {
+        return Collections.unmodifiableMap(this.languageServices);
+    }
+
+    public void setLanguageServices(final Map<String, PluginLanguageService> languageServices) {
+        if (this.languageServices != null) {
+            throw new RuntimeException("Plugin language services are not allowed to be re-assigned!");
+        }
+
+        this.languageServices = languageServices;
     }
 }

@@ -24,7 +24,7 @@
  */
 package org.spongepowered.plugin.jdk.discover;
 
-import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.jdk.JDKConstants;
 import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
@@ -58,9 +58,9 @@ public enum DiscoverStrategies implements DiscoverStrategy {
         }
 
         @Override
-        public Collection<PluginArtifact> discoverPlugins(final PluginEnvironment environment, final JDKPluginLanguageService service) {
+        public Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment, final JDKPluginLanguageService service) {
 
-            final List<PluginArtifact> pluginArtifacts = new ArrayList<>();
+            final List<PluginCandidate> pluginCandidates = new ArrayList<>();
 
             final Enumeration<URL> resources;
             try {
@@ -118,7 +118,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                                 continue;
                             }
                             for (final Map.Entry<String, PluginMetadata> pluginMetadataEntry : pluginMetadata.getAllMetadata().entrySet()) {
-                                pluginArtifacts.add(PluginArtifact.of(pluginMetadataEntry.getValue(), path, manifest));
+                                pluginCandidates.add(PluginCandidate.of(pluginMetadataEntry.getValue(), path, manifest));
                                 environment.getLogger().info("Discovered '{}' ({})...", pluginMetadataEntry.getValue().getId(), path);
                             }
                         } catch (final IOException e) {
@@ -174,7 +174,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         }
 
                         for (final Map.Entry<String, PluginMetadata> pluginMetadataEntry : pluginMetadata.getAllMetadata().entrySet()) {
-                            pluginArtifacts.add(PluginArtifact.of(pluginMetadataEntry.getValue(), path, manifest));
+                            pluginCandidates.add(PluginCandidate.of(pluginMetadataEntry.getValue(), path, manifest));
                             environment.getLogger().info("Discovered '{}' ({})...", pluginMetadataEntry.getValue().getId(), path);
                         }
                     } catch (final IOException e) {
@@ -184,7 +184,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                 }
             }
 
-            return pluginArtifacts;
+            return pluginCandidates;
         }
     }
 }

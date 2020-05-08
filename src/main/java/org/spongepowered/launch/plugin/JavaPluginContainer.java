@@ -24,23 +24,23 @@
  */
 package org.spongepowered.launch.plugin;
 
-import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 
 public final class JavaPluginContainer implements PluginContainer {
 
-    private final PluginArtifact artifact;
+    private final PluginCandidate artifact;
 
-    private JavaPluginContainer(final PluginArtifact artifact) {
+    private JavaPluginContainer(final PluginCandidate artifact) {
         this.artifact = artifact;
     }
 
-    public static JavaPluginContainer of(final PluginArtifact artifact) {
+    public static JavaPluginContainer of(final PluginCandidate artifact) {
         return new JavaPluginContainer(artifact);
     }
 
     @Override
-    public PluginArtifact getArtifact() {
+    public PluginCandidate getCandidate() {
         return this.artifact;
     }
 

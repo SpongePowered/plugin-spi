@@ -29,7 +29,10 @@ import cpw.mods.modlauncher.api.ILaunchHandlerService;
 import cpw.mods.modlauncher.api.ITransformingClassLoader;
 import cpw.mods.modlauncher.api.ITransformingClassLoaderBuilder;
 import org.spongepowered.launch.Launcher;
+import org.spongepowered.launch.plugin.PluginDiscovererService;
+import org.spongepowered.plugin.PluginEnvironment;
 
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -56,9 +59,13 @@ public final class ServerDevLaunchHandler implements ILaunchHandlerService {
 
     @Override
     public Callable<Void> launchService(final String[] arguments, final ITransformingClassLoader launchClassLoader) {
-        Launcher.getLogger().info("Bootstrapping Minecraft Server...");
 
         return () -> {
+            Thread.currentThread().setContextClassLoader(launchClassLoader.getInstance());
+
+            final PluginEnvironment pluginEnvironment = PluginDiscovererService.getPluginEnvironment();
+            Launcher.getPluginEnvironment().setLanguageServices(pluginEnvironment.getLanguageServices());
+
             Class.forName("net.minecraft.server.MinecraftServer", true, launchClassLoader.getInstance()).getMethod("main", String[].class)
                 .invoke(null, (Object) arguments);
             return null;

@@ -30,8 +30,8 @@ import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.launch.Launcher;
 import org.spongepowered.launch.plugin.config.section.PluginSection;
+import org.spongepowered.plugin.PluginEnvironment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +57,9 @@ public final class PluginMetadataConfiguration {
     @Setting(value = "plugins")
     private final List<PluginSection> pluginSections = new ArrayList<>();
 
-    public static PluginMetadataConfiguration loadFrom(final String fileName, final InputStream stream) throws IOException, ObjectMappingException {
+    public static PluginMetadataConfiguration loadFrom(final PluginEnvironment pluginEnvironment, final String fileName, final InputStream stream)
+        throws IOException,
+        ObjectMappingException {
         final PluginMetadataConfiguration configuration;
 
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
@@ -72,14 +74,15 @@ public final class PluginMetadataConfiguration {
 
                 if (pluginSection.getId() == null) {
                     // TODO Use regex to check for malformed plugin id, this will do for the moment
-                    Launcher.getLogger().error("Plugin specified with no id in '{}'. This plugin will be skipped...", fileName);
+                    pluginEnvironment.getLogger().error("Plugin specified with no id in '{}'. This plugin will be skipped...", fileName);
                     iter.remove();
                     continue;
                 }
 
                 if (pluginSection.getVersion() == null) {
                     // TODO Enforce sane versioning...maybe
-                    Launcher.getLogger().error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginSection.getId());
+                    pluginEnvironment.getLogger()
+                        .error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginSection.getId());
                     iter.remove();
                 }
             }

@@ -31,20 +31,20 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.jar.Manifest;
 
-public final class PluginArtifact {
+public final class PluginCandidate {
 
     private final PluginMetadata metadata;
     private final Path rootPath;
     @Nullable private final Manifest manifest;
 
-    private PluginArtifact(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
+    private PluginCandidate(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
         this.metadata = metadata;
         this.rootPath = rootPath;
         this.manifest = manifest;
     }
 
-    public static PluginArtifact of(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
-        return new PluginArtifact(metadata, rootPath, manifest);
+    public static PluginCandidate of(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
+        return new PluginCandidate(metadata, rootPath, manifest);
     }
 
     public PluginMetadata getMetadata() {

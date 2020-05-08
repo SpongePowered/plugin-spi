@@ -8,8 +8,5 @@
     "mixinPriority": 900,
     "mixins": [
         "MinecraftServerMixin"
-    ],
-    "client": [
-        "client.ClientBrandRetrieverMixin"
     ]
 }

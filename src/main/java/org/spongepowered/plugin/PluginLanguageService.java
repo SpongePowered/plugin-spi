@@ -45,17 +45,17 @@ public interface PluginLanguageService {
     void initialize(final PluginEnvironment environment);
 
     /**
-     * Discovers {@link PluginArtifact artifacts} as potential plugin candidates.
+     * Discovers {@link PluginCandidate candidates}.
      *
      * <p>No plugins should be classloaded whatsoever at this point.</p>
      *
      * @param environment The environment
      * @return The discovered plugins
      */
-    Collection<PluginArtifact> discoverPlugins(final PluginEnvironment environment);
+    Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment);
 
     /**
-     * Creates {@link PluginContainer plugins} from their {@link PluginArtifact}.
+     * Creates {@link PluginContainer plugins} from their {@link PluginCandidate candidate}.
      *
      * @param environment The environment
      * @param targetClassloader The classloader to load the plugin into
@@ -64,9 +64,9 @@ public interface PluginLanguageService {
     Collection<PluginContainer> createPlugins(final PluginEnvironment environment, final ClassLoader targetClassloader);
 
     /**
-     * Returns all {@link PluginArtifact artifacts}.
+     * Returns all {@link PluginCandidate candidates}.
      *
-     * @return The artifacts
+     * @return The candidates
      */
-    Collection<PluginArtifact> getArtifacts();
+    Collection<PluginCandidate> getCandidates();
 }

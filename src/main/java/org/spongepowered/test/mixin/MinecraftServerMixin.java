@@ -24,11 +24,7 @@
  */
 package org.spongepowered.test.mixin;
 
-import com.google.gson.JsonElement;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,10 +33,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
 
-    private final Logger impl$logger = LogManager.getLogger("Sponge");
-
-    @Inject(method = "loadAllWorlds", at = @At("HEAD"))
-    private void testMe(String saveName, String worldNameIn, long seed, WorldType type, JsonElement generatorOptions, CallbackInfo ci) {
-        this.impl$logger.error("Are we injecting? Good.");
+    @Inject(method = "run", at = @At("HEAD"))
+    private void impl$CreatePluginsAndLoad(final CallbackInfo ci) {
+        // TODO PluginLanguageService objects are classloaded and discovered in App. How do I get them in Transforming?
+        // TODO Write off the kickoff
     }
 }

@@ -24,7 +24,7 @@
  */
 package org.spongepowered.plugin.jdk.discover;
 
-import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
 
@@ -34,5 +34,5 @@ public interface DiscoverStrategy {
 
     String getName();
 
-    Collection<PluginArtifact> discoverPlugins(final PluginEnvironment environment, final JDKPluginLanguageService service);
+    Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment, final JDKPluginLanguageService service);
 }

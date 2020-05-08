@@ -28,10 +28,9 @@ import com.google.common.collect.ImmutableList;
 import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
-import cpw.mods.modlauncher.api.IncompatibleEnvironmentException;
 import org.spongepowered.launch.util.ImmutableMapEntry;
 import org.spongepowered.launch.util.MixinUtils;
-import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.PluginLanguageService;
@@ -54,13 +53,10 @@ import javax.annotation.Nonnull;
 public final class PluginDiscovererService implements ITransformationService {
 
     private static final String NAME = "plugin_discoverer";
+    private static final PluginEnvironment pluginEnvironment = new PluginEnvironment();
 
-    private final PluginEnvironment pluginEnvironment;
-    private final Map<String, PluginLanguageService> pluginLoaders;
-
-    public PluginDiscovererService() {
-        this.pluginEnvironment = new PluginEnvironment();
-        this.pluginLoaders = new HashMap<>();
+    public static PluginEnvironment getPluginEnvironment() {
+        return PluginDiscovererService.pluginEnvironment;
     }
 
     @Nonnull
@@ -73,12 +69,13 @@ public final class PluginDiscovererService implements ITransformationService {
     public void initialize(final IEnvironment environment) {
         final Path gameDirectory = environment.getProperty(IEnvironment.Keys.GAMEDIR.get()).orElse(Paths.get("."));
         final Path pluginsDirectory = gameDirectory.resolve("plugins"); // TODO Read Sponge config/command line
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "1.14.4-8.0.0-0"); // TODO Get actual version...
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
+        PluginDiscovererService.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
+        PluginDiscovererService.pluginEnvironment.getBlackboard()
+            .getOrCreate(PluginKeys.VERSION, () -> "1.14.4-8.0.0-0"); // TODO Get actual version...
+        PluginDiscovererService.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
 
-        for (final Map.Entry<String, PluginLanguageService> pluginLoader : this.pluginLoaders.entrySet()) {
-            pluginLoader.getValue().initialize(this.pluginEnvironment);
+        for (final Map.Entry<String, PluginLanguageService> entry : PluginDiscovererService.pluginEnvironment.getLanguageServices().entrySet()) {
+            entry.getValue().initialize(PluginDiscovererService.pluginEnvironment);
         }
     }
 
@@ -90,10 +87,11 @@ public final class PluginDiscovererService implements ITransformationService {
     @Override
     public List<Map.Entry<String, Path>> runScan(final IEnvironment environment) {
         final List<Map.Entry<String, Path>> launchResources = new ArrayList<>();
-        for (final Map.Entry<String, PluginLanguageService> pluginLoader : this.pluginLoaders.entrySet()) {
-            final Collection<PluginArtifact> pluginArtifacts = pluginLoader.getValue().discoverPlugins(this.pluginEnvironment);
-            for (final PluginArtifact pluginArtifact : pluginArtifacts) {
-                final Manifest manifest = pluginArtifact.getManifest().orElse(null);
+        for (final Map.Entry<String, PluginLanguageService> pluginLoader : PluginDiscovererService.pluginEnvironment.getLanguageServices()
+            .entrySet()) {
+            final Collection<PluginCandidate> pluginCandidates = pluginLoader.getValue().discoverPlugins(PluginDiscovererService.pluginEnvironment);
+            for (final PluginCandidate pluginCandidate : pluginCandidates) {
+                final Manifest manifest = pluginCandidate.getManifest().orElse(null);
                 if (manifest == null) {
                     continue;
                 }
@@ -102,7 +100,7 @@ public final class PluginDiscovererService implements ITransformationService {
                     continue;
                 }
 
-                launchResources.add(ImmutableMapEntry.of(pluginArtifact.getMetadata().getId(), pluginArtifact.getRootPath()));
+                launchResources.add(ImmutableMapEntry.of(pluginCandidate.getMetadata().getId(), pluginCandidate.getRootPath()));
             }
         }
 
@@ -110,22 +108,27 @@ public final class PluginDiscovererService implements ITransformationService {
     }
 
     @Override
-    public void onLoad(final IEnvironment env, final Set<String> otherServices) throws IncompatibleEnvironmentException {
+    public void onLoad(final IEnvironment env, final Set<String> otherServices) {
         final ServiceLoader<PluginLanguageService> serviceLoader =
             ServiceLoader.load(PluginLanguageService.class, ClassLoader.getSystemClassLoader());
+
+        final Map<String, PluginLanguageService> languageServices = new HashMap<>();
+
         for (final Iterator<PluginLanguageService> iter = serviceLoader.iterator(); iter.hasNext(); ) {
             final PluginLanguageService next;
 
             try {
                 next = iter.next();
-                this.pluginEnvironment.getLogger().info("Plugin language loader '{}' found.", next.getName());
+                PluginDiscovererService.pluginEnvironment.getLogger().info("Plugin language loader '{}' found.", next.getName());
             } catch (final ServiceConfigurationError e) {
-                this.pluginEnvironment.getLogger().error("Error encountered initializing plugin loader!", e);
+                PluginDiscovererService.pluginEnvironment.getLogger().error("Error encountered initializing plugin loader!", e);
                 continue;
             }
 
-            this.pluginLoaders.put(next.getName(), next);
+            languageServices.put(next.getName(), next);
         }
+
+        PluginDiscovererService.pluginEnvironment.setLanguageServices(languageServices);
     }
 
     @Nonnull

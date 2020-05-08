@@ -30,7 +30,7 @@ import org.spongepowered.launch.plugin.config.section.ContributorSection;
 import org.spongepowered.launch.plugin.config.section.DependencySection;
 import org.spongepowered.launch.plugin.config.section.LinksSection;
 import org.spongepowered.launch.plugin.config.section.PluginSection;
-import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
 import org.spongepowered.plugin.metadata.PluginContributor;
@@ -64,7 +64,7 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
         final InputStream stream) {
         final PluginMetadataConfiguration configuration;
         try {
-            configuration = PluginMetadataConfiguration.loadFrom(filename, stream);
+            configuration = PluginMetadataConfiguration.loadFrom(environment, filename, stream);
         } catch (final Exception e) {
             environment.getLogger().error("Encountered an issue reading plugin metadata!", e);
             return Optional.empty();
@@ -151,7 +151,7 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
     }
 
     @Override
-    protected Object createPluginInstance(final PluginEnvironment environment, final PluginArtifact artifact) {
+    protected Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate artifact) {
         return null;
     }
 }

@@ -24,7 +24,7 @@
  */
 package org.spongepowered.plugin.jdk;
 
-import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
@@ -40,11 +40,11 @@ import java.util.Optional;
 
 public abstract class JDKPluginLanguageService implements PluginLanguageService {
 
-    private final List<PluginArtifact> pluginArtifacts;
+    private final List<PluginCandidate> pluginCandidates;
     private PluginEnvironment environment;
 
     protected JDKPluginLanguageService() {
-        this.pluginArtifacts = new ArrayList<>();
+        this.pluginCandidates = new ArrayList<>();
     }
 
     @Override
@@ -53,12 +53,12 @@ public abstract class JDKPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public final Collection<PluginArtifact> discoverPlugins(final PluginEnvironment environment) {
+    public final Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment) {
         this.environment.getLogger().info("Discovering {} '{}' plugins...", DiscoverStrategies.CLASSPATH.getName(), this.getName());
 
-        this.pluginArtifacts.addAll(DiscoverStrategies.CLASSPATH.discoverPlugins(environment, this));
+        this.pluginCandidates.addAll(DiscoverStrategies.CLASSPATH.discoverPlugins(environment, this));
 
-        return this.pluginArtifacts;
+        return this.pluginCandidates;
     }
 
     @Override
@@ -67,8 +67,8 @@ public abstract class JDKPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public final Collection<PluginArtifact> getArtifacts() {
-        return Collections.unmodifiableList(this.pluginArtifacts);
+    public final Collection<PluginCandidate> getArtifacts() {
+        return Collections.unmodifiableList(this.pluginCandidates);
     }
 
     public abstract String getPluginMetadataFileName();
@@ -76,5 +76,5 @@ public abstract class JDKPluginLanguageService implements PluginLanguageService 
     public abstract Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename,
         final InputStream stream);
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginArtifact artifact);
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate artifact);
 }

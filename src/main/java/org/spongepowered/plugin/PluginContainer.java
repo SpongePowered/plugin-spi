@@ -30,14 +30,14 @@ import java.nio.file.Path;
 
 public interface PluginContainer {
 
-    PluginArtifact getArtifact();
+    PluginCandidate getCandidate();
 
     default Path getRootPath() {
-        return this.getArtifact().getRootPath();
+        return this.getCandidate().getRootPath();
     }
 
     default PluginMetadata getMetadata() {
-        return this.getArtifact().getMetadata();
+        return this.getCandidate().getMetadata();
     }
 
     Object getHandle();
