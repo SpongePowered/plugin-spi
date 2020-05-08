@@ -25,16 +25,13 @@
 package org.spongepowered.plugin;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.jar.Manifest;
 
 public final class PluginArtifact {
-
-    public static PluginArtifact of(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
-        return new PluginArtifact(metadata, rootPath, manifest);
-    }
 
     private final PluginMetadata metadata;
     private final Path rootPath;
@@ -44,6 +41,10 @@ public final class PluginArtifact {
         this.metadata = metadata;
         this.rootPath = rootPath;
         this.manifest = manifest;
+    }
+
+    public static PluginArtifact of(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
+        return new PluginArtifact(metadata, rootPath, manifest);
     }
 
     public PluginMetadata getMetadata() {

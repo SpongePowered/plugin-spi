@@ -22,39 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.launch.plugin.config.section;
 
-import com.google.common.base.Preconditions;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+@ConfigSerializable
+public final class DependencySection {
 
-public final class PluginMetadataContainer {
+    @Setting("id")
+    private String id;
 
-    public static PluginMetadataContainer of(final Iterable<PluginMetadata> pluginMetadata) {
-        Preconditions.checkNotNull(pluginMetadata);
-        return new PluginMetadataContainer(pluginMetadata);
+    @Setting("version")
+    private String version;
+
+    public String getId() {
+        return id;
     }
 
-    private final Map<String, PluginMetadata> pluginMetadata;
-
-    private PluginMetadataContainer(final Iterable<PluginMetadata> pluginMetadata) {
-        this.pluginMetadata = new HashMap<>();
-
-        for (PluginMetadata metadata : pluginMetadata) {
-            this.pluginMetadata.put(metadata.getId(), metadata);
-        }
-    }
-
-    public Optional<PluginMetadata> getMetadata(final String pluginId) {
-        Preconditions.checkNotNull(pluginId);
-
-        return Optional.ofNullable(this.pluginMetadata.get(pluginId));
-    }
-
-    public Map<String, PluginMetadata> getAllMetadata() {
-        return Collections.unmodifiableMap(this.pluginMetadata);
+    public String getVersion() {
+        return version;
     }
 }

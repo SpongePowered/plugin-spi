@@ -24,6 +24,8 @@
  */
 package org.spongepowered.plugin;
 
+import org.spongepowered.plugin.metadata.PluginMetadata;
+
 import java.nio.file.Path;
 
 public interface PluginContainer {

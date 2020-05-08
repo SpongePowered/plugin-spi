@@ -31,10 +31,10 @@ import java.util.jar.Manifest;
 
 public final class MixinUtils {
 
-    public static Optional<String> getMixinConfigs(final Manifest manifest) {
-        return Optional.ofNullable(manifest.getMainAttributes().getValue(LauncherConstants.Manifest.Attributes.MIXIN_CONFIGS));
+    private MixinUtils() {
     }
 
-    private MixinUtils() {
+    public static Optional<String> getMixinConfigs(final Manifest manifest) {
+        return Optional.ofNullable(manifest.getMainAttributes().getValue(LauncherConstants.Manifest.Attributes.MIXIN_CONFIGS));
     }
 }

@@ -54,6 +54,9 @@ public final class PluginMetadataConfiguration {
         }
     }
 
+    @Setting(value = "plugins")
+    private final List<PluginSection> pluginSections = new ArrayList<>();
+
     public static PluginMetadataConfiguration loadFrom(final String fileName, final InputStream stream) throws IOException, ObjectMappingException {
         final PluginMetadataConfiguration configuration;
 
@@ -79,19 +82,11 @@ public final class PluginMetadataConfiguration {
                     Launcher.getLogger().error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginSection.getId());
                     iter.remove();
                 }
-
-                if (pluginSection.getName() == null) {
-                    Launcher.getLogger().error("Plugin '{}' has no name specified. Using the id instead...", pluginSection.getId());
-                    pluginSection.setName(pluginSection.getId());
-                }
             }
         }
 
         return configuration;
     }
-
-    @Setting(value = "plugins")
-    private List<PluginSection> pluginSections = new ArrayList<>();
 
     public List<PluginSection> getPluginSections() {
         return this.pluginSections;

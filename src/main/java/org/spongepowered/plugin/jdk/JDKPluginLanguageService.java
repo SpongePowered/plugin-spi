@@ -28,17 +28,23 @@ import org.spongepowered.plugin.PluginArtifact;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
-import org.spongepowered.plugin.PluginMetadataContainer;
 import org.spongepowered.plugin.jdk.discover.DiscoverStrategies;
+import org.spongepowered.plugin.metadata.PluginMetadataContainer;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class JDKPluginLanguageService implements PluginLanguageService {
 
+    private final List<PluginArtifact> pluginArtifacts;
     private PluginEnvironment environment;
+
+    protected JDKPluginLanguageService() {
+        this.pluginArtifacts = new ArrayList<>();
+    }
 
     @Override
     public void initialize(final PluginEnvironment environment) {
@@ -49,8 +55,9 @@ public abstract class JDKPluginLanguageService implements PluginLanguageService 
     public final Collection<PluginArtifact> discoverPlugins(final PluginEnvironment environment) {
         this.environment.getLogger().info("Discovering {} '{}' plugins...", DiscoverStrategies.CLASSPATH.getName(), this.getName());
 
-        // TODO Flat-File artifacts
-        return new ArrayList<>(DiscoverStrategies.CLASSPATH.discoverPlugins(environment, this));
+        this.pluginArtifacts.addAll(DiscoverStrategies.CLASSPATH.discoverPlugins(environment, this));
+
+        return this.pluginArtifacts;
     }
 
     @Override

@@ -59,7 +59,8 @@ public final class ServerDevLaunchHandler implements ILaunchHandlerService {
         Launcher.getLogger().info("Bootstrapping Minecraft Server...");
 
         return () -> {
-            Class.forName("net.minecraft.server.MinecraftServer", true, launchClassLoader.getInstance()).getMethod("main", String[].class).invoke(null, (Object)arguments);
+            Class.forName("net.minecraft.server.MinecraftServer", true, launchClassLoader.getInstance()).getMethod("main", String[].class)
+                .invoke(null, (Object) arguments);
             return null;
         };
     }

@@ -22,18 +22,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk;
+package org.spongepowered.launch.plugin;
 
-public final class JDKConstants {
+import org.spongepowered.plugin.PluginContainer;
 
-    private JDKConstants() {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+// Just tossing this in here to get plugins out of the spi and into Launch
+public final class PluginManager {
+
+    private final Map<String, PluginContainer> plugins;
+
+    public PluginManager() {
+        this.plugins = new HashMap<>();
     }
 
-    public static final class Manifest {
+    public Optional<PluginContainer> getPlugin(final String id) {
+        return Optional.ofNullable(this.plugins.get(id));
+    }
 
-        public static final String LOCATION = "META-INF/MANIFEST.MF";
+    public Collection<PluginContainer> getPlugins() {
+        return Collections.unmodifiableCollection(this.plugins.values());
+    }
 
-        private Manifest() {
-        }
+    public void addPlugin(final PluginContainer container) {
+        this.plugins.put(container.getMetadata().getId(), container);
     }
 }

@@ -22,18 +22,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk;
+package org.spongepowered.plugin.metadata;
 
-public final class JDKConstants {
+import com.google.common.base.Preconditions;
 
-    private JDKConstants() {
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public final class PluginMetadataContainer {
+
+    private final Map<String, PluginMetadata> pluginMetadata;
+
+    private PluginMetadataContainer(final Iterable<PluginMetadata> pluginMetadata) {
+        this.pluginMetadata = new HashMap<>();
+
+        for (PluginMetadata metadata : pluginMetadata) {
+            this.pluginMetadata.put(metadata.getId(), metadata);
+        }
     }
 
-    public static final class Manifest {
+    public static PluginMetadataContainer of(final Iterable<PluginMetadata> pluginMetadata) {
+        Preconditions.checkNotNull(pluginMetadata);
+        return new PluginMetadataContainer(pluginMetadata);
+    }
 
-        public static final String LOCATION = "META-INF/MANIFEST.MF";
+    public Optional<PluginMetadata> getMetadata(final String pluginId) {
+        Preconditions.checkNotNull(pluginId);
 
-        private Manifest() {
-        }
+        return Optional.ofNullable(this.pluginMetadata.get(pluginId));
+    }
+
+    public Map<String, PluginMetadata> getAllMetadata() {
+        return Collections.unmodifiableMap(this.pluginMetadata);
     }
 }

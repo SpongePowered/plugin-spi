@@ -52,14 +52,10 @@ public final class Blackboard {
     public <V> Optional<V> get(final Key<V> key) {
         Preconditions.checkNotNull(key);
 
-        return Optional.ofNullable((V) key.clazz.cast(this.values.get(key)));
+        return Optional.ofNullable(key.clazz.cast(this.values.get(key)));
     }
 
     public static final class Key<V> implements Comparable<Key<V>> {
-
-        public static <V> Key<V> of(final String name, final Class<V> clazz) {
-            return new Key<>(name, clazz);
-        }
 
         private final String name;
         private final Class<V> clazz;
@@ -67,6 +63,10 @@ public final class Blackboard {
         private Key(final String name, final Class<V> clazz) {
             this.name = name;
             this.clazz = clazz;
+        }
+
+        public static <V> Key<V> of(final String name, final Class<V> clazz) {
+            return new Key<>(name, clazz);
         }
 
         public String getName() {

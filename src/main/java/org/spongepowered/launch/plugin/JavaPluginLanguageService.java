@@ -26,17 +26,22 @@ package org.spongepowered.launch.plugin;
 
 import org.spongepowered.launch.LauncherConstants;
 import org.spongepowered.launch.plugin.config.PluginMetadataConfiguration;
+import org.spongepowered.launch.plugin.config.section.ContributorSection;
+import org.spongepowered.launch.plugin.config.section.DependencySection;
 import org.spongepowered.launch.plugin.config.section.LinksSection;
 import org.spongepowered.launch.plugin.config.section.PluginSection;
 import org.spongepowered.plugin.PluginArtifact;
 import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.PluginMetadataContainer;
 import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
-import org.spongepowered.plugin.PluginMetadata;
+import org.spongepowered.plugin.metadata.PluginContributor;
+import org.spongepowered.plugin.metadata.PluginDependency;
+import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.spongepowered.plugin.metadata.PluginMetadataContainer;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public final class JavaPluginLanguageService extends JDKPluginLanguageService {
@@ -53,8 +58,10 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
         return LauncherConstants.Plugin.Metadata.FILENAME;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream) {
+    public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename,
+        final InputStream stream) {
         final PluginMetadataConfiguration configuration;
         try {
             configuration = PluginMetadataConfiguration.loadFrom(filename, stream);
@@ -65,22 +72,79 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
 
         final List<PluginMetadata> pluginMetadata = new ArrayList<>();
         for (final PluginSection pluginSection : configuration.getPluginSections()) {
-            final PluginMetadata.Builder builder = PluginMetadata.builder();
-            builder
+            final PluginMetadata.Builder metadataBuilder = PluginMetadata.builder();
+            metadataBuilder
                 .setId(pluginSection.getId())
                 .setName(pluginSection.getName())
                 .setVersion(pluginSection.getVersion())
-                .setDescription(pluginSection.getDescription())
-                .setAuthor(pluginSection.getAuthor());
+                .setDescription(pluginSection.getDescription());
 
             final LinksSection linksSection = pluginSection.getLinksSection();
             if (linksSection != null) {
-                builder.setHomepageURL(linksSection.getHomepage());
-                builder.setSourceURL(linksSection.getSource());
-                builder.setIssuesURL(linksSection.getIssues());
+                metadataBuilder.setHomepage(linksSection.getHomepage());
+                metadataBuilder.setSource(linksSection.getSource());
+                metadataBuilder.setIssues(linksSection.getIssues());
             }
 
-            pluginMetadata.add(builder.build());
+            final List<ContributorSection> contributorSections = pluginSection.getContributorSections();
+            final List<PluginContributor> pluginContributors = new ArrayList<>();
+
+            if (contributorSections != null) {
+                for (final ContributorSection contributorSection : contributorSections) {
+                    final String name = contributorSection.getName();
+                    if (name == null || name.isEmpty()) {
+                        environment.getLogger().error("Plugin '{}' cannot specify a developer with no name! Skipping...", pluginSection.getId());
+                        continue;
+                    }
+
+                    final PluginContributor.Builder developerBuilder = PluginContributor.builder()
+                        .setName(contributorSection.getName())
+                        .setDescription(contributorSection.getDescription());
+
+                    pluginContributors.add(developerBuilder.build());
+                }
+            }
+
+            if (pluginContributors.isEmpty()) {
+                environment.getLogger().error("Plugin '{}' must specify at least one contributor! Skipping...", pluginSection.getId());
+                continue;
+            }
+
+            metadataBuilder.setContributors(pluginContributors);
+
+            final List<DependencySection> dependencySections = pluginSection.getDependencySections();
+            final List<PluginDependency> pluginDependencies = new ArrayList<>();
+
+            if (dependencySections != null) {
+                for (final DependencySection dependencySection : dependencySections) {
+                    final String id = dependencySection.getId();
+                    if (id == null) {
+                        environment.getLogger().error("Plugin '{}' cannot specify a dependency with no id! Skipping...", pluginSection.getId());
+                        continue;
+                    }
+
+                    final String version = dependencySection.getVersion();
+                    if (version == null) {
+                        environment.getLogger().error("Plugin '{}' cannot specify a dependency with no version!", pluginSection.getId());
+                        continue;
+                    }
+
+                    final PluginDependency.Builder dependencyBuilder = PluginDependency.builder()
+                        .setId(id)
+                        .setVersion(version);
+
+                    pluginDependencies.add(dependencyBuilder.build());
+                }
+            }
+
+            metadataBuilder.setDependencies(pluginDependencies);
+
+            final Map<String, String> extraMetadata = pluginSection.getExtraMetadata();
+            if (extraMetadata != null) {
+                metadataBuilder.setExtraMetadata((Map<String, Object>) (Object) extraMetadata);
+            }
+
+            pluginMetadata.add(metadataBuilder.build());
         }
 
         return Optional.of(PluginMetadataContainer.of(pluginMetadata));

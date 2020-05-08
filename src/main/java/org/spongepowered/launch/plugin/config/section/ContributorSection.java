@@ -22,18 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk;
+package org.spongepowered.launch.plugin.config.section;
 
-public final class JDKConstants {
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-    private JDKConstants() {
+@ConfigSerializable
+public final class ContributorSection {
+
+    @Setting("name")
+    private String name;
+
+    @Setting("description")
+    private String description;
+
+    public String getName() {
+        return this.name;
     }
 
-    public static final class Manifest {
-
-        public static final String LOCATION = "META-INF/MANIFEST.MF";
-
-        private Manifest() {
-        }
+    public String getDescription() {
+        return this.description;
     }
 }

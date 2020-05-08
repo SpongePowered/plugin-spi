@@ -26,7 +26,9 @@ package org.spongepowered.launch.plugin.config.section;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.launch.LauncherConstants;
+
+import java.util.List;
+import java.util.Map;
 
 @ConfigSerializable
 public final class PluginSection {
@@ -41,13 +43,19 @@ public final class PluginSection {
     private String version;
 
     @Setting(value = "description")
-    private String description = LauncherConstants.Plugin.Metadata.UNKNOWN_STRING_VALUE;
-
-    @Setting(value = "author")
-    private String author = LauncherConstants.Plugin.Metadata.UNKNOWN_STRING_VALUE;
+    private String description;
 
     @Setting(value = "links")
     private LinksSection linksSection;
+
+    @Setting(value = "contributors")
+    private List<ContributorSection> contributorSections;
+
+    @Setting(value = "dependencies")
+    private List<DependencySection> dependencySections;
+
+    @Setting(value = "extra")
+    private Map<String, String> extra;
 
     public String getId() {
         return this.id;
@@ -55,6 +63,10 @@ public final class PluginSection {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
     public String getVersion() {
@@ -65,15 +77,19 @@ public final class PluginSection {
         return this.description;
     }
 
-    public String getAuthor() {
-        return this.author;
-    }
-
     public LinksSection getLinksSection() {
         return this.linksSection;
     }
 
-    public void setName(String id) {
-        this.name = id;
+    public List<ContributorSection> getContributorSections() {
+        return this.contributorSections;
+    }
+
+    public List<DependencySection> getDependencySections() {
+        return this.dependencySections;
+    }
+
+    public Map<String, String> getExtraMetadata() {
+        return this.extra;
     }
 }

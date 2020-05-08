@@ -24,6 +24,9 @@
  */
 package org.spongepowered.launch.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,17 +34,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /*
  * A class that attempts to parse command line arguments into key value pairs to allow addition and editing.
  * Can not use JOptSimple as that doesn't parse out the values for keys unless the spec says it has a value.
  */
 public class ArgumentList {
+
     private static final Logger LOGGER = LogManager.getLogger();
-    private List<Supplier<String[]>> entries = new ArrayList<>();
-    private Map<String, EntryValue> values = new HashMap<>();
+    private final List<Supplier<String[]>> entries = new ArrayList<>();
+    private final Map<String, EntryValue> values = new HashMap<>();
 
     public static ArgumentList from(String... args) {
         ArgumentList ret = new ArgumentList();
@@ -58,8 +59,8 @@ public class ArgumentList {
                     String key = idx == -1 ? args[x] : args[x].substring(0, idx);
                     String value = idx == -1 ? null : idx == args[x].length() - 1 ? "" : args[x].substring(idx + 1);
 
-                    if (idx == -1 && x + 1 < args.length && !args[x+1].startsWith("-")) { //Not in --key=value, so try and grab the next argument.
-                        ret.addArg(true, key, args[x+1]); //Assume that if the next value is a "argument" then don't use it as a value.
+                    if (idx == -1 && x + 1 < args.length && !args[x + 1].startsWith("-")) { //Not in --key=value, so try and grab the next argument.
+                        ret.addArg(true, key, args[x + 1]); //Assume that if the next value is a "argument" then don't use it as a value.
                         x++; // This isn't perfect, but the best we can do without knowing all of the spec.
                     } else {
                         ret.addArg(false, key, value);
@@ -75,7 +76,7 @@ public class ArgumentList {
     }
 
     public void addRaw(final String arg) {
-        entries.add(() -> new String[] { arg });
+        entries.add(() -> new String[]{arg});
     }
 
     public void addArg(boolean split, String raw, String value) {
@@ -93,8 +94,8 @@ public class ArgumentList {
 
     public String[] getArguments() {
         return entries.stream()
-                .flatMap(e -> Arrays.asList(e.get()).stream())
-                .toArray(size -> new String[size]);
+            .flatMap(e -> Arrays.asList(e.get()).stream())
+            .toArray(size -> new String[size]);
     }
 
     public boolean hasValue(String key) {
@@ -124,21 +125,24 @@ public class ArgumentList {
 
     public void putLazy(String key, String value) {
         EntryValue ent = values.get(key);
-        if (ent == null)
+        if (ent == null) {
             addArg(true, "--" + key, value);
-        else if (ent.getValue() == null)
+        } else if (ent.getValue() == null) {
             ent.setValue(value);
+        }
     }
 
     public String remove(String key) {
         EntryValue ent = values.remove(key);
-        if (ent == null)
+        if (ent == null) {
             return null;
+        }
         entries.remove(ent);
         return ent.getValue();
     }
 
     private class EntryValue implements Supplier<String[]> {
+
         private final String prefix;
         private final String key;
         private final boolean split;
@@ -165,11 +169,13 @@ public class ArgumentList {
 
         @Override
         public String[] get() {
-            if (getValue() == null)
-                return new String[] { prefix + getKey() };
-            if (split)
-                return new String[] { prefix + getKey(), getValue() };
-            return new String[] { prefix + getKey() + '=' + getValue() };
+            if (getValue() == null) {
+                return new String[]{prefix + getKey()};
+            }
+            if (split) {
+                return new String[]{prefix + getKey(), getValue()};
+            }
+            return new String[]{prefix + getKey() + '=' + getValue()};
         }
 
         @Override

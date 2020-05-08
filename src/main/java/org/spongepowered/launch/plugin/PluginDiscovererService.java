@@ -29,9 +29,9 @@ import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
 import cpw.mods.modlauncher.api.IncompatibleEnvironmentException;
+import org.spongepowered.launch.util.ImmutableMapEntry;
 import org.spongepowered.launch.util.MixinUtils;
 import org.spongepowered.plugin.PluginArtifact;
-import org.spongepowered.launch.util.ImmutableMapEntry;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.PluginLanguageService;
@@ -111,15 +111,16 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void onLoad(final IEnvironment env, final Set<String> otherServices) throws IncompatibleEnvironmentException {
-        final ServiceLoader<PluginLanguageService> serviceLoader = ServiceLoader.load(PluginLanguageService.class, ClassLoader.getSystemClassLoader());
-        for (final Iterator<PluginLanguageService> iter = serviceLoader.iterator(); iter.hasNext();) {
+        final ServiceLoader<PluginLanguageService> serviceLoader =
+            ServiceLoader.load(PluginLanguageService.class, ClassLoader.getSystemClassLoader());
+        for (final Iterator<PluginLanguageService> iter = serviceLoader.iterator(); iter.hasNext(); ) {
             final PluginLanguageService next;
 
             try {
                 next = iter.next();
                 this.pluginEnvironment.getLogger().info("Plugin language loader '{}' found.", next.getName());
             } catch (final ServiceConfigurationError e) {
-                this.pluginEnvironment.getLogger().error("Error encountered initializing plugin loader service!", e);
+                this.pluginEnvironment.getLogger().error("Error encountered initializing plugin loader!", e);
                 continue;
             }
 

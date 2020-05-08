@@ -22,18 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk;
+package org.spongepowered.launch.plugin;
 
-public final class JDKConstants {
+import org.spongepowered.plugin.PluginArtifact;
+import org.spongepowered.plugin.PluginContainer;
 
-    private JDKConstants() {
+public final class JavaPluginContainer implements PluginContainer {
+
+    private final PluginArtifact artifact;
+
+    private JavaPluginContainer(final PluginArtifact artifact) {
+        this.artifact = artifact;
     }
 
-    public static final class Manifest {
+    public static JavaPluginContainer of(final PluginArtifact artifact) {
+        return new JavaPluginContainer(artifact);
+    }
 
-        public static final String LOCATION = "META-INF/MANIFEST.MF";
+    @Override
+    public PluginArtifact getArtifact() {
+        return this.artifact;
+    }
 
-        private Manifest() {
-        }
+    @Override
+    public Object getHandle() {
+        return null;
     }
 }

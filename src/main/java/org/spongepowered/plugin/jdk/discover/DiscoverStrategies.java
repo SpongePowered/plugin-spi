@@ -26,10 +26,10 @@ package org.spongepowered.plugin.jdk.discover;
 
 import org.spongepowered.plugin.PluginArtifact;
 import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.PluginMetadataContainer;
 import org.spongepowered.plugin.jdk.JDKConstants;
 import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
-import org.spongepowered.plugin.PluginMetadata;
+import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.spongepowered.plugin.metadata.PluginMetadataContainer;
 import org.spongepowered.plugin.util.ManifestUtils;
 
 import java.io.IOException;
@@ -112,7 +112,8 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         }
 
                         try (final InputStream inputStream = jf.getInputStream(pluginMetadataJarEntry)) {
-                            final PluginMetadataContainer pluginMetadata = service.createPluginMetadata(environment, pluginMetadataJarEntry.getName(), inputStream).orElse(null);
+                            final PluginMetadataContainer pluginMetadata =
+                                service.createPluginMetadata(environment, pluginMetadataJarEntry.getName(), inputStream).orElse(null);
                             if (pluginMetadata == null) {
                                 continue;
                             }
@@ -165,8 +166,9 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         continue;
                     }
 
-                    try(final InputStream inputStream = Files.newInputStream(pluginMetadataFile)) {
-                        final PluginMetadataContainer pluginMetadata = service.createPluginMetadata(environment, pluginMetadataFile.getFileName().toString(), inputStream).orElse(null);
+                    try (final InputStream inputStream = Files.newInputStream(pluginMetadataFile)) {
+                        final PluginMetadataContainer pluginMetadata =
+                            service.createPluginMetadata(environment, pluginMetadataFile.getFileName().toString(), inputStream).orElse(null);
                         if (pluginMetadata == null) {
                             continue;
                         }

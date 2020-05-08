@@ -28,16 +28,16 @@ import java.util.Map;
 
 public final class ImmutableMapEntry<K, V> implements Map.Entry<K, V> {
 
-    public static <K, V> ImmutableMapEntry<K, V> of(final K key, final V value) {
-        return new ImmutableMapEntry<>(key, value);
-    }
-
     private final K key;
     private final V value;
 
     private ImmutableMapEntry(final K key, final V value) {
         this.key = key;
         this.value = value;
+    }
+
+    public static <K, V> ImmutableMapEntry<K, V> of(final K key, final V value) {
+        return new ImmutableMapEntry<>(key, value);
     }
 
     @Override

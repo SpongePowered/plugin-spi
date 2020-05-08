@@ -56,16 +56,14 @@ public final class ClientDevLaunchHandler implements ILaunchHandlerService {
     }
 
     @Override
-    public Callable<Void> launchService(String[] arguments, final ITransformingClassLoader launchClassLoader) {
+    public Callable<Void> launchService(final String[] arguments, final ITransformingClassLoader launchClassLoader) {
 
         Launcher.getLogger().info("Bootstrapping Minecraft client, please wait...");
-
-        final String[] args = arguments;
 
         return () -> {
             final Class<?> mcClass = Class.forName("net.minecraft.client.main.Main", true, launchClassLoader.getInstance());
             final Method mcClassMethod = mcClass.getMethod("main", String[].class);
-            mcClassMethod.invoke(null, (Object) args);
+            mcClassMethod.invoke(null, (Object) arguments);
             return null;
         };
     }
