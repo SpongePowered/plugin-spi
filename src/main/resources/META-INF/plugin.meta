@@ -2,7 +2,7 @@
 	"plugins": [{
 		"id": "tester",
 		"name": "Tester",
-		"version": 1.0,
+		"version": "1.0",
 		"links": {
 			"homepage": "https://www.spongepowered.org",
 			"source": "https://www.spongepowered.org/source",

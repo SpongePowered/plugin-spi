@@ -34,6 +34,7 @@ import org.spongepowered.plugin.metadata.PluginMetadataContainer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,11 @@ public abstract class JDKPluginLanguageService implements PluginLanguageService 
     @Override
     public final Collection<PluginContainer> createPlugins(final PluginEnvironment environment, final ClassLoader targetClassloader) {
         return null;
+    }
+
+    @Override
+    public final Collection<PluginArtifact> getArtifacts() {
+        return Collections.unmodifiableList(this.pluginArtifacts);
     }
 
     public abstract String getPluginMetadataFileName();

@@ -62,4 +62,11 @@ public interface PluginLanguageService {
      * @return The plugins
      */
     Collection<PluginContainer> createPlugins(final PluginEnvironment environment, final ClassLoader targetClassloader);
+
+    /**
+     * Returns all {@link PluginArtifact artifacts}.
+     *
+     * @return The artifacts
+     */
+    Collection<PluginArtifact> getArtifacts();
 }
