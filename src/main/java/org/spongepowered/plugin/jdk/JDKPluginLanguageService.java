@@ -67,7 +67,7 @@ public abstract class JDKPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public final Collection<PluginCandidate> getArtifacts() {
+    public final Collection<PluginCandidate> getCandidates() {
         return Collections.unmodifiableList(this.pluginCandidates);
     }
 
