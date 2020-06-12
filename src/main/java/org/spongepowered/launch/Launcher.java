@@ -46,6 +46,7 @@ public abstract class Launcher {
     protected static void loadPlugins() {
         final PluginLoader pluginLoader = Launcher.getPluginLoader();
         pluginLoader.discoverServices();
+        pluginLoader.getServices().forEach((k, v) -> v.initialize(pluginLoader.getEnvironment()));
         pluginLoader.initialize(Paths.get("."));
         pluginLoader.discoverResources();
         pluginLoader.determineCandidates();
