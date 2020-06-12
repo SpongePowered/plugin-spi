@@ -26,12 +26,14 @@ package org.spongepowered.launch;
 
 import net.minecraft.server.MinecraftServer;
 
+import java.nio.file.Paths;
+
 public final class ServerLauncher extends Launcher {
 
     // TODO String array of arguments is nasty, do something proper later.
     public static void launch(final String[] args) {
         // TODO This is test code, need to run through lots of preliminary game state before loading the server
-        Launcher.loadPlugins();
+        Launcher.loadPlugins(Paths.get("."));
         Launcher.getLogger().info("Loading Minecraft Server, please wait...");
         MinecraftServer.main(args);
     }

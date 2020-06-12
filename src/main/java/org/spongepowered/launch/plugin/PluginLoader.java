@@ -25,6 +25,7 @@
 package org.spongepowered.launch.plugin;
 
 import org.spongepowered.plugin.PluginCandidate;
+import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
 import org.spongepowered.plugin.PluginKeys;
@@ -42,9 +43,10 @@ import java.util.ServiceLoader;
 public final class PluginLoader {
 
     private final PluginEnvironment pluginEnvironment;
+
     private final Map<String, PluginLanguageService> languageServices;
     private final Map<String, Collection<PluginFile>> pluginFiles;
-    private final Map<String, Collection<PluginCandidate>> pluginCandidates;
+    private final Map<PluginLanguageService, Collection<PluginCandidate>> pluginCandidates;
 
     public PluginLoader() {
         this.pluginEnvironment = new PluginEnvironment();
@@ -63,10 +65,6 @@ public final class PluginLoader {
 
     public Map<String, Collection<PluginFile>> getResources() {
         return Collections.unmodifiableMap(this.pluginFiles);
-    }
-
-    public Map<String, Collection<PluginCandidate>> getCandidates() {
-        return Collections.unmodifiableMap(this.pluginCandidates);
     }
 
     public void discoverServices() {
@@ -112,7 +110,18 @@ public final class PluginLoader {
             final PluginLanguageService languageService = languageEntry.getValue();
             final Collection<PluginCandidate> pluginCandidates = languageService.determineCandidates(this.pluginEnvironment);
             if (pluginCandidates.size() > 0) {
-                this.pluginCandidates.put(languageEntry.getKey(), Collections.unmodifiableCollection(pluginCandidates));
+                this.pluginCandidates.put(languageService, Collections.unmodifiableCollection(pluginCandidates));
+            }
+        }
+    }
+
+    public void createContainers() {
+        for (final Map.Entry<PluginLanguageService, Collection<PluginCandidate>> languageCandidates : this.pluginCandidates.entrySet()) {
+            final PluginLanguageService languageService = languageCandidates.getKey();
+            final Collection<PluginCandidate> candidates = languageCandidates.getValue();
+            for (final PluginCandidate candidate : candidates) {
+                // TODO Woo, onwards to the game!
+                final PluginContainer plugin = languageService.createPlugin(candidate, this.pluginEnvironment, PluginLoader.class.getClassLoader());
             }
         }
     }

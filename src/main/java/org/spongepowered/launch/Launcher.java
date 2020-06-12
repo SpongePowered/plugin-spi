@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.launch.plugin.PluginLoader;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public abstract class Launcher {
@@ -43,12 +44,13 @@ public abstract class Launcher {
         return Launcher.pluginLoader;
     }
 
-    protected static void loadPlugins() {
+    protected static void loadPlugins(Path gameDirectory) {
         final PluginLoader pluginLoader = Launcher.getPluginLoader();
         pluginLoader.discoverServices();
         pluginLoader.getServices().forEach((k, v) -> v.initialize(pluginLoader.getEnvironment()));
-        pluginLoader.initialize(Paths.get("."));
+        pluginLoader.initialize(gameDirectory);
         pluginLoader.discoverResources();
         pluginLoader.determineCandidates();
+        pluginLoader.createContainers();
     }
 }
