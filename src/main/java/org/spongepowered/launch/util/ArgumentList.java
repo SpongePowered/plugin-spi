@@ -44,7 +44,7 @@ public class ArgumentList {
     private final List<Supplier<String[]>> entries = new ArrayList<>();
     private final Map<String, EntryValue> values = new HashMap<>();
 
-    public static ArgumentList from(String... args) {
+    public static ArgumentList from(final String... args) {
         ArgumentList ret = new ArgumentList();
 
         boolean ended = false;
@@ -79,7 +79,7 @@ public class ArgumentList {
         entries.add(() -> new String[]{arg});
     }
 
-    public void addArg(boolean split, String raw, String value) {
+    public void addArg(final boolean split, final String raw, final String value) {
         int idx = raw.startsWith("--") ? 2 : 1;
         String prefix = raw.substring(0, idx);
         String key = raw.substring(idx);
@@ -98,21 +98,21 @@ public class ArgumentList {
             .toArray(size -> new String[size]);
     }
 
-    public boolean hasValue(String key) {
+    public boolean hasValue(final String key) {
         return getOrDefault(key, null) != null;
     }
 
-    public String get(String key) {
+    public String get(final String key) {
         EntryValue ent = values.get(key);
         return ent == null ? null : ent.getValue();
     }
 
-    public String getOrDefault(String key, String value) {
+    public String getOrDefault(final String key, final String value) {
         EntryValue ent = values.get(key);
         return ent == null ? value : ent.getValue() == null ? value : ent.getValue();
     }
 
-    public void put(String key, String value) {
+    public void put(final String key, final String value) {
         EntryValue entry = values.get(key);
         if (entry == null) {
             entry = new EntryValue(true, "--", key, value);
@@ -123,7 +123,7 @@ public class ArgumentList {
         }
     }
 
-    public void putLazy(String key, String value) {
+    public void putLazy(final String key, final String value) {
         EntryValue ent = values.get(key);
         if (ent == null) {
             addArg(true, "--" + key, value);
@@ -132,7 +132,7 @@ public class ArgumentList {
         }
     }
 
-    public String remove(String key) {
+    public String remove(final String key) {
         EntryValue ent = values.remove(key);
         if (ent == null) {
             return null;
@@ -148,7 +148,7 @@ public class ArgumentList {
         private final boolean split;
         private String value;
 
-        public EntryValue(boolean split, String prefix, String key, String value) {
+        public EntryValue(final boolean split, final String prefix, final String key, final String value) {
             this.split = split;
             this.prefix = prefix;
             this.key = key;
@@ -163,7 +163,7 @@ public class ArgumentList {
             return this.value;
         }
 
-        public void setValue(String value) {
+        public void setValue(final String value) {
             this.value = value;
         }
 

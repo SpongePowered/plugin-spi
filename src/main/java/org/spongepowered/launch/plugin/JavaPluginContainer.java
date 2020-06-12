@@ -29,10 +29,10 @@ import org.spongepowered.plugin.PluginContainer;
 
 public final class JavaPluginContainer implements PluginContainer {
 
-    private final PluginCandidate artifact;
+    private final PluginCandidate candidate;
 
-    private JavaPluginContainer(final PluginCandidate artifact) {
-        this.artifact = artifact;
+    private JavaPluginContainer(final PluginCandidate candidate) {
+        this.candidate = candidate;
     }
 
     public static JavaPluginContainer of(final PluginCandidate artifact) {
@@ -41,7 +41,7 @@ public final class JavaPluginContainer implements PluginContainer {
 
     @Override
     public PluginCandidate getCandidate() {
-        return this.artifact;
+        return this.candidate;
     }
 
     @Override

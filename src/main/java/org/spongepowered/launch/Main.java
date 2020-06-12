@@ -29,7 +29,7 @@ import org.spongepowered.launch.util.ArgumentList;
 
 public final class Main {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         // TODO Calculate this via our own LauncherCommandLine, toss Forge class
         final ArgumentList lst = ArgumentList.from(args);

@@ -150,7 +150,7 @@ public final class JavaPluginLanguageService extends JVMPluginLanguageService {
     }
 
     @Override
-    protected List<PluginCandidate> sortCandidates(List<PluginCandidate> pluginCandidates) {
+    protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates) {
         // TODO Sort based on dependencies..
         return pluginCandidates;
     }

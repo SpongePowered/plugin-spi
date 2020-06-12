@@ -84,7 +84,7 @@ public final class PluginLoader {
         }
     }
 
-    public void initialize(Path gameDirectory) {
+    public void initialize(final Path gameDirectory) {
         final Path pluginsDirectory = gameDirectory.resolve("plugins"); // TODO Read Sponge config/command line
         this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
         this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "1.14.4-8.0.0-0"); // TODO Get actual version...

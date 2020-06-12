@@ -101,7 +101,7 @@ public final class Blackboard {
                 return false;
             }
 
-            return this.name.equals(((Key) obj).name);
+            return this.name.equals(((Key<?>) obj).name);
         }
     }
 }

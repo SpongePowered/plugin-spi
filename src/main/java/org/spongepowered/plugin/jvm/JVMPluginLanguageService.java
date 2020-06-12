@@ -107,7 +107,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
 
     public abstract Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream);
 
-    protected abstract List<PluginCandidate> sortCandidates(List<PluginCandidate> pluginCandidates);
+    protected abstract List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates);
 
     protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate);
 }
