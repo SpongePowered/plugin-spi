@@ -24,9 +24,9 @@
  */
 package org.spongepowered.test;
 
-import org.spongepowered.plugin.jdk.Plugin;
+import org.spongepowered.plugin.jvm.Plugin;
 
-@Plugin(id = "test")
+@Plugin("test")
 public final class TestPlugin {
 
 }

@@ -22,20 +22,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.test.mixin;
+package org.spongepowered.plugin;
 
-import net.minecraft.server.MinecraftServer;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.jar.Manifest;
 
-@Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin {
+import javax.annotation.Nullable;
 
-    @Inject(method = "run", at = @At("HEAD"))
-    private void impl$CreatePluginsAndLoad(final CallbackInfo ci) {
-        // TODO PluginLanguageService objects are classloaded and discovered in App. How do I get them in Transforming?
-        // TODO Write off the kickoff
+public final class PluginFile {
+
+    public static PluginFile of(final Path rootPath, @Nullable final Manifest manifest) {
+        return new PluginFile(rootPath, manifest);
+    }
+
+    private final Path rootPath;
+    @Nullable Manifest manifest;
+
+    private PluginFile(final Path rootPath, @Nullable final Manifest manifest) {
+        this.rootPath = rootPath;
+        this.manifest = manifest;
+    }
+
+    public Path getRootPath() {
+        return this.rootPath;
+    }
+
+    public Optional<Manifest> getManifest() {
+        return Optional.ofNullable(this.manifest);
     }
 }

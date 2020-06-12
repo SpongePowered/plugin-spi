@@ -22,14 +22,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk.discover;
+package org.spongepowered.plugin.jvm.discover;
 
-import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.jdk.JDKConstants;
-import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
-import org.spongepowered.plugin.metadata.PluginMetadata;
-import org.spongepowered.plugin.metadata.PluginMetadataContainer;
+import org.spongepowered.plugin.PluginFile;
+import org.spongepowered.plugin.jvm.JVMConstants;
+import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 import org.spongepowered.plugin.util.ManifestUtils;
 
 import java.io.IOException;
@@ -44,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -58,13 +55,13 @@ public enum DiscoverStrategies implements DiscoverStrategy {
         }
 
         @Override
-        public Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment, final JDKPluginLanguageService service) {
+        public Collection<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
 
-            final List<PluginCandidate> pluginCandidates = new ArrayList<>();
+            final List<PluginFile> pluginFiles = new ArrayList<>();
 
             final Enumeration<URL> resources;
             try {
-                resources = ClassLoader.getSystemClassLoader().getResources(JDKConstants.Manifest.LOCATION);
+                resources = ClassLoader.getSystemClassLoader().getResources(JVMConstants.Manifest.LOCATION);
             } catch (final IOException e) {
                 throw new RuntimeException("Failed to enumerate classloader resources!");
             }
@@ -111,20 +108,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                             continue;
                         }
 
-                        try (final InputStream inputStream = jf.getInputStream(pluginMetadataJarEntry)) {
-                            final PluginMetadataContainer pluginMetadata =
-                                service.createPluginMetadata(environment, pluginMetadataJarEntry.getName(), inputStream).orElse(null);
-                            if (pluginMetadata == null) {
-                                continue;
-                            }
-                            for (final Map.Entry<String, PluginMetadata> pluginMetadataEntry : pluginMetadata.getAllMetadata().entrySet()) {
-                                pluginCandidates.add(PluginCandidate.of(pluginMetadataEntry.getValue(), path, manifest));
-                                environment.getLogger().info("Discovered '{}' ({})...", pluginMetadataEntry.getValue().getId(), path);
-                            }
-                        } catch (final IOException e) {
-                            environment.getLogger().error("Error reading plugin metadata for '{}' when traversing classloader resources "
-                                + "for plugin discovery! Skipping...", pluginMetadataJarEntry, e);
-                        }
+                        pluginFiles.add(PluginFile.of(path, manifest));
                     } catch (final IOException e) {
                         environment.getLogger().error("Error reading '{}' as a Jar file when traversing classloader "
                             + "resources for plugin discovery! Skipping...", url, e);
@@ -141,16 +125,14 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
                     try {
                         path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0,
-                            uri.getRawSchemeSpecificPart().length() - (JDKConstants.Manifest.LOCATION.length()))));
+                            uri.getRawSchemeSpecificPart().length() - (JVMConstants.Manifest.LOCATION.length()))));
                     } catch (final URISyntaxException e) {
                         environment.getLogger().error("Error creating root URI for '{}' when traversing classloader resources for plugin "
                             + "discovery! Skipping...", url, e);
                         continue;
                     }
 
-                    final Path pluginMetadataFile = path.resolve(service.getPluginMetadataFileName());
-
-                    if (Files.notExists(pluginMetadataFile)) {
+                    if (Files.notExists(path.resolve(service.getPluginMetadataFileName()))) {
                         continue;
                     }
 
@@ -166,25 +148,11 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         continue;
                     }
 
-                    try (final InputStream inputStream = Files.newInputStream(pluginMetadataFile)) {
-                        final PluginMetadataContainer pluginMetadata =
-                            service.createPluginMetadata(environment, pluginMetadataFile.getFileName().toString(), inputStream).orElse(null);
-                        if (pluginMetadata == null) {
-                            continue;
-                        }
-
-                        for (final Map.Entry<String, PluginMetadata> pluginMetadataEntry : pluginMetadata.getAllMetadata().entrySet()) {
-                            pluginCandidates.add(PluginCandidate.of(pluginMetadataEntry.getValue(), path, manifest));
-                            environment.getLogger().info("Discovered '{}' ({})...", pluginMetadataEntry.getValue().getId(), path);
-                        }
-                    } catch (final IOException e) {
-                        environment.getLogger().error("Error reading plugin metadata for '{}' when traversing classloader resources "
-                            + "for plugin discovery! Skipping...", pluginMetadataFile, e);
-                    }
+                    pluginFiles.add(PluginFile.of(path, manifest));
                 }
             }
 
-            return pluginCandidates;
+            return pluginFiles;
         }
     }
 }

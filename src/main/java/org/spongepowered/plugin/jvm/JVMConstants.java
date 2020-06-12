@@ -22,17 +22,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk.discover;
+package org.spongepowered.plugin.jvm;
 
-import org.spongepowered.plugin.PluginCandidate;
-import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
+public final class JVMConstants {
 
-import java.util.Collection;
+    private JVMConstants() {
+    }
 
-public interface DiscoverStrategy {
+    public static final class Manifest {
 
-    String getName();
+        public static final String LOCATION = "META-INF/MANIFEST.MF";
 
-    Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment, final JDKPluginLanguageService service);
+        private Manifest() {
+        }
+    }
 }

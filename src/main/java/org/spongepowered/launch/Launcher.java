@@ -26,12 +26,28 @@ package org.spongepowered.launch;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.launch.plugin.PluginLoader;
 
-public final class Launcher {
+import java.nio.file.Paths;
+
+public abstract class Launcher {
 
     private static final Logger logger = LogManager.getLogger("Sponge");
+    private static final PluginLoader pluginLoader = new PluginLoader();
 
     public static Logger getLogger() {
         return Launcher.logger;
+    }
+
+    public static PluginLoader getPluginLoader() {
+        return Launcher.pluginLoader;
+    }
+
+    protected static void loadPlugins() {
+        final PluginLoader pluginLoader = Launcher.getPluginLoader();
+        pluginLoader.discoverServices();
+        pluginLoader.initialize(Paths.get("."));
+        pluginLoader.discoverResources();
+        pluginLoader.determineCandidates();
     }
 }

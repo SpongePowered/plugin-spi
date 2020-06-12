@@ -30,33 +30,26 @@ import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
 import org.spongepowered.launch.util.ImmutableMapEntry;
 import org.spongepowered.launch.util.MixinUtils;
-import org.spongepowered.plugin.PluginCandidate;
-import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.PluginKeys;
-import org.spongepowered.plugin.PluginLanguageService;
+import org.spongepowered.plugin.PluginFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.jar.Manifest;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 public final class PluginDiscovererService implements ITransformationService {
 
     private static final String NAME = "plugin_discoverer";
-    private static final PluginEnvironment pluginEnvironment = new PluginEnvironment();
+    private final PluginLoader pluginLoader;
 
-    public static PluginEnvironment getPluginEnvironment() {
-        return PluginDiscovererService.pluginEnvironment;
+    public PluginDiscovererService() {
+        this.pluginLoader = new PluginLoader();
     }
 
     @Nonnull
@@ -68,15 +61,7 @@ public final class PluginDiscovererService implements ITransformationService {
     @Override
     public void initialize(final IEnvironment environment) {
         final Path gameDirectory = environment.getProperty(IEnvironment.Keys.GAMEDIR.get()).orElse(Paths.get("."));
-        final Path pluginsDirectory = gameDirectory.resolve("plugins"); // TODO Read Sponge config/command line
-        PluginDiscovererService.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        PluginDiscovererService.pluginEnvironment.getBlackboard()
-            .getOrCreate(PluginKeys.VERSION, () -> "1.14.4-8.0.0-0"); // TODO Get actual version...
-        PluginDiscovererService.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
-
-        for (final Map.Entry<String, PluginLanguageService> entry : PluginDiscovererService.pluginEnvironment.getLanguageServices().entrySet()) {
-            entry.getValue().initialize(PluginDiscovererService.pluginEnvironment);
-        }
+        this.pluginLoader.initialize(gameDirectory);
     }
 
     @Override
@@ -86,22 +71,19 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public List<Map.Entry<String, Path>> runScan(final IEnvironment environment) {
+        this.pluginLoader.discoverResources();
+
         final List<Map.Entry<String, Path>> launchResources = new ArrayList<>();
-        for (final Map.Entry<String, PluginLanguageService> pluginLoader : PluginDiscovererService.pluginEnvironment.getLanguageServices()
-            .entrySet()) {
-            final Collection<PluginCandidate> pluginCandidates = pluginLoader.getValue().discoverPlugins(PluginDiscovererService.pluginEnvironment);
-            for (final PluginCandidate pluginCandidate : pluginCandidates) {
-                final Manifest manifest = pluginCandidate.getManifest().orElse(null);
-                if (manifest == null) {
-                    continue;
-                }
 
-                if (!MixinUtils.getMixinConfigs(manifest).isPresent()) {
-                    continue;
-                }
-
-                launchResources.add(ImmutableMapEntry.of(pluginCandidate.getMetadata().getId(), pluginCandidate.getRootPath()));
-            }
+        for (final Map.Entry<String, Collection<PluginFile>> resourcesEntry : this.pluginLoader.getResources().entrySet()) {
+            final Collection<PluginFile> resources = resourcesEntry.getValue();
+            launchResources.addAll(
+                resources
+                    .stream()
+                    .filter(pluginFile -> pluginFile.getManifest().isPresent() && MixinUtils.getMixinConfigs(pluginFile.getManifest().get()).isPresent())
+                    .map(pluginFile -> ImmutableMapEntry.of(pluginFile.getRootPath().getFileName().toString(), pluginFile.getRootPath()))
+                    .collect(Collectors.toList())
+            );
         }
 
         return launchResources;
@@ -109,26 +91,8 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void onLoad(final IEnvironment env, final Set<String> otherServices) {
-        final ServiceLoader<PluginLanguageService> serviceLoader =
-            ServiceLoader.load(PluginLanguageService.class, ClassLoader.getSystemClassLoader());
-
-        final Map<String, PluginLanguageService> languageServices = new HashMap<>();
-
-        for (final Iterator<PluginLanguageService> iter = serviceLoader.iterator(); iter.hasNext(); ) {
-            final PluginLanguageService next;
-
-            try {
-                next = iter.next();
-                PluginDiscovererService.pluginEnvironment.getLogger().info("Plugin language loader '{}' found.", next.getName());
-            } catch (final ServiceConfigurationError e) {
-                PluginDiscovererService.pluginEnvironment.getLogger().error("Error encountered initializing plugin loader!", e);
-                continue;
-            }
-
-            languageServices.put(next.getName(), next);
-        }
-
-        PluginDiscovererService.pluginEnvironment.setLanguageServices(languageServices);
+        this.pluginLoader.discoverServices();
+        this.pluginLoader.getServices().forEach((k, v) -> this.pluginLoader.getEnvironment().getLogger().info("Plugin language loader '{}' found.", k));
     }
 
     @Nonnull

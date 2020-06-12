@@ -22,18 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk;
+package org.spongepowered.launch;
 
-public final class JDKConstants {
+import net.minecraft.client.main.Main;
 
-    private JDKConstants() {
-    }
+public final class ClientLauncher extends Launcher {
 
-    public static final class Manifest {
-
-        public static final String LOCATION = "META-INF/MANIFEST.MF";
-
-        private Manifest() {
-        }
+    // TODO String array of arguments is nasty, do something proper later.
+    public static void launch(final String[] args) {
+        // TODO This is test code, need to run through lots of preliminary game state before loading the server
+        Launcher.loadPlugins();
+        Launcher.getLogger().info("Loading Minecraft Client, please wait...");
+        Main.main(args);
     }
 }

@@ -32,7 +32,7 @@ import org.spongepowered.launch.plugin.config.section.LinksSection;
 import org.spongepowered.launch.plugin.config.section.PluginSection;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.jdk.JDKPluginLanguageService;
+import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 import org.spongepowered.plugin.metadata.PluginContributor;
 import org.spongepowered.plugin.metadata.PluginDependency;
 import org.spongepowered.plugin.metadata.PluginMetadata;
@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public final class JavaPluginLanguageService extends JDKPluginLanguageService {
+public final class JavaPluginLanguageService extends JVMPluginLanguageService {
 
     private final static String NAME = "java_sponge";
 
@@ -60,8 +60,7 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename,
-        final InputStream stream) {
+    public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream) {
         final PluginMetadataConfiguration configuration;
         try {
             configuration = PluginMetadataConfiguration.loadFrom(environment, filename, stream);
@@ -148,6 +147,12 @@ public final class JavaPluginLanguageService extends JDKPluginLanguageService {
         }
 
         return Optional.of(PluginMetadataContainer.of(pluginMetadata));
+    }
+
+    @Override
+    protected List<PluginCandidate> sortCandidates(List<PluginCandidate> pluginCandidates) {
+        // TODO Sort based on dependencies..
+        return pluginCandidates;
     }
 
     @Override

@@ -22,9 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jdk;
+package org.spongepowered.plugin.jvm.discover;
 
-public @interface Plugin {
+import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.PluginFile;
+import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 
-    String id();
+import java.util.Collection;
+
+public interface DiscoverStrategy {
+
+    String getName();
+
+    Collection<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service);
 }

@@ -24,38 +24,27 @@
  */
 package org.spongepowered.plugin;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.plugin.metadata.PluginMetadata;
-
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.jar.Manifest;
 
 public final class PluginCandidate {
 
     private final PluginMetadata metadata;
-    private final Path rootPath;
-    @Nullable private final Manifest manifest;
+    private final PluginFile pluginFile;
 
-    private PluginCandidate(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
+    private PluginCandidate(final PluginMetadata metadata, final PluginFile pluginFile) {
         this.metadata = metadata;
-        this.rootPath = rootPath;
-        this.manifest = manifest;
+        this.pluginFile = pluginFile;
     }
 
-    public static PluginCandidate of(final PluginMetadata metadata, final Path rootPath, @Nullable final Manifest manifest) {
-        return new PluginCandidate(metadata, rootPath, manifest);
+    public static PluginCandidate of(final PluginMetadata metadata, final PluginFile pluginFile) {
+        return new PluginCandidate(metadata, pluginFile);
     }
 
     public PluginMetadata getMetadata() {
         return this.metadata;
     }
 
-    public Path getRootPath() {
-        return this.rootPath;
-    }
-
-    public Optional<Manifest> getManifest() {
-        return Optional.ofNullable(this.manifest);
+    public PluginFile getFile() {
+        return this.pluginFile;
     }
 }

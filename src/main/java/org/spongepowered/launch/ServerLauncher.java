@@ -22,26 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.launch;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.server.MinecraftServer;
 
-public final class PluginEnvironment {
+public final class ServerLauncher extends Launcher {
 
-    private final Logger logger;
-    private final Blackboard blackboard;
-
-    public PluginEnvironment() {
-        this.logger = LogManager.getLogger("Plugin");
-        this.blackboard = new Blackboard();
-    }
-
-    public Logger getLogger() {
-        return this.logger;
-    }
-
-    public Blackboard getBlackboard() {
-        return this.blackboard;
+    // TODO String array of arguments is nasty, do something proper later.
+    public static void launch(final String[] args) {
+        // TODO This is test code, need to run through lots of preliminary game state before loading the server
+        Launcher.loadPlugins();
+        Launcher.getLogger().info("Loading Minecraft Server, please wait...");
+        MinecraftServer.main(args);
     }
 }

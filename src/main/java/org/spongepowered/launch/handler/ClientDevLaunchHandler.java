@@ -28,15 +28,21 @@ import cpw.mods.gross.Java9ClassLoaderUtil;
 import cpw.mods.modlauncher.api.ILaunchHandlerService;
 import cpw.mods.modlauncher.api.ITransformingClassLoader;
 import cpw.mods.modlauncher.api.ITransformingClassLoaderBuilder;
-import org.spongepowered.launch.Launcher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 public final class ClientDevLaunchHandler implements ILaunchHandlerService {
+
+    private final Logger logger;
+
+    public ClientDevLaunchHandler() {
+        this.logger = LogManager.getLogger("Sponge");
+    }
 
     @Override
     public String name() {
@@ -58,12 +64,10 @@ public final class ClientDevLaunchHandler implements ILaunchHandlerService {
     @Override
     public Callable<Void> launchService(final String[] arguments, final ITransformingClassLoader launchClassLoader) {
 
-        Launcher.getLogger().info("Bootstrapping Minecraft client, please wait...");
+        this.logger.info("Transitioning to Sponge launcher, please wait...");
 
         return () -> {
-            final Class<?> mcClass = Class.forName("net.minecraft.client.main.Main", true, launchClassLoader.getInstance());
-            final Method mcClassMethod = mcClass.getMethod("main", String[].class);
-            mcClassMethod.invoke(null, (Object) arguments);
+            Class.forName("org.spongepowered.launch.ClientLauncher", true, launchClassLoader.getInstance()).getMethod("launch", String[].class).invoke(null, (Object) arguments);
             return null;
         };
     }

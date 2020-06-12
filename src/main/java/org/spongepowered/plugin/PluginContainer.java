@@ -33,7 +33,7 @@ public interface PluginContainer {
     PluginCandidate getCandidate();
 
     default Path getRootPath() {
-        return this.getCandidate().getRootPath();
+        return this.getCandidate().getFile().getRootPath();
     }
 
     default PluginMetadata getMetadata() {

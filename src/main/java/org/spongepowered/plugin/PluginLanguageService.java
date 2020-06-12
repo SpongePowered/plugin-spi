@@ -25,6 +25,7 @@
 package org.spongepowered.plugin;
 
 import java.util.Collection;
+import java.util.jar.Manifest;
 
 public interface PluginLanguageService {
 
@@ -45,28 +46,36 @@ public interface PluginLanguageService {
     void initialize(final PluginEnvironment environment);
 
     /**
-     * Discovers {@link PluginCandidate candidates}.
+     * Discovers {@link PluginFile launch resources} for use with ecosystems that are pluggable
+     * with other constructs. As an example and a use case, Sponge passes off the files's {@link Manifest}
+     * to ModLauncher for Mixin interoperability.
      *
-     * <p>No plugins should be classloaded whatsoever at this point.</p>
+     * <p>Under no circumstance should plugins be classloaded in the invocation of this method.</p>
      *
-     * @param environment The environment
-     * @return The discovered plugins
-     */
-    Collection<PluginCandidate> discoverPlugins(final PluginEnvironment environment);
-
-    /**
-     * Creates {@link PluginContainer plugins} from their {@link PluginCandidate candidate}.
+     * <p>It is also assumed that the library user will track its plugin resources, for use when discovering candidates.</p>
      *
      * @param environment The environment
-     * @param targetClassloader The classloader to load the plugin into
-     * @return The plugins
+     * @return The discovered files
      */
-    Collection<PluginContainer> createPlugins(final PluginEnvironment environment, final ClassLoader targetClassloader);
+    Collection<PluginFile> discoverResources(final PluginEnvironment environment);
 
     /**
-     * Returns all {@link PluginCandidate candidates}.
+     * Determines the {@link PluginCandidate candidates} that will be, eventually, loaded as plugins.
      *
-     * @return The candidates
+     * <p>Under no circumstance should plugins be classloaded in the invocation of this method.</p>
+     *
+     * @param environment The environment
+     * @return The discovered candidates
      */
-    Collection<PluginCandidate> getCandidates();
+    Collection<PluginCandidate> determineCandidates(final PluginEnvironment environment);
+
+    /**
+     * Creates a {@link PluginContainer} which encapsulates the plugin and is the final representation of
+     * a plugin by this library.
+     *
+     * @param environment The environment
+     * @param targetClassloader The target classloader
+     * @return The container
+     */
+    PluginContainer createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader);
 }

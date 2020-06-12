@@ -60,7 +60,6 @@ license {
 dependencies {
     minecraft("net.minecraft:joined:1.14.4")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation("net.minecrell.licenser:net.minecrell.licenser.gradle.plugin:0.4.1")
     implementation("com.google.guava:guava:21.0")
     implementation("cpw.mods:modlauncher:4.1.+")
     implementation("org.ow2.asm:asm-commons:6.2")
