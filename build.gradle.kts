@@ -25,15 +25,16 @@ minecraft {
     mappings("snapshot", "20200119-1.14.3")
     runs {
         create("server") {
-            workingDirectory( project.file("./run"))
+            workingDirectory(project.file("./run"))
             args.addAll(listOf("nogui", "--launchTarget", "sponge_server_dev"))
-            main = "org.spongepowered.launch.Main"
+            main = "org.spongepowered.modlauncher.Main"
         }
 
         create("client") {
-            workingDirectory( project.file("./run"))
+            environment("target", "client")
+            workingDirectory(project.file("./run"))
             args.addAll(listOf("--launchTarget", "sponge_client_dev", "--version", "1.14.4", "--accessToken", "0"))
-            main = "org.spongepowered.launch.Main"
+            main = "org.spongepowered.modlauncher.Main"
         }
     }
 }
@@ -42,7 +43,6 @@ repositories {
     mavenLocal()
     jcenter()
     maven("https://repo.spongepowered.org/maven")
-    gradlePluginPortal()
 }
 
 license {

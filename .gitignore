@@ -283,3 +283,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### plugin-spi ###
+.idea/
+run/
