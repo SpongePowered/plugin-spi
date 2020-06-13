@@ -22,12 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.launch.plugin;
+package org.spongepowered.modlauncher;
 
 import com.google.common.collect.ImmutableList;
 import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
+import org.spongepowered.launch.plugin.PluginLoader;
 import org.spongepowered.launch.util.ImmutableMapEntry;
 import org.spongepowered.launch.util.MixinUtils;
 import org.spongepowered.plugin.PluginEnvironment;
@@ -94,7 +95,6 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void onLoad(final IEnvironment env, final Set<String> otherServices) {
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "0.1");
         this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> env.getProperty(IEnvironment.Keys.GAMEDIR.get()).orElse(Paths.get(".")));
         this.pluginLoader = new PluginLoader(this.pluginEnvironment);
         this.pluginLoader.discoverServices();

@@ -22,10 +22,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.launch;
+package org.spongepowered.modlauncher;
 
 import cpw.mods.modlauncher.Launcher;
-import org.spongepowered.launch.util.ArgumentList;
+import org.spongepowered.modlauncher.util.ArgumentList;
 
 public final class Main {
 

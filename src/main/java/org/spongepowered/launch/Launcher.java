@@ -28,6 +28,7 @@ import com.google.inject.Injector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.launch.plugin.PluginLoader;
+import org.spongepowered.plugin.Blackboard;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginKeys;
 
@@ -51,10 +52,15 @@ public abstract class Launcher {
         return Launcher.pluginLoader;
     }
 
+    // TODO Pass over the base plugins directory and library version (or set that in the lib itself?)
     protected static void loadPlugins(final Injector parentInjector, final Path gameDirectory) {
-        Launcher.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "0.1");
-        Launcher.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        Launcher.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PARENT_INJECTOR, () -> parentInjector);
+        final Blackboard blackboard = Launcher.pluginEnvironment.getBlackboard();
+        blackboard.getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
+        blackboard.getOrCreate(PluginKeys.PARENT_INJECTOR, () -> parentInjector);
+        final Path pluginsDirectory = gameDirectory.resolve("plugins");
+        blackboard.getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
+        blackboard.getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
+
         Launcher.pluginLoader = new PluginLoader(Launcher.pluginEnvironment);
         pluginLoader.discoverServices();
         pluginLoader.getServices().forEach((k, v) -> v.initialize(pluginLoader.getEnvironment()));

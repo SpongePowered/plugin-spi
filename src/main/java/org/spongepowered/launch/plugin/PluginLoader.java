@@ -28,11 +28,8 @@ import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
-import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.PluginLanguageService;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -68,11 +65,6 @@ public final class PluginLoader {
     }
 
     public void initialize() {
-        final Path gameDirectory = this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> Paths.get("."));
-        final Path pluginsDirectory = gameDirectory.resolve("plugins"); // TODO Read Sponge config/command line
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
-
         for (final Map.Entry<String, PluginLanguageService> entry : this.languageServices.entrySet()) {
             entry.getValue().initialize(this.pluginEnvironment);
         }

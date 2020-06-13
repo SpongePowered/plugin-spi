@@ -65,7 +65,7 @@ public final class PluginMetadataConfiguration {
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             final JSONConfigurationLoader loader = JSONConfigurationLoader.builder().setSource(() -> reader).build();
             final ConfigurationNode node = loader.load();
-            configuration = MAPPER.bindToNew().populate(node);
+            configuration = PluginMetadataConfiguration.MAPPER.bindToNew().populate(node);
 
             // Plugin validation checks
             final Iterator<PluginSection> iter = configuration.pluginSections.iterator();
@@ -81,8 +81,13 @@ public final class PluginMetadataConfiguration {
 
                 if (pluginSection.getVersion() == null) {
                     // TODO Enforce sane versioning...maybe
-                    pluginEnvironment.getLogger()
-                        .error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginSection.getId());
+                    pluginEnvironment.getLogger().error("Plugin '{}' has no version specified. This plugin will be skipped...", pluginSection.getId());
+                    iter.remove();
+                    continue;
+                }
+
+                if (pluginSection.getMainClass() == null) {
+                    pluginEnvironment.getLogger().error("Plugin '{}' has no main class specified. This plugin will be skipped...", pluginSection.getId());
                     iter.remove();
                 }
             }

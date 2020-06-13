@@ -42,6 +42,9 @@ public final class PluginSection {
     @Setting(value = "version")
     private String version;
 
+    @Setting(value = "main-class")
+    private String mainClass;
+
     @Setting(value = "description")
     private String description;
 
@@ -70,7 +73,11 @@ public final class PluginSection {
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
+    }
+
+    public String getMainClass() {
+        return this.mainClass;
     }
 
     public String getDescription() {

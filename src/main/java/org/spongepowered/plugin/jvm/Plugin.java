@@ -25,6 +25,4 @@
 package org.spongepowered.plugin.jvm;
 
 public @interface Plugin {
-
-    String value();
 }

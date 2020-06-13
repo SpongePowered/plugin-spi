@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 
 public final class PluginMetadata {
 
-    private final String id, name, version, description;
+    private final String id, name, version, mainClass, description;
     private final URL homepage, source, issues;
     private final List<PluginContributor> contributors;
     private final List<PluginDependency> dependencies;
@@ -51,6 +51,7 @@ public final class PluginMetadata {
         this.id = builder.id;
         this.name = builder.name;
         this.version = builder.version;
+        this.mainClass = builder.mainClass;
         this.description = builder.description;
         this.homepage = builder.homepage;
         this.source = builder.source;
@@ -73,7 +74,11 @@ public final class PluginMetadata {
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
+    }
+
+    public String getMainClass() {
+        return this.mainClass;
     }
 
     public Optional<String> getDescription() {
@@ -110,6 +115,7 @@ public final class PluginMetadata {
             .add("id", this.id)
             .add("name", this.name)
             .add("version", this.version)
+            .add("mainClass", this.mainClass)
             .add("description", this.description)
             .add("homepage", this.homepage)
             .add("source", this.source)
@@ -122,7 +128,7 @@ public final class PluginMetadata {
 
     public static final class Builder {
 
-        String id, name, version, description;
+        String id, name, version, mainClass, description;
         URL homepage, source, issues;
         List<PluginContributor> contributors = new ArrayList<>();
         List<PluginDependency> dependencies = new ArrayList<>();
@@ -140,6 +146,11 @@ public final class PluginMetadata {
 
         public Builder setVersion(final String version) {
             this.version = Preconditions.checkNotNull(version);
+            return this;
+        }
+
+        public Builder setMainClass(final String mainClass) {
+            this.mainClass = Preconditions.checkNotNull(mainClass);
             return this;
         }
 
@@ -200,6 +211,7 @@ public final class PluginMetadata {
         public PluginMetadata build() {
             Preconditions.checkNotNull(this.id);
             Preconditions.checkNotNull(this.version);
+            Preconditions.checkNotNull(this.mainClass);
 
             return new PluginMetadata(this);
         }

@@ -76,6 +76,7 @@ public final class JavaPluginLanguageService extends JVMPluginLanguageService {
                 .setId(pluginSection.getId())
                 .setName(pluginSection.getName())
                 .setVersion(pluginSection.getVersion())
+                .setMainClass(pluginSection.getMainClass())
                 .setDescription(pluginSection.getDescription());
 
             final LinksSection linksSection = pluginSection.getLinksSection();

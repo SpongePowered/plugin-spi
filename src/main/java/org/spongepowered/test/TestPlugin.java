@@ -26,7 +26,7 @@ package org.spongepowered.test;
 
 import org.spongepowered.plugin.jvm.Plugin;
 
-@Plugin("test")
+@Plugin()
 public final class TestPlugin {
 
 }

@@ -1,2 +1,2 @@
-org.spongepowered.launch.handler.ServerDevLaunchHandler
-org.spongepowered.launch.handler.ClientDevLaunchHandler
+org.spongepowered.modlauncher.handler.ServerDevLaunchHandler
+org.spongepowered.modlauncher.handler.ClientDevLaunchHandler
