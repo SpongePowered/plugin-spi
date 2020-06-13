@@ -9,17 +9,19 @@ buildscript {
 }
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     `java-library`
     id("net.minecraftforge.gradle")
     id("net.minecrell.licenser") version "0.4"
 }
 
-defaultTasks("licenseFormat", "build")
-
 apply {
     plugin("org.spongepowered.mixin")
 }
+
+defaultTasks("licenseFormat", "build")
+
+group = "org.spongepowered"
+version = "0.1.0-SNAPSHOT"
 
 minecraft {
     mappings("snapshot", "20200119-1.14.3")
@@ -69,4 +71,22 @@ dependencies {
     implementation("org.spongepowered:configurate-json:3.6.1")
     // Use JUnit test framework
     testImplementation("junit:junit:4.12")
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+                // The basics
+                "Specification-Title" to "SpongePowered Plugin Subsystem",
+                "Specification-Version" to archiveVersion.get(),
+                "Specification-Vendor" to "SpongePowered",
+                "Implementation-Title" to "plugin-spi",
+                "Implementation-Version" to archiveVersion.get(),
+                "Implementation-Vendor" to "SpongePowered",
+
+                // Test Plugin
+                "Loader" to "java_sponge",
+                "MixinConfigs" to "mixins.json"
+        )
+    }
 }
