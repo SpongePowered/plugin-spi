@@ -32,14 +32,10 @@ import javax.annotation.Nullable;
 
 public final class PluginFile {
 
-    public static PluginFile of(final Path rootPath, @Nullable final Manifest manifest) {
-        return new PluginFile(rootPath, manifest);
-    }
-
     private final Path rootPath;
     @Nullable private final Manifest manifest;
 
-    private PluginFile(final Path rootPath, @Nullable final Manifest manifest) {
+    public PluginFile(final Path rootPath, @Nullable final Manifest manifest) {
         this.rootPath = rootPath;
         this.manifest = manifest;
     }

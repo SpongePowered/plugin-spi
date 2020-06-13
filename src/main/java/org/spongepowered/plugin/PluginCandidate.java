@@ -31,13 +31,9 @@ public final class PluginCandidate {
     private final PluginMetadata metadata;
     private final PluginFile pluginFile;
 
-    private PluginCandidate(final PluginMetadata metadata, final PluginFile pluginFile) {
+    public PluginCandidate(final PluginMetadata metadata, final PluginFile pluginFile) {
         this.metadata = metadata;
         this.pluginFile = pluginFile;
-    }
-
-    public static PluginCandidate of(final PluginMetadata metadata, final PluginFile pluginFile) {
-        return new PluginCandidate(metadata, pluginFile);
     }
 
     public PluginMetadata getMetadata() {

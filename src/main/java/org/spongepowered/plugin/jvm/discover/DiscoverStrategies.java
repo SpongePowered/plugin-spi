@@ -104,7 +104,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                             continue;
                         }
 
-                        pluginFiles.add(PluginFile.of(path, manifest));
+                        pluginFiles.add(new PluginFile(path, manifest));
                     } catch (final IOException e) {
                         environment.getLogger().error("Error reading '{}' as a Jar file when traversing classloader resources for plugin discovery! Skipping...", url, e);
                     }
@@ -139,7 +139,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         continue;
                     }
 
-                    pluginFiles.add(PluginFile.of(path, manifest));
+                    pluginFiles.add(new PluginFile(path, manifest));
                 }
             }
 
