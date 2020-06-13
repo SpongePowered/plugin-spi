@@ -37,10 +37,10 @@ public final class DependencySection {
     private String version;
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
     }
 }

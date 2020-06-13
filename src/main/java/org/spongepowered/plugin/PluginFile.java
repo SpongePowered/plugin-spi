@@ -37,7 +37,7 @@ public final class PluginFile {
     }
 
     private final Path rootPath;
-    @Nullable Manifest manifest;
+    @Nullable private final Manifest manifest;
 
     private PluginFile(final Path rootPath, @Nullable final Manifest manifest) {
         this.rootPath = rootPath;
