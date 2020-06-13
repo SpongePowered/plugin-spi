@@ -24,6 +24,8 @@
  */
 package org.spongepowered.plugin;
 
+import com.google.inject.Injector;
+
 import java.nio.file.Path;
 
 public final class PluginKeys {
@@ -33,4 +35,6 @@ public final class PluginKeys {
     public static final Blackboard.Key<Path> BASE_DIRECTORY = Blackboard.Key.of("base_directory", Path.class);
 
     public static final Blackboard.Key<Path> PLUGINS_DIRECTORY = Blackboard.Key.of("plugins_directory", Path.class);
+
+    public static final Blackboard.Key<Injector> PARENT_INJECTOR = Blackboard.Key.of("parent_injector", Injector.class);
 }

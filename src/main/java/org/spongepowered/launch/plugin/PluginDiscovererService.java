@@ -30,7 +30,9 @@ import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
 import org.spongepowered.launch.util.ImmutableMapEntry;
 import org.spongepowered.launch.util.MixinUtils;
+import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
+import org.spongepowered.plugin.PluginKeys;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,10 +48,12 @@ import javax.annotation.Nonnull;
 public final class PluginDiscovererService implements ITransformationService {
 
     private static final String NAME = "plugin_discoverer";
-    private final PluginLoader pluginLoader;
+    private final PluginEnvironment pluginEnvironment;
+
+    private PluginLoader pluginLoader;
 
     public PluginDiscovererService() {
-        this.pluginLoader = new PluginLoader();
+        this.pluginEnvironment = new PluginEnvironment();
     }
 
     @Nonnull
@@ -60,8 +64,7 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void initialize(final IEnvironment environment) {
-        final Path gameDirectory = environment.getProperty(IEnvironment.Keys.GAMEDIR.get()).orElse(Paths.get("."));
-        this.pluginLoader.initialize(gameDirectory);
+        this.pluginLoader.initialize();
     }
 
     @Override
@@ -91,6 +94,9 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void onLoad(final IEnvironment env, final Set<String> otherServices) {
+        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "0.1");
+        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> env.getProperty(IEnvironment.Keys.GAMEDIR.get()).orElse(Paths.get(".")));
+        this.pluginLoader = new PluginLoader(this.pluginEnvironment);
         this.pluginLoader.discoverServices();
         this.pluginLoader.getServices().forEach((k, v) -> this.pluginLoader.getEnvironment().getLogger().info("Plugin language loader '{}' found.", k));
     }

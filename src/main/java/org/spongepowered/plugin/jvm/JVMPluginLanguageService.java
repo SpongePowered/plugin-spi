@@ -87,7 +87,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
                             perStrategyCandidates.add(candidate);
                         }
                     }
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     environment.getLogger().error("An error occurred when opening the plugin metadata file for '{}'!", pluginFile.getRootPath().toString(), e);
                 }
             }
@@ -109,5 +109,5 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
 
     protected abstract List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates);
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate);
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, Class<?> pluginClass);
 }

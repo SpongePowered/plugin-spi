@@ -24,30 +24,41 @@
  */
 package org.spongepowered.launch;
 
+import com.google.inject.Injector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.launch.plugin.PluginLoader;
+import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.PluginKeys;
 
 import java.nio.file.Path;
 
 public abstract class Launcher {
 
     private static final Logger logger = LogManager.getLogger("Sponge");
-    private static final PluginLoader pluginLoader = new PluginLoader();
+    private static final PluginEnvironment pluginEnvironment = new PluginEnvironment();
+    private static PluginLoader pluginLoader;
 
     public static Logger getLogger() {
         return Launcher.logger;
+    }
+
+    public static PluginEnvironment getPluginEnvironment() {
+        return Launcher.pluginEnvironment;
     }
 
     public static PluginLoader getPluginLoader() {
         return Launcher.pluginLoader;
     }
 
-    protected static void loadPlugins(final Path gameDirectory) {
-        final PluginLoader pluginLoader = Launcher.getPluginLoader();
+    protected static void loadPlugins(final Injector parentInjector, final Path gameDirectory) {
+        Launcher.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "0.1");
+        Launcher.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
+        Launcher.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PARENT_INJECTOR, () -> parentInjector);
+        Launcher.pluginLoader = new PluginLoader(Launcher.pluginEnvironment);
         pluginLoader.discoverServices();
         pluginLoader.getServices().forEach((k, v) -> v.initialize(pluginLoader.getEnvironment()));
-        pluginLoader.initialize(gameDirectory);
+        pluginLoader.initialize();
         pluginLoader.discoverResources();
         pluginLoader.determineCandidates();
         pluginLoader.createContainers();

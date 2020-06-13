@@ -61,6 +61,7 @@ dependencies {
     minecraft("net.minecraft:joined:1.14.4")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("com.google.guava:guava:21.0")
+    implementation("com.google.inject:guice:4.0")
     implementation("cpw.mods:modlauncher:4.1.+")
     implementation("org.ow2.asm:asm-commons:6.2")
     implementation("cpw.mods:grossjava9hacks:1.1.+")

@@ -32,6 +32,7 @@ import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.PluginLanguageService;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,14 +43,13 @@ import java.util.ServiceLoader;
 
 public final class PluginLoader {
 
-    private final PluginEnvironment pluginEnvironment;
-
     private final Map<String, PluginLanguageService> languageServices;
     private final Map<String, Collection<PluginFile>> pluginFiles;
     private final Map<PluginLanguageService, Collection<PluginCandidate>> pluginCandidates;
+    private final PluginEnvironment pluginEnvironment;
 
-    public PluginLoader() {
-        this.pluginEnvironment = new PluginEnvironment();
+    public PluginLoader(final PluginEnvironment pluginEnvironment) {
+        this.pluginEnvironment = pluginEnvironment;
         this.languageServices = new HashMap<>();
         this.pluginFiles = new HashMap<>();
         this.pluginCandidates = new HashMap<>();
@@ -67,6 +67,17 @@ public final class PluginLoader {
         return Collections.unmodifiableMap(this.pluginFiles);
     }
 
+    public void initialize() {
+        final Path gameDirectory = this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> Paths.get("."));
+        final Path pluginsDirectory = gameDirectory.resolve("plugins"); // TODO Read Sponge config/command line
+        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
+        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
+
+        for (final Map.Entry<String, PluginLanguageService> entry : this.languageServices.entrySet()) {
+            entry.getValue().initialize(this.pluginEnvironment);
+        }
+    }
+
     public void discoverServices() {
         final ServiceLoader<PluginLanguageService> serviceLoader = ServiceLoader.load(PluginLanguageService.class, PluginLoader.class.getClassLoader());
 
@@ -81,17 +92,6 @@ public final class PluginLoader {
             }
 
             this.languageServices.put(next.getName(), next);
-        }
-    }
-
-    public void initialize(final Path gameDirectory) {
-        final Path pluginsDirectory = gameDirectory.resolve("plugins"); // TODO Read Sponge config/command line
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> "1.14.4-8.0.0-0"); // TODO Get actual version...
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
-
-        for (final Map.Entry<String, PluginLanguageService> entry : this.languageServices.entrySet()) {
-            entry.getValue().initialize(this.pluginEnvironment);
         }
     }
 

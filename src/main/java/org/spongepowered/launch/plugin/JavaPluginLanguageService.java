@@ -156,7 +156,7 @@ public final class JavaPluginLanguageService extends JVMPluginLanguageService {
     }
 
     @Override
-    protected Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate artifact) {
+    protected Object createPluginInstance(PluginEnvironment environment, PluginCandidate candidate, Class<?> pluginClass) {
         return null;
     }
 }
