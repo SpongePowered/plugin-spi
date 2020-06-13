@@ -50,7 +50,8 @@ public final class Main {
 
         final Path gameDirectory = optionSet.valueOf(gameDir);
         Main.pluginEnvironment = new PluginEnvironment();
-        Main.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> PluginEnvironment.class.getPackage().getImplementationVersion());
+        final String implementationVersion = PluginEnvironment.class.getPackage().getImplementationVersion();
+        Main.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.VERSION, () -> implementationVersion == null ? "dev" : implementationVersion);
         Main.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
         // TODO Read in plugin directories from CLI/Config
         Main.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.PLUGIN_DIRECTORIES, () -> Arrays.asList(gameDirectory.resolve("mods"), gameDirectory.resolve("plugins")));

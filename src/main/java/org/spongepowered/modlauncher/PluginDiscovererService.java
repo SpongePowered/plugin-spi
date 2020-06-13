@@ -95,6 +95,8 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void onLoad(final IEnvironment env, final Set<String> otherServices) {
+        this.pluginEnvironment.getLogger().info("SpongePowered PLUGIN Subsystem Version={} Service={}", this.pluginEnvironment.getBlackboard().get(PluginKeys.VERSION).get(), "ModLauncher");
+
         this.pluginLoader = new PluginLoader(this.pluginEnvironment);
         this.pluginLoader.discoverServices();
         this.pluginLoader.getServices().forEach((k, v) -> this.pluginLoader.getEnvironment().getLogger().info("Plugin language loader '{}' found.", k));
