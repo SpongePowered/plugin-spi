@@ -39,7 +39,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -55,7 +54,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
         }
 
         @Override
-        public Collection<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
+        public List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
 
             final List<PluginFile> pluginFiles = new ArrayList<>();
 
@@ -73,8 +72,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                 try {
                     uri = url.toURI();
                 } catch (final URISyntaxException e) {
-                    environment.getLogger().error("Malformed URL '{}' detected when traversing classloader resources for plugin discovery! "
-                        + "Skipping...", url, e);
+                    environment.getLogger().error("Malformed URL '{}' detected when traversing classloader resources for plugin discovery! Skipping...", url, e);
                     continue;
                 }
                 final Path path;
@@ -84,8 +82,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                     try {
                         path = Paths.get(new URI(uri.getRawSchemeSpecificPart().split("!")[0]));
                     } catch (final URISyntaxException e) {
-                        environment.getLogger().error("Malformed URI for Jar '{}' detected when traversing classloader resources for plugin "
-                            + "discovery! Skipping...", url, e);
+                        environment.getLogger().error("Malformed URI for Jar '{}' detected when traversing classloader resources for plugin discovery! Skipping...", url, e);
                         continue;
                     }
 
@@ -98,8 +95,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         final Manifest manifest = jf.getManifest();
                         final String loader = ManifestUtils.getLoader(manifest).orElse(null);
                         if (loader == null) {
-                            environment.getLogger().error("Manifest for '{}' does not specify a plugin loader when traversing "
-                                + "classloader resources for plugin discovery! Skipping...", jf);
+                            environment.getLogger().error("Manifest for '{}' does not specify a plugin loader when traversing classloader resources for plugin discovery! Skipping...", jf);
                             continue;
                         }
 
@@ -110,25 +106,21 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
                         pluginFiles.add(PluginFile.of(path, manifest));
                     } catch (final IOException e) {
-                        environment.getLogger().error("Error reading '{}' as a Jar file when traversing classloader "
-                            + "resources for plugin discovery! Skipping...", url, e);
+                        environment.getLogger().error("Error reading '{}' as a Jar file when traversing classloader resources for plugin discovery! Skipping...", url, e);
                     }
                 } else {
                     Manifest manifest;
                     try (final InputStream stream = url.openStream()) {
                         manifest = new Manifest(stream);
                     } catch (final IOException e) {
-                        environment.getLogger().error("Malformed URL '{}' detected when traversing classloader "
-                            + "resources for plugin discovery! Skipping...", url, e);
+                        environment.getLogger().error("Malformed URL '{}' detected when traversing classloader resources for plugin discovery! Skipping...", url, e);
                         continue;
                     }
 
                     try {
-                        path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0,
-                            uri.getRawSchemeSpecificPart().length() - (JVMConstants.Manifest.LOCATION.length()))));
+                        path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (JVMConstants.Manifest.LOCATION.length()))));
                     } catch (final URISyntaxException e) {
-                        environment.getLogger().error("Error creating root URI for '{}' when traversing classloader resources for plugin "
-                            + "discovery! Skipping...", url, e);
+                        environment.getLogger().error("Error creating root URI for '{}' when traversing classloader resources for plugin discovery! Skipping...", url, e);
                         continue;
                     }
 
@@ -138,8 +130,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
                     final String loader = ManifestUtils.getLoader(manifest).orElse(null);
                     if (loader == null) {
-                        environment.getLogger().error("Manifest for '{}' did not specify a plugin loader when traversing "
-                            + "classloader resources for plugin discovery! Skipping...", url);
+                        environment.getLogger().error("Manifest for '{}' did not specify a plugin loader when traversing classloader resources for plugin discovery! Skipping...", url);
                         continue;
                     }
 

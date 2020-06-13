@@ -24,13 +24,11 @@
  */
 package org.spongepowered.plugin.jvm;
 
-import com.google.inject.Injector;
 import org.spongepowered.launch.plugin.JavaPluginContainer;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
-import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.jvm.discover.DiscoverStrategies;
 import org.spongepowered.plugin.metadata.PluginMetadata;
@@ -62,8 +60,8 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public Collection<PluginFile> discoverResources(final PluginEnvironment environment) {
-        final Collection<PluginFile> pluginFiles = DiscoverStrategies.CLASSPATH.discoverResources(environment, this);
+    public List<PluginFile> discoverResources(final PluginEnvironment environment) {
+        final List<PluginFile> pluginFiles = DiscoverStrategies.CLASSPATH.discoverResources(environment, this);
         environment.getLogger().info("Discovered '{}' [{}] plugin resource(s) for '{}'.", pluginFiles.size(), DiscoverStrategies.CLASSPATH.getName(), this.getName());
         this.pluginResources.put(DiscoverStrategies.CLASSPATH.getName(), pluginFiles);
         // TODO Directory-installed plugin files
@@ -71,7 +69,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public Collection<PluginCandidate> determineCandidates(final PluginEnvironment environment) {
+    public List<PluginCandidate> determineCandidates(final PluginEnvironment environment) {
         List<PluginCandidate> pluginCandidates = new ArrayList<>();
 
         for (final Map.Entry<String, Collection<PluginFile>> resourcesEntry : this.pluginResources.entrySet()) {
@@ -106,9 +104,8 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         final Object pluginInstance;
         try {
             pluginInstance = this.createPluginInstance(environment, candidate, targetClassloader);
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            environment.getLogger().error("Encountered an error attempting to create an instance of Plugin '{}'.", candidate.getMetadata().getId(),
-                e);
+        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            environment.getLogger().error("Encountered an error attempting to create an instance of Plugin '{}'!", candidate.getMetadata().getId(), e);
             return Optional.empty();
         }
         return Optional.of(JavaPluginContainer.of(candidate, pluginInstance));

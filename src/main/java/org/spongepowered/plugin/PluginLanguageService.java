@@ -25,6 +25,7 @@
 package org.spongepowered.plugin;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.jar.Manifest;
 
@@ -58,7 +59,7 @@ public interface PluginLanguageService {
      * @param environment The environment
      * @return The discovered files
      */
-    Collection<PluginFile> discoverResources(final PluginEnvironment environment);
+    List<PluginFile> discoverResources(final PluginEnvironment environment);
 
     /**
      * Determines the {@link PluginCandidate candidates} that will be, eventually, loaded as plugins.
@@ -68,11 +69,10 @@ public interface PluginLanguageService {
      * @param environment The environment
      * @return The discovered candidates
      */
-    Collection<PluginCandidate> determineCandidates(final PluginEnvironment environment);
+    List<PluginCandidate> determineCandidates(final PluginEnvironment environment);
 
     /**
-     * Creates a {@link PluginContainer} which encapsulates the plugin and is the final representation of
-     * a plugin by this library.
+     * Creates a {@link PluginContainer} which encapsulates the plugin and is the final representation of a plugin by this library.
      *
      * @param environment The environment
      * @param targetClassloader The target classloader

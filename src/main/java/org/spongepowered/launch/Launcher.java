@@ -24,7 +24,7 @@
  */
 package org.spongepowered.launch;
 
-import com.google.inject.Injector;
+import com.google.inject.Guice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.launch.plugin.PluginLoader;
@@ -33,6 +33,7 @@ import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginKeys;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public abstract class Launcher {
 
@@ -48,22 +49,17 @@ public abstract class Launcher {
         return Launcher.pluginEnvironment;
     }
 
-    public static PluginLoader getPluginLoader() {
-        return Launcher.pluginLoader;
+    protected static void populateBlackboard(final String pluginSpiVersion, final Path baseDirectory, final List<Path> pluginDirectories) {
+        final Blackboard blackboard = Launcher.getPluginEnvironment().getBlackboard();
+        blackboard.getOrCreate(PluginKeys.VERSION, () -> pluginSpiVersion);
+        blackboard.getOrCreate(PluginKeys.BASE_DIRECTORY, () -> baseDirectory);
+        blackboard.getOrCreate(PluginKeys.PLUGIN_DIRECTORIES, () -> pluginDirectories);
+        blackboard.getOrCreate(PluginKeys.PARENT_INJECTOR, () -> Guice.createInjector(new LauncherModule()));
     }
 
-    // TODO Pass over the base plugins directory and library version (or set that in the lib itself?)
-    protected static void loadPlugins(final Injector parentInjector, final Path gameDirectory) {
-        final Blackboard blackboard = Launcher.pluginEnvironment.getBlackboard();
-        blackboard.getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        blackboard.getOrCreate(PluginKeys.PARENT_INJECTOR, () -> parentInjector);
-        final Path pluginsDirectory = gameDirectory.resolve("plugins");
-        blackboard.getOrCreate(PluginKeys.BASE_DIRECTORY, () -> gameDirectory);
-        blackboard.getOrCreate(PluginKeys.PLUGINS_DIRECTORY, () -> pluginsDirectory);
-
+    protected static void loadPlugins() {
         Launcher.pluginLoader = new PluginLoader(Launcher.pluginEnvironment);
         pluginLoader.discoverServices();
-        pluginLoader.getServices().forEach((k, v) -> v.initialize(pluginLoader.getEnvironment()));
         pluginLoader.initialize();
         pluginLoader.discoverResources();
         pluginLoader.determineCandidates();

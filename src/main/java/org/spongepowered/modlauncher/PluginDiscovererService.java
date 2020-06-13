@@ -54,7 +54,7 @@ public final class PluginDiscovererService implements ITransformationService {
     private PluginLoader pluginLoader;
 
     public PluginDiscovererService() {
-        this.pluginEnvironment = new PluginEnvironment();
+        this.pluginEnvironment = Main.getLaunchPluginEnvironment();
     }
 
     @Nonnull
@@ -95,7 +95,6 @@ public final class PluginDiscovererService implements ITransformationService {
 
     @Override
     public void onLoad(final IEnvironment env, final Set<String> otherServices) {
-        this.pluginEnvironment.getBlackboard().getOrCreate(PluginKeys.BASE_DIRECTORY, () -> env.getProperty(IEnvironment.Keys.GAMEDIR.get()).orElse(Paths.get(".")));
         this.pluginLoader = new PluginLoader(this.pluginEnvironment);
         this.pluginLoader.discoverServices();
         this.pluginLoader.getServices().forEach((k, v) -> this.pluginLoader.getEnvironment().getLogger().info("Plugin language loader '{}' found.", k));

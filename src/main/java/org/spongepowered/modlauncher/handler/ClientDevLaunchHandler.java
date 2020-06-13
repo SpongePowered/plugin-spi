@@ -30,10 +30,15 @@ import cpw.mods.modlauncher.api.ITransformingClassLoader;
 import cpw.mods.modlauncher.api.ITransformingClassLoaderBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.modlauncher.Main;
+import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.PluginKeys;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public final class ClientDevLaunchHandler implements ILaunchHandlerService {
@@ -67,7 +72,12 @@ public final class ClientDevLaunchHandler implements ILaunchHandlerService {
         this.logger.info("Transitioning to Sponge launcher, please wait...");
 
         return () -> {
-            Class.forName("org.spongepowered.launch.ClientLauncher", true, launchClassLoader.getInstance()).getMethod("launch", String[].class).invoke(null, (Object) arguments);
+            final PluginEnvironment launchPluginEnvironment = Main.getLaunchPluginEnvironment();
+            Class.forName("org.spongepowered.launch.ClientLauncher", true, launchClassLoader.getInstance()).getMethod("launch", String.class, Path.class, List.class, String[].class).invoke(null,
+                launchPluginEnvironment.getBlackboard().get(PluginKeys.VERSION).orElse(null),
+                launchPluginEnvironment.getBlackboard().get(PluginKeys.BASE_DIRECTORY).orElse(null),
+                launchPluginEnvironment.getBlackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElse(null),
+                arguments);
             return null;
         };
     }

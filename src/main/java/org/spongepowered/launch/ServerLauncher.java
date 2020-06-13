@@ -24,19 +24,16 @@
  */
 package org.spongepowered.launch;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import net.minecraft.server.MinecraftServer;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.util.List;
 
 public final class ServerLauncher extends Launcher {
 
-    // TODO String array of arguments is nasty, do something proper later.
-    public static void launch(final String[] args) {
-        // TODO This is test code, need to run through lots of preliminary game state before loading the server
-        final Injector injector = Guice.createInjector(new LauncherModule());
-        Launcher.loadPlugins(injector, Paths.get("."));
+    public static void launch(final String pluginSpiVersion, final Path baseDirectory, final List<Path> pluginDirectories, final String[] args) {
+        Launcher.populateBlackboard(pluginSpiVersion, baseDirectory, pluginDirectories);
+        Launcher.loadPlugins();
         Launcher.getLogger().info("Loading Minecraft Server, please wait...");
         MinecraftServer.main(args);
     }

@@ -66,9 +66,16 @@ public final class PluginDependency {
         return Objects.hash(this.id);
     }
 
+    public enum LoadOrder {
+        NONE,
+        AFTER
+    }
+
     public static class Builder {
 
         String id, version;
+        boolean optional;
+        LoadOrder loadOrder = LoadOrder.NONE;
 
         public Builder setId(final String id) {
             this.id = Preconditions.checkNotNull(id);
@@ -77,6 +84,16 @@ public final class PluginDependency {
 
         public Builder setVersion(final String version) {
             this.version = Preconditions.checkNotNull(version);
+            return this;
+        }
+
+        public Builder setOptional(final boolean optional) {
+            this.optional = optional;
+            return this;
+        }
+
+        public Builder setLoadOrder(final LoadOrder loadOrder) {
+            this.loadOrder = loadOrder;
             return this;
         }
 

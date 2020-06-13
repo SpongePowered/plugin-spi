@@ -34,16 +34,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 public final class PluginLoader {
 
-    private final Map<String, PluginLanguageService> languageServices;
-    private final Map<String, Collection<PluginFile>> pluginFiles;
-    private final Map<PluginLanguageService, Collection<PluginCandidate>> pluginCandidates;
     private final PluginEnvironment pluginEnvironment;
+    private final Map<String, PluginLanguageService> languageServices;
+    private final Map<String, List<PluginFile>> pluginFiles;
+    private final Map<PluginLanguageService, List<PluginCandidate>> pluginCandidates;
 
     public PluginLoader(final PluginEnvironment pluginEnvironment) {
         this.pluginEnvironment = pluginEnvironment;
@@ -90,9 +91,9 @@ public final class PluginLoader {
     public void discoverResources() {
         for (final Map.Entry<String, PluginLanguageService> languageEntry : this.languageServices.entrySet()) {
             final PluginLanguageService languageService = languageEntry.getValue();
-            final Collection<PluginFile> pluginFiles = languageService.discoverResources(this.pluginEnvironment);
+            final List<PluginFile> pluginFiles = languageService.discoverResources(this.pluginEnvironment);
             if (pluginFiles.size() > 0) {
-                this.pluginFiles.put(languageEntry.getKey(), Collections.unmodifiableCollection(pluginFiles));
+                this.pluginFiles.put(languageEntry.getKey(), pluginFiles);
             }
         }
     }
@@ -100,15 +101,15 @@ public final class PluginLoader {
     public void determineCandidates() {
         for (final Map.Entry<String, PluginLanguageService> languageEntry : this.languageServices.entrySet()) {
             final PluginLanguageService languageService = languageEntry.getValue();
-            final Collection<PluginCandidate> pluginCandidates = languageService.determineCandidates(this.pluginEnvironment);
+            final List<PluginCandidate> pluginCandidates = languageService.determineCandidates(this.pluginEnvironment);
             if (pluginCandidates.size() > 0) {
-                this.pluginCandidates.put(languageService, Collections.unmodifiableCollection(pluginCandidates));
+                this.pluginCandidates.put(languageService, pluginCandidates);
             }
         }
     }
 
     public void createContainers() {
-        for (final Map.Entry<PluginLanguageService, Collection<PluginCandidate>> languageCandidates : this.pluginCandidates.entrySet()) {
+        for (final Map.Entry<PluginLanguageService, List<PluginCandidate>> languageCandidates : this.pluginCandidates.entrySet()) {
             final PluginLanguageService languageService = languageCandidates.getKey();
             final Collection<PluginCandidate> candidates = languageCandidates.getValue();
             for (final PluginCandidate candidate : candidates) {

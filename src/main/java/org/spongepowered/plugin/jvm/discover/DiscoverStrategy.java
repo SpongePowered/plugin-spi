@@ -28,11 +28,11 @@ import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
 import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface DiscoverStrategy {
 
     String getName();
 
-    Collection<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service);
+    List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service);
 }

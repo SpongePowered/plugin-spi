@@ -42,7 +42,7 @@ public final class Blackboard {
     }
 
     @SuppressWarnings("unchecked")
-    public <V> V getOrCreate(final Key<V> key, final Supplier<V> defaultValue) {
+    public <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue) {
         Preconditions.checkNotNull(key);
         Preconditions.checkNotNull(defaultValue);
 
@@ -65,8 +65,8 @@ public final class Blackboard {
             this.clazz = clazz;
         }
 
-        public static <V> Key<V> of(final String name, final Class<V> clazz) {
-            return new Key<>(name, clazz);
+        public static <V> Key<V> of(final String name, final Class<? super V> clazz) {
+            return new Key<>(name, (Class<V>) clazz);
         }
 
         public String getName() {

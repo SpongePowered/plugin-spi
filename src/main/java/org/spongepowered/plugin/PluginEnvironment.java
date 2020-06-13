@@ -35,7 +35,6 @@ public final class PluginEnvironment {
     public PluginEnvironment() {
         this.logger = LogManager.getLogger("Plugin");
         this.blackboard = new Blackboard();
-        this.blackboard.getOrCreate(PluginKeys.VERSION, () -> PluginEnvironment.class.getPackage().getImplementationVersion());
     }
 
     public Logger getLogger() {
