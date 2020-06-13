@@ -24,6 +24,7 @@
  */
 package org.spongepowered.launch.plugin;
 
+import com.google.inject.Injector;
 import org.spongepowered.launch.LauncherConstants;
 import org.spongepowered.launch.plugin.config.PluginMetadataConfiguration;
 import org.spongepowered.launch.plugin.config.section.ContributorSection;
@@ -32,6 +33,7 @@ import org.spongepowered.launch.plugin.config.section.LinksSection;
 import org.spongepowered.launch.plugin.config.section.PluginSection;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 import org.spongepowered.plugin.metadata.PluginContributor;
 import org.spongepowered.plugin.metadata.PluginDependency;
@@ -157,7 +159,14 @@ public final class JavaPluginLanguageService extends JVMPluginLanguageService {
     }
 
     @Override
-    protected Object createPluginInstance(PluginEnvironment environment, PluginCandidate candidate, Class<?> pluginClass) {
-        return null;
+    protected Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        final String mainClass = candidate.getMetadata().getMainClass();
+        final Class<?> pluginClass = Class.forName(mainClass, true, targetClassLoader);
+        final Injector parentInjector = environment.getBlackboard().get(PluginKeys.PARENT_INJECTOR).orElse(null);
+        if (parentInjector != null) {
+            final Injector childInjector = parentInjector.createChildInjector(new PluginModule());
+            return childInjector.getInstance(pluginClass);
+        }
+        return pluginClass.newInstance();
     }
 }

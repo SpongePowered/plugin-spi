@@ -24,10 +24,13 @@
  */
 package org.spongepowered.plugin.jvm;
 
+import com.google.inject.Injector;
+import org.spongepowered.launch.plugin.JavaPluginContainer;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
+import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.jvm.discover.DiscoverStrategies;
 import org.spongepowered.plugin.metadata.PluginMetadata;
@@ -99,8 +102,16 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public PluginContainer createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) {
-        return null;
+    public Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) {
+        final Object pluginInstance;
+        try {
+            pluginInstance = this.createPluginInstance(environment, candidate, targetClassloader);
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            environment.getLogger().error("Encountered an error attempting to create an instance of Plugin '{}'.", candidate.getMetadata().getId(),
+                e);
+            return Optional.empty();
+        }
+        return Optional.of(JavaPluginContainer.of(candidate, pluginInstance));
     }
 
     public abstract String getPluginMetadataFileName();
@@ -109,5 +120,6 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
 
     protected abstract List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates);
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, Class<?> pluginClass);
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader)
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException;
 }

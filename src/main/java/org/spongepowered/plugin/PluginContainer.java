@@ -40,5 +40,5 @@ public interface PluginContainer {
         return this.getCandidate().getMetadata();
     }
 
-    Object getHandle();
+    Object getInstance();
 }

@@ -112,8 +112,9 @@ public final class PluginLoader {
             final PluginLanguageService languageService = languageCandidates.getKey();
             final Collection<PluginCandidate> candidates = languageCandidates.getValue();
             for (final PluginCandidate candidate : candidates) {
-                // TODO Woo, onwards to the game!
-                final PluginContainer plugin = languageService.createPlugin(candidate, this.pluginEnvironment, PluginLoader.class.getClassLoader());
+                final PluginContainer pluginContainer = languageService.createPlugin(candidate, this.pluginEnvironment, PluginLoader.class.getClassLoader()).orElse(null);
+                // TODO Pass off to the PluginManager
+                this.pluginEnvironment.getLogger().info(pluginContainer);
             }
         }
     }

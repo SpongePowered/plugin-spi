@@ -25,6 +25,7 @@
 package org.spongepowered.plugin;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.jar.Manifest;
 
 public interface PluginLanguageService {
@@ -77,5 +78,5 @@ public interface PluginLanguageService {
      * @param targetClassloader The target classloader
      * @return The container
      */
-    PluginContainer createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader);
+    Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader);
 }

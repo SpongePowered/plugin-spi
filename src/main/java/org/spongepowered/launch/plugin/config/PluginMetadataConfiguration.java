@@ -87,6 +87,7 @@ public final class PluginMetadataConfiguration {
                 }
 
                 if (pluginSection.getMainClass() == null) {
+                    // TODO Validate class format
                     pluginEnvironment.getLogger().error("Plugin '{}' has no main class specified. This plugin will be skipped...", pluginSection.getId());
                     iter.remove();
                 }
