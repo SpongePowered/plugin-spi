@@ -15,7 +15,7 @@ plugins {
     id("net.minecrell.licenser") version "0.4"
 }
 
-defaultTasks("licenseFormat", "build")
+defaultTasks("build")
 
 apply {
     plugin("org.spongepowered.mixin")
