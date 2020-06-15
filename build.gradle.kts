@@ -100,10 +100,11 @@ signing {
 
 tasks.withType<PublishToMavenRepository>().configureEach {
     onlyIf {
+        (repository == publishing.repositories["GitHubPackages"] &&
+                publication == publishing.publications["gpr"]) ||
         (repository == publishing.repositories["spongeRepo"] &&
-                publication == publishing.publications["sponge"]) ||
-                (repository == publishing.repositories["GitHubPackages"] &&
-                        publication == publishing.publications["gpr"])
+                publication == publishing.publications["sponge"])
+
     }
 }
 tasks.withType<PublishToMavenLocal>().configureEach {
@@ -121,24 +122,23 @@ publishing {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
+        val spongeRepo: String? by project
         // Set by the build server
-        project.properties["spongeRepo"]?.let { repo ->
-            maven(repo) {
-                val spongeUsername: String? by project
-                val spongePassword: String? by project
-                spongeUsername?.let {
-                    spongePassword?.let {
-                        credentials {
-                            username = spongeUsername
-                            password = spongePassword
-                        }
-                    }
-                }
-                artifacts {
-                    jar.get()
-                    sourceJar.get()
-                    javadocJar.get()
-                }
+        maven {
+            name = "spongeRepo"
+            spongeRepo?.apply {
+                url = uri(this)
+            }
+            val spongeUsername: String? by project
+            val spongePassword: String? by project
+            credentials {
+                username = spongeUsername ?: System.getenv("ORG_GRADLE_PROJECT_spongeUsername")
+                password = spongePassword ?: System.getenv("ORG_GRADLE_PROJECT_spongePassword")
+            }
+            artifacts {
+                jar.get()
+                sourceJar.get()
+                javadocJar.get()
             }
         }
     }
