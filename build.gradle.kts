@@ -98,6 +98,19 @@ signing {
 //    sign(tasks["jar"])
 }
 
+tasks.withType<PublishToMavenRepository>().configureEach {
+    onlyIf {
+        (repository == publishing.repositories["spongeRepo"] &&
+                publication == publishing.publications["sponge"]) ||
+                (repository == publishing.repositories["GitHubPackages"] &&
+                        publication == publishing.publications["gpr"])
+    }
+}
+tasks.withType<PublishToMavenLocal>().configureEach {
+    onlyIf {
+        publication == publishing.publications["sponge"]
+    }
+}
 publishing {
     repositories {
         maven {
@@ -130,9 +143,9 @@ publishing {
         }
     }
     publications {
-//        register("gpr", MavenPublication::class) {
-//            from(components["java"])
-//        }
+        register("gpr", MavenPublication::class) {
+            from(components["java"])
+        }
         register("sponge", MavenPublication::class) {
             artifact(jar.get())
             artifact(sourceJar.get())
