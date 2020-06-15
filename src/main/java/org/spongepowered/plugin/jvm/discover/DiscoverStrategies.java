@@ -26,6 +26,7 @@ package org.spongepowered.plugin.jvm.discover;
 
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
+import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.jvm.JVMConstants;
 import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 import org.spongepowered.plugin.jvm.util.ManifestUtils;
@@ -39,15 +40,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
 
 public enum DiscoverStrategies implements DiscoverStrategy {
 
-    CLASSPATH() {
+    CLASSPATH {
         @Override
         public String getName() {
             return "classpath";
@@ -55,7 +58,6 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
         @Override
         public List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
-
             final List<PluginFile> pluginFiles = new ArrayList<>();
 
             final Enumeration<URL> resources;
@@ -158,5 +160,58 @@ public enum DiscoverStrategies implements DiscoverStrategy {
 
             return pluginFiles;
         }
+    },
+
+    DIRECTORY {
+        @Override
+        public String getName() {
+            return "directory";
+        }
+
+        @Override
+        public List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
+            final List<PluginFile> pluginFiles = new ArrayList<>();
+
+            for (final Path pluginsDir : environment.getBlackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
+                try {
+                    for (final Path path : Files.walk(pluginsDir).collect(Collectors.toList())) {
+                        try (final JarFile jf = new JarFile(path.toFile())) {
+                            final Manifest manifest = jf.getManifest();
+                            final String loader = ManifestUtils.getLoader(manifest).orElse(null);
+                            if (loader == null) {
+                                environment.getLogger().debug("Manifest for '{}' does not specify a plugin loader when traversing directory resources for plugin discovery! Skipping...", jf);
+                                continue;
+                            }
+
+                            if (!service.getName().equals(loader)) {
+                                environment.getLogger().debug("'{}' specified loader '{}' but ours is '{}'. Skipping...", jf, loader, service.getName());
+                                continue;
+                            }
+
+                            if (!service.isValidManifest(environment, manifest)) {
+                                environment.getLogger().error("Manifest specified in '{}' is not valid for loader '{}'. Skipping...", jf, service.getName());
+                                continue;
+                            }
+
+                            final JarEntry pluginMetadataJarEntry = jf.getJarEntry(JVMConstants.META_INF_LOCATION + "/" + service.getPluginMetadataFileName());
+                            if (pluginMetadataJarEntry == null) {
+                                environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
+                                continue;
+                            }
+
+                            pluginFiles.add(new PluginFile(path, manifest));
+                        } catch (final IOException e) {
+                            environment.getLogger().error("Error reading '{}' as a Jar file when traversing directory resources for plugin discovery! Skipping...", path, e);
+                        }
+                    }
+                }
+                catch (final IOException ex) {
+                    environment.getLogger().error("Error walking plugins directory {}", pluginsDir, ex);
+                }
+            }
+
+            return pluginFiles;
+        }
     }
+
 }
