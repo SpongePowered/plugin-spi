@@ -107,7 +107,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
             environment.getLogger().error("Encountered an error attempting to create an instance of Plugin '{}'!", candidate.getMetadata().getId(), e);
             return Optional.empty();
         }
-        return Optional.of(JavaPluginContainer.of(candidate, pluginInstance));
+        return Optional.of(new JVMPluginContainer(candidate, pluginInstance));
     }
 
     public abstract String getPluginMetadataFileName();

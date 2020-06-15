@@ -27,18 +27,14 @@ package org.spongepowered.plugin.jvm;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 
-public final class JavaPluginContainer implements PluginContainer {
+public final class JVMPluginContainer implements PluginContainer {
 
     private final PluginCandidate candidate;
     private final Object instance;
 
-    private JavaPluginContainer(final PluginCandidate candidate, final Object instance) {
+    public JVMPluginContainer(final PluginCandidate candidate, final Object instance) {
         this.candidate = candidate;
         this.instance = instance;
-    }
-
-    public static JavaPluginContainer of(final PluginCandidate candidate, final Object instance) {
-        return new JavaPluginContainer(candidate, instance);
     }
 
     @Override

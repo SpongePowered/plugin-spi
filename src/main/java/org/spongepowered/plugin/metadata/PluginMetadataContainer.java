@@ -35,17 +35,14 @@ public final class PluginMetadataContainer {
 
     private final Map<String, PluginMetadata> pluginMetadata;
 
-    private PluginMetadataContainer(final Iterable<PluginMetadata> pluginMetadata) {
+    public PluginMetadataContainer(final Iterable<PluginMetadata> pluginMetadata) {
+        Preconditions.checkNotNull(pluginMetadata);
+
         this.pluginMetadata = new HashMap<>();
 
         for (PluginMetadata metadata : pluginMetadata) {
             this.pluginMetadata.put(metadata.getId(), metadata);
         }
-    }
-
-    public static PluginMetadataContainer of(final Iterable<PluginMetadata> pluginMetadata) {
-        Preconditions.checkNotNull(pluginMetadata);
-        return new PluginMetadataContainer(pluginMetadata);
     }
 
     public Optional<PluginMetadata> getMetadata(final String pluginId) {
