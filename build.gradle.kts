@@ -16,6 +16,8 @@ repositories {
 
 val specVersion: String by project
 
+val main by sourceSets
+
 val jar by tasks.existing(Jar::class) {
     manifest {
         attributes(mapOf(
@@ -27,6 +29,38 @@ val jar by tasks.existing(Jar::class) {
                 "Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
         ))
     }
+}
+
+val javadoc by tasks.existing(Javadoc::class) {
+    options {
+        encoding = "UTF-8"
+        charset("UTF-8")
+        isFailOnError = false
+        (this as StandardJavadocDocletOptions).apply {
+            links?.addAll(
+                    mutableListOf(
+                            "http://www.slf4j.org/apidocs/",
+                            "https://google.github.io/guava/releases/21.0/api/docs/",
+                            "https://google.github.io/guice/api-docs/4.1/javadoc/",
+                            "http://asm.ow2.org/asm50/javadoc/user/",
+                            "https://docs.oracle.com/javase/8/docs/api/"
+                    )
+            )
+            addStringOption("-Xdoclint:none", "-quiet")
+        }
+    }
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+    group = "build"
+    classifier = "javadoc"
+    from(javadoc)
+}
+
+val sourceJar by tasks.registering(Jar::class) {
+    classifier = "sources"
+    group = "build"
+    from(sourceOutput)
 }
 
 license {
@@ -41,13 +75,17 @@ license {
     include("**/*.java", "**/*.groovy", "**/*.kt")
 }
 
+val sourceOutput by configurations.registering
+
 dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("com.google.guava:guava:21.0")
     implementation("com.google.inject:guice:4.0")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
     implementation("org.checkerframework:checker-qual:3.4.1")
-
+    main.allSource.srcDirs.forEach {
+        add(sourceOutput.name, project.files(it.relativeTo(project.projectDir).path))
+    }
     // Use JUnit test framework
     testImplementation("junit:junit:4.12")
 }
@@ -70,10 +108,36 @@ publishing {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
-    }
-    publications {
-        register("gpr", MavenPublication::class) {
-            from(components["java"])
+        // Set by the build server
+        project.properties["spongeRepo"]?.let { repo ->
+            maven(repo) {
+                val spongeUsername: String? by project
+                val spongePassword: String? by project
+                spongeUsername?.let {
+                    spongePassword?.let {
+                        credentials {
+                            username = spongeUsername
+                            password = spongePassword
+                        }
+                    }
+                }
+                artifacts {
+                    jar.get()
+                    sourceJar.get()
+                    javadocJar.get()
+                }
+            }
         }
     }
+    publications {
+//        register("gpr", MavenPublication::class) {
+//            from(components["java"])
+//        }
+        register("sponge", MavenPublication::class) {
+            artifact(jar.get())
+            artifact(sourceJar.get())
+            artifact(javadocJar.get())
+        }
+    }
+
 }

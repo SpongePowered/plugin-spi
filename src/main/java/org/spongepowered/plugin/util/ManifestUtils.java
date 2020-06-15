@@ -24,14 +24,18 @@
  */
 package org.spongepowered.plugin.util;
 
-import org.spongepowered.launch.LauncherConstants;
-
 import java.util.Optional;
 import java.util.jar.Manifest;
 
 public final class ManifestUtils {
 
+    public static final class Constants {
+
+        public static final String LOADER = "Loader";
+
+    }
+
     public static Optional<String> getLoader(final Manifest manifest) {
-        return Optional.ofNullable(manifest.getMainAttributes().getValue(LauncherConstants.Manifest.Attributes.LOADER));
+        return Optional.ofNullable(manifest.getMainAttributes().getValue(Constants.LOADER));
     }
 }

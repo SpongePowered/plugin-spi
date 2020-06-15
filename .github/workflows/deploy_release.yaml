@@ -30,13 +30,12 @@ jobs:
       # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
       # the publishing section of your build.gradle
       - name: Publish to GitHub Packages
-        run: ./gradlew publish
+        run: ./gradlew publish -PspongeRepo=$spongeRepo -PspongeUsername=$spongeUsername -PspongePassword=$spongePassword
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Until we actually need to deploy this, we don't need to deploy spongegradle to any maven, plugin portal is sufficient.
-#          ORG_GRADLE_PROJECT_spongeRepo: ${{ secrets.SPONGE_REPO_URL }}
-#          ORG_GRADLE_PROJECT_spongeUsername: ${{ secrets.SPONGE_REPO_USERNAME }}
-#          ORG_GRADLE_PROJECT_spongePassword: ${{ secrets.SPONGE_REPO_PASSWORD }}
+          spongeRepo: ${{ secrets.SPONGE_MAVEN_REPO_URL }}
+          spongeUsername: ${{ secrets.SPONGE_REPO_USERNAME }}
+          spongePassword: ${{ secrets.SPONGE_REPO_PASSWORD }}
 
 
