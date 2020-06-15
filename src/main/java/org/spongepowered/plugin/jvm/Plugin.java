@@ -24,5 +24,36 @@
  */
 package org.spongepowered.plugin.jvm;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * An annotation used to mark a plugin using the JVM language
+ * service.
+ * <p>
+ * Plugins are under no obligation to include this annotation,
+ * though are encouraged to do so - as external tools may rely
+ * on this to locate your plugin's main class.
+ * <p>
+ * Plugins that do include this annotation <em>may</em> be
+ * subject to verification against the plugin metadata, and may
+ * crash if such data does not match.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface Plugin {
+
+    /**
+     * An ID for the plugin to be used internally. The ID should be unique as to
+     * not conflict with other plugins.
+     * <p>
+     * Implementations may choose to validate this data, so it <em>should</em>
+     * match the corresponding metadata.
+     *
+     * @return The plugin identifier
+     */
+    String value();
+
 }
