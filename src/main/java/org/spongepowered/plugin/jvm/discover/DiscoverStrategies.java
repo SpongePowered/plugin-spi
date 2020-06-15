@@ -28,7 +28,7 @@ import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginFile;
 import org.spongepowered.plugin.jvm.JVMConstants;
 import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
-import org.spongepowered.plugin.util.ManifestUtils;
+import org.spongepowered.plugin.jvm.util.ManifestUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

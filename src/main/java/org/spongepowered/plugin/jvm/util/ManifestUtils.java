@@ -22,20 +22,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.util;
+package org.spongepowered.plugin.jvm.util;
+
+import org.spongepowered.plugin.jvm.JVMConstants;
 
 import java.util.Optional;
 import java.util.jar.Manifest;
 
 public final class ManifestUtils {
 
-    public static final class Constants {
-
-        public static final String LOADER = "Loader";
-
-    }
-
     public static Optional<String> getLoader(final Manifest manifest) {
-        return Optional.ofNullable(manifest.getMainAttributes().getValue(Constants.LOADER));
+        return Optional.ofNullable(manifest.getMainAttributes().getValue(JVMConstants.Manifest.LOADER));
     }
 }
