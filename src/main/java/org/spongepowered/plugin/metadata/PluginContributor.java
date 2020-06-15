@@ -26,11 +26,10 @@ package org.spongepowered.plugin.metadata;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
 
 public final class PluginContributor {
 

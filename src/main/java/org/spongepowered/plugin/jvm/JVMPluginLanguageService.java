@@ -24,7 +24,6 @@
  */
 package org.spongepowered.plugin.jvm;
 
-import org.spongepowered.launch.plugin.JavaPluginContainer;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;

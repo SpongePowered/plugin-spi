@@ -65,6 +65,7 @@ public final class Blackboard {
             this.clazz = clazz;
         }
 
+        @SuppressWarnings("unchecked")
         public static <V> Key<V> of(final String name, final Class<? super V> clazz) {
             return new Key<>(name, (Class<V>) clazz);
         }

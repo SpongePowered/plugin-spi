@@ -24,11 +24,11 @@
  */
 package org.spongepowered.plugin;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.jar.Manifest;
-
-import javax.annotation.Nullable;
 
 public final class PluginFile {
 

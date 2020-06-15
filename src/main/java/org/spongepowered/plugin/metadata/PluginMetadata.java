@@ -26,6 +26,7 @@ package org.spongepowered.plugin.metadata;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,8 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.annotation.Nullable;
 
 public final class PluginMetadata {
 
