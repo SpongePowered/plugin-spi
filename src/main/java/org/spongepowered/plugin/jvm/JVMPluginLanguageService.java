@@ -82,7 +82,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
                     if (pluginMetadataContainer != null) {
                         for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.getAllMetadata().entrySet()) {
                             final PluginMetadata metadata = metadataEntry.getValue();
-                            final PluginCandidate candidate = PluginCandidate.of(metadata, pluginFile);
+                            final PluginCandidate candidate = new PluginCandidate(metadata, pluginFile);
                             pluginCandidates.add(candidate);
                             perStrategyCandidates.add(candidate);
                         }
