@@ -97,16 +97,19 @@ signing {
 //    useInMemoryPgpKeys(signingKey, signingPassword)
 //    sign(tasks["jar"])
 }
+val spongeRepo: String? by project
 
 tasks.withType<PublishToMavenRepository>().configureEach {
     onlyIf {
         (repository == publishing.repositories["GitHubPackages"] &&
                 publication == publishing.publications["gpr"]) ||
-        (repository == publishing.repositories["spongeRepo"] &&
-                publication == publishing.publications["sponge"])
+        (!spongeRepo.isNullOrBlank()
+                && repository == publishing.repositories["spongeRepo"]
+                && publication == publishing.publications["sponge"])
 
     }
 }
+
 tasks.withType<PublishToMavenLocal>().configureEach {
     onlyIf {
         publication == publishing.publications["sponge"]
@@ -122,7 +125,6 @@ publishing {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
-        val spongeRepo: String? by project
         // Set by the build server
         maven {
             name = "spongeRepo"
