@@ -46,7 +46,6 @@ val javadoc by tasks.existing(Javadoc::class) {
                             "https://docs.oracle.com/javase/8/docs/api/"
                     )
             )
-            addStringOption("-Xdoclint:none", "-quiet")
         }
     }
 }
@@ -136,11 +135,6 @@ publishing {
             credentials {
                 username = spongeUsername ?: System.getenv("ORG_GRADLE_PROJECT_spongeUsername")
                 password = spongePassword ?: System.getenv("ORG_GRADLE_PROJECT_spongePassword")
-            }
-            artifacts {
-                jar.get()
-                sourceJar.get()
-                javadocJar.get()
             }
         }
     }

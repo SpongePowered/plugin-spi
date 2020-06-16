@@ -74,6 +74,7 @@ public interface PluginLanguageService {
     /**
      * Creates a {@link PluginContainer} which encapsulates the plugin and is the final representation of a plugin by this library.
      *
+     * @param candidate The candidate
      * @param environment The environment
      * @param targetClassloader The target classloader
      * @return The container
