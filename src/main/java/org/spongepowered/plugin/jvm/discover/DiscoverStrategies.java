@@ -87,7 +87,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                     }
 
                     try (final JarFile jf = new JarFile(path.toFile())) {
-                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(service.getPluginMetadataFileName());
+                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry("META-INF/" + service.getPluginMetadataFileName());
                         if (pluginMetadataJarEntry == null) {
                             environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
                             continue;

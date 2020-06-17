@@ -78,7 +78,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
             final List<PluginCandidate> perStrategyCandidates = new ArrayList<>();
 
             for (final PluginFile pluginFile : resources) {
-                final Path pluginMetadataFile = pluginFile.getRootPath().resolve(this.getPluginMetadataFileName());
+                final Path pluginMetadataFile = pluginFile.getRootPath().resolve("META-INF").resolve(this.getPluginMetadataFileName());
                 try (final InputStream stream = Files.newInputStream(pluginMetadataFile)) {
                     final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, pluginMetadataFile.getFileName().toString(), stream).orElse(null);
                     if (pluginMetadataContainer != null) {
