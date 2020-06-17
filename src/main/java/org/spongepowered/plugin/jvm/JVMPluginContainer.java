@@ -24,6 +24,7 @@
  */
 package org.spongepowered.plugin.jvm;
 
+import com.google.common.base.MoreObjects;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 
@@ -45,5 +46,13 @@ public final class JVMPluginContainer implements PluginContainer {
     @Override
     public Object getInstance() {
         return this.instance;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .addValue(this.candidate.getMetadata())
+                .add("path", this.candidate.getFile().getRootPath())
+                .toString();
     }
 }

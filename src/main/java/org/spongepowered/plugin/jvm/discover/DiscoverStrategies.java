@@ -89,6 +89,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                     try (final JarFile jf = new JarFile(path.toFile())) {
                         final JarEntry pluginMetadataJarEntry = jf.getJarEntry(service.getPluginMetadataFileName());
                         if (pluginMetadataJarEntry == null) {
+                            environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
                             continue;
                         }
 
@@ -100,7 +101,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         }
 
                         if (!service.getName().equals(loader)) {
-                            // Not our plugin
+                            environment.getLogger().debug("'{}' specified loader '{}' but ours is '{}'. Skipping...", jf, loader, service.getName());
                             continue;
                         }
 
@@ -125,6 +126,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                     }
 
                     if (Files.notExists(path.resolve(service.getPluginMetadataFileName()))) {
+                        environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                         continue;
                     }
 
@@ -135,7 +137,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                     }
 
                     if (!service.getName().equals(loader)) {
-                        // Not our plugin
+                        environment.getLogger().debug("'{}' specified loader '{}' but ours is '{}'. Skipping...", path, loader, service.getName());
                         continue;
                     }
 
