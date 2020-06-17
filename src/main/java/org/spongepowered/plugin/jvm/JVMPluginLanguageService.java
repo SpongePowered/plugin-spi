@@ -46,6 +46,8 @@ import java.util.Optional;
 
 public abstract class JVMPluginLanguageService implements PluginLanguageService {
 
+    private static final String DEFAULT_METADATA_FILE_NAME = "plugin.meta";
+
     private final Map<String, Collection<PluginFile>> pluginResources;
     private final Map<String, Collection<PluginCandidate>> pluginCandidates;
 
@@ -110,11 +112,15 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         return Optional.of(new JVMPluginContainer(candidate, pluginInstance));
     }
 
-    public abstract String getPluginMetadataFileName();
+    public String getPluginMetadataFileName() {
+        return JVMPluginLanguageService.DEFAULT_METADATA_FILE_NAME;
+    }
 
     public abstract Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream);
 
-    protected abstract List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates);
+    protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates) {
+        return pluginCandidates;
+    }
 
     protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader)
         throws ClassNotFoundException, IllegalAccessException, InstantiationException;
