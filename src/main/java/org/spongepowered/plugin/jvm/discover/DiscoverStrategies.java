@@ -87,7 +87,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                     }
 
                     try (final JarFile jf = new JarFile(path.toFile())) {
-                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry("META-INF/" + service.getPluginMetadataFileName());
+                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(JVMConstants.META_INF_LOCATION + "/" + service.getPluginMetadataFileName());
                         if (pluginMetadataJarEntry == null) {
                             environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
                             continue;
@@ -125,7 +125,8 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         continue;
                     }
 
-                    if (Files.notExists(path.resolve(service.getPluginMetadataFileName()))) {
+                    final Path pluginMetadataFile = path.resolve(JVMConstants.META_INF_LOCATION).resolve(service.getPluginMetadataFileName());
+                    if (Files.notExists(pluginMetadataFile)) {
                         environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                         continue;
                     }
