@@ -100,6 +100,9 @@ signing {
 val spongeSnapshotRepo: String? by project
 val spongeReleaseRepo: String? by project
 
+val projectUrl: String by project
+val projectDescription: String by project
+
 publishing {
     repositories {
         maven {
@@ -125,7 +128,6 @@ publishing {
             }
         }
     }
-    val description: String by project
     publications {
         register("sponge", MavenPublication::class) {
             artifact(jar.get())
@@ -133,8 +135,8 @@ publishing {
             artifact(javadocJar.get())
             pom {
                 this.name.set("plugin-spi")
-                setDescription(description)
-                this.url.set(url)
+                this.description.set(projectDescription)
+                this.url.set(projectUrl)
 
                 licenses {
                     license {
@@ -145,7 +147,7 @@ publishing {
                 scm {
                     connection.set("scm:git:git://github.com/SpongePowered/plugin-spi.git")
                     developerConnection.set("scm:git:ssh://github.com/SpongePowered/plugin-spi.git")
-                    this.url.set(url)
+                    this.url.set(projectUrl)
                 }
             }
         }
