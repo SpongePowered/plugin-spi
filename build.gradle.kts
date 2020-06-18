@@ -96,13 +96,15 @@ signing {
 //    useInMemoryPgpKeys(signingKey, signingPassword)
 //    sign(tasks["jar"])
 }
-val spongeRepo: String? by project
+val spongeSnapshotRepo: String? by project
+val spongeReleaseRepo: String? by project
 
 tasks.withType<PublishToMavenRepository>().configureEach {
     onlyIf {
         (repository == publishing.repositories["GitHubPackages"] &&
                 publication == publishing.publications["gpr"]) ||
-        (!spongeRepo.isNullOrBlank()
+        (!spongeSnapshotRepo.isNullOrBlank()
+                && !spongeReleaseRepo.isNullOrBlank()
                 && repository == publishing.repositories["spongeRepo"]
                 && publication == publishing.publications["sponge"])
 
@@ -127,9 +129,11 @@ publishing {
         // Set by the build server
         maven {
             name = "spongeRepo"
-            spongeRepo?.apply {
+            val repoUrl = if ((version as String).endsWith("-SNAPSHOT")) spongeSnapshotRepo else spongeReleaseRepo
+            repoUrl?.apply {
                 url = uri(this)
             }
+            println("Sponge Repo Url is: $url")
             val spongeUsername: String? by project
             val spongePassword: String? by project
             credentials {
