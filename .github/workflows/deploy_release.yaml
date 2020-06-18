@@ -1,7 +1,7 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java#publishing-using-gradle
 
-name: Publish Plugin to Maven and Github Packages
+name: Publish plugin-spi to Maven and Github Packages
 
 on:
   push:
@@ -31,8 +31,8 @@ jobs:
 
       # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
       # the publishing section of your build.gradle
-      - name: Publish to GitHub Packages
-        run: ./gradlew javadocJar sourceJar jar generatePomFileForGprPublication generatePomFileForSpongePublication publish
+      - name: Publish to Sponge Maven & GitHub Packages
+        run: ./gradlew javadocJar sourceJar jar publish
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

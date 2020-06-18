@@ -12,6 +12,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven("https://repo.spongepowered.org/maven")
+    maven("https://repo-new.spongepowered.org/maven")
 }
 
 val specVersion: String by project
@@ -99,23 +100,6 @@ signing {
 val spongeSnapshotRepo: String? by project
 val spongeReleaseRepo: String? by project
 
-tasks.withType<PublishToMavenRepository>().configureEach {
-    onlyIf {
-        (repository == publishing.repositories["GitHubPackages"] &&
-                publication == publishing.publications["gpr"]) ||
-        (!spongeSnapshotRepo.isNullOrBlank()
-                && !spongeReleaseRepo.isNullOrBlank()
-                && repository == publishing.repositories["spongeRepo"]
-                && publication == publishing.publications["sponge"])
-
-    }
-}
-
-tasks.withType<PublishToMavenLocal>().configureEach {
-    onlyIf {
-        publication == publishing.publications["sponge"]
-    }
-}
 publishing {
     repositories {
         maven {
@@ -133,7 +117,6 @@ publishing {
             repoUrl?.apply {
                 url = uri(this)
             }
-            println("Sponge Repo Url is: $url")
             val spongeUsername: String? by project
             val spongePassword: String? by project
             credentials {
@@ -142,14 +125,29 @@ publishing {
             }
         }
     }
+    val description: String by project
     publications {
-        register("gpr", MavenPublication::class) {
-            from(components["java"])
-        }
         register("sponge", MavenPublication::class) {
             artifact(jar.get())
             artifact(sourceJar.get())
             artifact(javadocJar.get())
+            pom {
+                this.name.set("plugin-spi")
+                setDescription(description)
+                this.url.set(url)
+
+                licenses {
+                    license {
+                        this.name.set("MIT")
+                        this.url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/SpongePowered/plugin-spi.git")
+                    developerConnection.set("scm:git:ssh://github.com/SpongePowered/plugin-spi.git")
+                    this.url.set(url)
+                }
+            }
         }
     }
 
