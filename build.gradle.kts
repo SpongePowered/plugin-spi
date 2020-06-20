@@ -1,5 +1,4 @@
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     `java-library`
     `maven-publish`
     id("net.minecrell.licenser") version "0.4"
@@ -78,7 +77,7 @@ license {
 val sourceOutput by configurations.registering
 
 dependencies {
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    api("org.spongepowered:plugin-meta:0.5.0-SNAPSHOT")
     implementation("com.google.guava:guava:21.0")
     implementation("com.google.inject:guice:4.0")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
@@ -86,7 +85,6 @@ dependencies {
     main.allSource.srcDirs.forEach {
         add(sourceOutput.name, project.files(it.relativeTo(project.projectDir).path))
     }
-    // Use JUnit test framework
     testImplementation("junit:junit:4.12")
 }
 

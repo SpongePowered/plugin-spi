@@ -32,6 +32,7 @@ import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.jvm.discover.DiscoverStrategies;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 import org.spongepowered.plugin.metadata.PluginMetadataContainer;
+import org.spongepowered.plugin.metadata.util.PluginMeta;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -117,12 +118,28 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         return JVMPluginLanguageService.DEFAULT_METADATA_FILE_NAME;
     }
 
-    public abstract Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream);
+    public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream) {
+        final PluginMeta pluginMeta = PluginMeta.builder().build();
+        try {
+            final List<PluginMetadata> pluginMetadata = new ArrayList<>(pluginMeta.read(stream));
+            pluginMetadata.removeIf(nextMetadata -> !this.isValidMetadata(environment, nextMetadata));
+            if (pluginMetadata.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(new PluginMetadataContainer(pluginMetadata));
+        } catch (IOException e) {
+            environment.getLogger().error("An error occurred reading plugin metadata file '{}'.", filename, e);
+            return Optional.empty();
+        }
+    }
+
+    public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {
+        return true;
+    }
 
     protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates) {
         return pluginCandidates;
     }
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader)
-        throws ClassNotFoundException, IllegalAccessException, InstantiationException;
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader) throws ClassNotFoundException, IllegalAccessException, InstantiationException;
 }
