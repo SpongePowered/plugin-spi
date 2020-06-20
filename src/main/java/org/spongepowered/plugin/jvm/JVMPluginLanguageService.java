@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.jar.Manifest;
 
 public abstract class JVMPluginLanguageService implements PluginLanguageService {
 
@@ -131,6 +132,10 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
             environment.getLogger().error("An error occurred reading plugin metadata file '{}'.", filename, e);
             return Optional.empty();
         }
+    }
+
+    public boolean isValidManifest(final PluginEnvironment environment, final Manifest manifest) {
+        return true;
     }
 
     public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {

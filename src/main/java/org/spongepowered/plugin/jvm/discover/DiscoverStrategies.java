@@ -105,6 +105,11 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                             continue;
                         }
 
+                        if (!service.isValidManifest(environment, manifest)) {
+                            environment.getLogger().error("Manifest specified in '{}' is not valid for loader '{}'. Skipping...", jf, service.getName());
+                            continue;
+                        }
+
                         pluginFiles.add(new PluginFile(path, manifest));
                     } catch (final IOException e) {
                         environment.getLogger().error("Error reading '{}' as a Jar file when traversing classloader resources for plugin discovery! Skipping...", url, e);
@@ -125,20 +130,25 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         continue;
                     }
 
-                    final Path pluginMetadataFile = path.resolve(JVMConstants.META_INF_LOCATION).resolve(service.getPluginMetadataFileName());
-                    if (Files.notExists(pluginMetadataFile)) {
-                        environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
-                        continue;
-                    }
-
                     final String loader = ManifestUtils.getLoader(manifest).orElse(null);
                     if (loader == null) {
                         environment.getLogger().error("Manifest for '{}' did not specify a plugin loader when traversing classloader resources for plugin discovery! Skipping...", url);
                         continue;
                     }
 
+                    final Path pluginMetadataFile = path.resolve(JVMConstants.META_INF_LOCATION).resolve(service.getPluginMetadataFileName());
+                    if (Files.notExists(pluginMetadataFile)) {
+                        environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
+                        continue;
+                    }
+
                     if (!service.getName().equals(loader)) {
                         environment.getLogger().debug("'{}' specified loader '{}' but ours is '{}'. Skipping...", path, loader, service.getName());
+                        continue;
+                    }
+
+                    if (!service.isValidManifest(environment, manifest)) {
+                        environment.getLogger().error("Manifest specified in '{}' is not valid for loader '{}'. Skipping...", path, service.getName());
                         continue;
                     }
 
