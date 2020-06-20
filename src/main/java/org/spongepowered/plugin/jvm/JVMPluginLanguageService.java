@@ -47,7 +47,7 @@ import java.util.Optional;
 
 public abstract class JVMPluginLanguageService implements PluginLanguageService {
 
-    private static final String DEFAULT_METADATA_FILE_NAME = "plugin.meta";
+    private static final String DEFAULT_METADATA_FILE_NAME = "plugins.json";
 
     private final Map<String, Collection<PluginFile>> pluginResources;
     private final Map<String, Collection<PluginCandidate>> pluginCandidates;
