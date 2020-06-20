@@ -10,13 +10,26 @@ defaultTasks("build")
 repositories {
     mavenLocal()
     jcenter()
-    maven("https://repo.spongepowered.org/maven")
-    maven("https://repo-new.spongepowered.org/maven")
+    maven {
+        name = "sponge v2"
+        setUrl("https://repo-new.spongepowered.org/repository/maven-public")
+    }
+    maven {
+        name = "sponge"
+        setUrl("https://repo.spongepowered.org/maven")
+    }
 }
 
 val specVersion: String by project
 
 val main by sourceSets
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
+}
 
 val jar by tasks.existing(Jar::class) {
     manifest {
@@ -50,18 +63,6 @@ val javadoc by tasks.existing(Javadoc::class) {
     }
 }
 
-val javadocJar by tasks.registering(Jar::class) {
-    group = "build"
-    classifier = "javadoc"
-    from(javadoc)
-}
-
-val sourceJar by tasks.registering(Jar::class) {
-    classifier = "sources"
-    group = "build"
-    from(sourceOutput)
-}
-
 license {
     header = file("HEADER.txt")
     newLine = false
@@ -74,17 +75,12 @@ license {
     include("**/*.java", "**/*.groovy", "**/*.kt")
 }
 
-val sourceOutput by configurations.registering
-
 dependencies {
-    api("org.spongepowered:plugin-meta:0.5.0-SNAPSHOT")
+    api("org.spongepowered:plugin-meta:0.6.0-SNAPSHOT")
     implementation("com.google.guava:guava:21.0")
     implementation("com.google.inject:guice:4.0")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
     implementation("org.checkerframework:checker-qual:3.4.1")
-    main.allSource.srcDirs.forEach {
-        add(sourceOutput.name, project.files(it.relativeTo(project.projectDir).path))
-    }
     testImplementation("junit:junit:4.12")
 }
 
@@ -128,9 +124,7 @@ publishing {
     }
     publications {
         register("sponge", MavenPublication::class) {
-            artifact(jar.get())
-            artifact(sourceJar.get())
-            artifact(javadocJar.get())
+            from(components["java"])
             pom {
                 this.name.set("plugin-spi")
                 this.description.set(projectDescription)
