@@ -69,7 +69,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
 
         for (final DiscoverStrategies strategy : DiscoverStrategies.values()) {
             final List<PluginFile> files = strategy.discoverResources(environment, this);
-            environment.getLogger().info("Discovered '{}' [{}] plugin resource(s) for '{}'.", pluginFiles.size(), strategy.getName(), this.getName());
+            environment.getLogger().info("Discovered '{}' [{}] plugin resource(s) for '{}'.", files.size(), strategy.getName(), this.getName());
             this.pluginResources.put(strategy.getName(), files);
             pluginFiles.addAll(files);
         }

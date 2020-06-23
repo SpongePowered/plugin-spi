@@ -175,6 +175,9 @@ public enum DiscoverStrategies implements DiscoverStrategy {
             for (final Path pluginsDir : environment.getBlackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
                 try {
                     for (final Path path : Files.walk(pluginsDir).collect(Collectors.toList())) {
+                        if (path.equals(pluginsDir)) {
+                            continue;
+                        }
                         try (final JarFile jf = new JarFile(path.toFile())) {
                             final Manifest manifest = jf.getManifest();
                             final String loader = ManifestUtils.getLoader(manifest).orElse(null);
