@@ -24,6 +24,7 @@
  */
 package org.spongepowered.plugin.jvm;
 
+import org.spongepowered.plugin.InvalidPluginException;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
@@ -32,7 +33,7 @@ import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.jvm.discover.DiscoverStrategies;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 import org.spongepowered.plugin.metadata.PluginMetadataContainer;
-import org.spongepowered.plugin.metadata.util.PluginMeta;
+import org.spongepowered.plugin.metadata.util.PluginMetadataHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,15 +110,8 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) {
-        final Object pluginInstance;
-        try {
-            pluginInstance = this.createPluginInstance(environment, candidate, targetClassloader);
-        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            environment.getLogger().error("Encountered an error attempting to create an instance of Plugin '{}'!", candidate.getMetadata().getId(), e);
-            return Optional.empty();
-        }
-        return Optional.of(new JVMPluginContainer(candidate, pluginInstance));
+    public Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) throws InvalidPluginException {
+        return Optional.of(new JVMPluginContainer(candidate, this.createPluginInstance(environment, candidate, targetClassloader)));
     }
 
     public String getPluginMetadataFileName() {
@@ -125,9 +119,9 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream) {
-        final PluginMeta pluginMeta = PluginMeta.builder().build();
+        final PluginMetadataHelper metadataHelper = PluginMetadataHelper.builder().build();
         try {
-            final List<PluginMetadata> pluginMetadata = new ArrayList<>(pluginMeta.read(stream));
+            final List<PluginMetadata> pluginMetadata = new ArrayList<>(metadataHelper.read(stream));
             pluginMetadata.removeIf(nextMetadata -> !this.isValidMetadata(environment, nextMetadata));
             if (pluginMetadata.isEmpty()) {
                 return Optional.empty();
@@ -143,13 +137,13 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         return true;
     }
 
-    public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {
+    public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata metadata) {
         return true;
     }
 
-    protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates) {
-        return pluginCandidates;
+    protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> candidates) {
+        return candidates;
     }
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader) throws ClassNotFoundException, IllegalAccessException, InstantiationException;
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader) throws InvalidPluginException;
 }

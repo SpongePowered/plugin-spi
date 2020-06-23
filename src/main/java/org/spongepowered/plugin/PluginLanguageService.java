@@ -77,7 +77,8 @@ public interface PluginLanguageService {
      * @param candidate The candidate
      * @param environment The environment
      * @param targetClassloader The target classloader
+     * @throws InvalidPluginException If the plugin is considered invalid by the implementation
      * @return The container
      */
-    Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader);
+    Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) throws InvalidPluginException;
 }
