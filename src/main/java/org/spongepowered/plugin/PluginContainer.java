@@ -29,19 +29,40 @@ import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.nio.file.Path;
 
+/**
+ * An object that joins a plugin's {@link PluginMetadata metadata} with it's instance.
+ *
+ * <p>Typically becomes the fundamental operator of the implementation's registration system
+ * for anything that is deemed "a plugin".</p>
+ */
 public interface PluginContainer {
 
-    PluginCandidate getCandidate();
+    /**
+     * Gets the {@link PluginMetadata metadata} used to describe this plugin.
+     * @return The metadata
+     */
+    PluginMetadata getMetadata();
 
-    default Path getRootPath() {
-        return this.getCandidate().getFile().getRootPath();
-    }
+    /**
+     * Gets the file that should be considered the physical representation of the plugin.
+     *
+     * @return The file
+     */
+    Path getFile();
 
-    default PluginMetadata getMetadata() {
-        return this.getCandidate().getMetadata();
-    }
-
+    /**
+     * Gets a {@link Logger} with the id set to this plugin's id.
+     *
+     * <p>@see {@link PluginMetadata#getId()}</p>
+     *
+     * @return The logger
+     */
     Logger getLogger();
 
+    /**
+     * Gets the instance created when loading this plugin.
+     *
+     * @return The instance
+     */
     Object getInstance();
 }

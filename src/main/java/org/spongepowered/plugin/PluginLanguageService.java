@@ -24,6 +24,7 @@
  */
 package org.spongepowered.plugin;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public interface PluginLanguageService {
     void initialize(final PluginEnvironment environment);
 
     /**
-     * Discovers {@link PluginFile launch resources} for use with ecosystems that are pluggable
+     * Discovers {@link Path launch resources} for use with ecosystems that are pluggable
      * with other constructs. As an example and a use case, Sponge passes off the files's {@link Manifest}
      * to ModLauncher for Mixin interoperability.
      *
@@ -59,7 +60,7 @@ public interface PluginLanguageService {
      * @param environment The environment
      * @return The discovered files
      */
-    List<PluginFile> discoverResources(final PluginEnvironment environment);
+    List<Path> discoverResources(final PluginEnvironment environment);
 
     /**
      * Determines the {@link PluginCandidate candidates} that will be, eventually, loaded as plugins.

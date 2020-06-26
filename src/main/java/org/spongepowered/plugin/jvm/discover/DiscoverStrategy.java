@@ -25,14 +25,14 @@
 package org.spongepowered.plugin.jvm.discover;
 
 import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.PluginFile;
 import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface DiscoverStrategy {
 
     String getName();
 
-    List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service);
+    List<Path> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service);
 }

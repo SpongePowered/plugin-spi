@@ -29,6 +29,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
+import org.spongepowered.plugin.metadata.PluginMetadata;
+
+import java.nio.file.Path;
+import java.util.Objects;
 
 public final class JVMPluginContainer implements PluginContainer {
 
@@ -43,8 +47,13 @@ public final class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
-    public PluginCandidate getCandidate() {
-        return this.candidate;
+    public PluginMetadata getMetadata() {
+        return this.candidate.getMetadata();
+    }
+
+    @Override
+    public Path getFile() {
+        return this.candidate.getFile();
     }
 
     @Override
@@ -58,10 +67,28 @@ public final class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(this.candidate.getMetadata().getId());
+    }
+
+    @Override
+    public boolean equals(final Object that) {
+        if (that == this) {
+            return true;
+        }
+
+        if (!(that instanceof PluginContainer)) {
+            return false;
+        }
+
+        return this.candidate.getMetadata().getId().equals(((PluginContainer) that).getMetadata().getId());
+    }
+
+    @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .addValue(this.candidate.getMetadata())
-                .add("path", this.candidate.getFile().getRootPath())
+                .add("file", this.candidate.getFile())
                 .toString();
     }
 }

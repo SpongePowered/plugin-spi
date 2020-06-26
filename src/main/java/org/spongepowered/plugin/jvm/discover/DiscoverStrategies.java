@@ -25,7 +25,6 @@
 package org.spongepowered.plugin.jvm.discover;
 
 import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.PluginFile;
 import org.spongepowered.plugin.PluginKeys;
 import org.spongepowered.plugin.jvm.JVMConstants;
 import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
@@ -57,8 +56,8 @@ public enum DiscoverStrategies implements DiscoverStrategy {
         }
 
         @Override
-        public List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
-            final List<PluginFile> pluginFiles = new ArrayList<>();
+        public List<Path> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
+            final List<Path> pluginFiles = new ArrayList<>();
 
             final Enumeration<URL> resources;
             try {
@@ -112,7 +111,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                             continue;
                         }
 
-                        pluginFiles.add(new PluginFile(path, manifest));
+                        pluginFiles.add(path);
                     } catch (final IOException e) {
                         environment.getLogger().error("Error reading '{}' as a Jar file when traversing classloader resources for plugin discovery! Skipping...", url, e);
                     }
@@ -154,7 +153,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         continue;
                     }
 
-                    pluginFiles.add(new PluginFile(path, manifest));
+                    pluginFiles.add(path);
                 }
             }
 
@@ -169,8 +168,8 @@ public enum DiscoverStrategies implements DiscoverStrategy {
         }
 
         @Override
-        public List<PluginFile> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
-            final List<PluginFile> pluginFiles = new ArrayList<>();
+        public List<Path> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service) {
+            final List<Path> pluginFiles = new ArrayList<>();
 
             for (final Path pluginsDir : environment.getBlackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
                 try {
@@ -202,7 +201,7 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                                 continue;
                             }
 
-                            pluginFiles.add(new PluginFile(path, manifest));
+                            pluginFiles.add(path);
                         } catch (final IOException e) {
                             environment.getLogger().error("Error reading '{}' as a Jar file when traversing directory resources for plugin discovery! Skipping...", path, e);
                         }

@@ -26,21 +26,23 @@ package org.spongepowered.plugin;
 
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.nio.file.Path;
+
 public final class PluginCandidate {
 
     private final PluginMetadata metadata;
-    private final PluginFile pluginFile;
+    private final Path file;
 
-    public PluginCandidate(final PluginMetadata metadata, final PluginFile pluginFile) {
+    public PluginCandidate(final PluginMetadata metadata, final Path file) {
         this.metadata = metadata;
-        this.pluginFile = pluginFile;
+        this.file = file;
     }
 
     public PluginMetadata getMetadata() {
         return this.metadata;
     }
 
-    public PluginFile getFile() {
-        return this.pluginFile;
+    public Path getFile() {
+        return this.file;
     }
 }
