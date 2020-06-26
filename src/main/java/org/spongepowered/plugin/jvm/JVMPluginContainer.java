@@ -25,22 +25,31 @@
 package org.spongepowered.plugin.jvm;
 
 import com.google.common.base.MoreObjects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 
 public final class JVMPluginContainer implements PluginContainer {
 
     private final PluginCandidate candidate;
+    private final Logger logger;
     private final Object instance;
 
     public JVMPluginContainer(final PluginCandidate candidate, final Object instance) {
         this.candidate = candidate;
+        this.logger = LogManager.getLogger(candidate.getMetadata().getId());
         this.instance = instance;
     }
 
     @Override
     public PluginCandidate getCandidate() {
         return this.candidate;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return this.logger;
     }
 
     @Override

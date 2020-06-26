@@ -24,6 +24,7 @@
  */
 package org.spongepowered.plugin;
 
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.nio.file.Path;
@@ -39,6 +40,8 @@ public interface PluginContainer {
     default PluginMetadata getMetadata() {
         return this.getCandidate().getMetadata();
     }
+
+    Logger getLogger();
 
     Object getInstance();
 }
