@@ -70,8 +70,8 @@ public final class JVMPluginContainer implements PluginContainer {
 
     @Override
     public Optional<URL> locateResource(final URL relative) {
-        ClassLoader classLoader = this.getInstance().getClass().getClassLoader();
-        URL resolved = classLoader.getResource(relative.getPath());
+        final ClassLoader classLoader = this.getInstance().getClass().getClassLoader();
+        final URL resolved = classLoader.getResource(relative.getPath());
         return Optional.ofNullable(resolved);
     }
 
