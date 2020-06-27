@@ -31,8 +31,10 @@ import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class JVMPluginContainer implements PluginContainer {
 
@@ -64,6 +66,13 @@ public final class JVMPluginContainer implements PluginContainer {
     @Override
     public Object getInstance() {
         return this.instance;
+    }
+
+    @Override
+    public Optional<URL> locateResource(final URL relative) {
+        final ClassLoader classLoader = this.getInstance().getClass().getClassLoader();
+        final URL resolved = classLoader.getResource(relative.getPath());
+        return Optional.ofNullable(resolved);
     }
 
     @Override
