@@ -79,7 +79,7 @@ public interface PluginContainer {
     Optional<URL> locateResource(final URL relative);
 
     /**
-     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URL}
+     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URL}.
      *
      * @param relative The relative URL
      * @return The opened resource, if available
