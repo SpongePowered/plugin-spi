@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -133,6 +134,13 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     @Override
     public Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) throws InvalidPluginException {
         return Optional.of(new JVMPluginContainer(candidate, this.createPluginInstance(environment, candidate, targetClassloader)));
+    }
+
+    @Override
+    public Optional<URL> resolvePluginResource(PluginContainer container, URL relative) {
+        ClassLoader classLoader = container.getInstance().getClass().getClassLoader();
+        URL resolved = classLoader.getResource(relative.getPath());
+        return Optional.ofNullable(resolved);
     }
 
     public String getPluginMetadataFileName() {

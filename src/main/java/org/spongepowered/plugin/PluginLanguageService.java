@@ -24,6 +24,7 @@
  */
 package org.spongepowered.plugin;
 
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -82,4 +83,13 @@ public interface PluginLanguageService {
      * @return The container
      */
     Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) throws InvalidPluginException;
+
+    /**
+     * Resolves a bundled resource {@link URL} for a plugin, given the relative resource location.
+     *
+     * @param container The plugin
+     * @param relative The relative resource location
+     * @return The resolved resource location, if available
+     */
+    Optional<URL> resolvePluginResource(PluginContainer container, URL relative);
 }
