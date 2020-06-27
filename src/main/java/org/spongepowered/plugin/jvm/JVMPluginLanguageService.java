@@ -136,13 +136,6 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         return Optional.of(new JVMPluginContainer(candidate, this.createPluginInstance(environment, candidate, targetClassloader)));
     }
 
-    @Override
-    public Optional<URL> resolvePluginResource(PluginContainer container, URL relative) {
-        ClassLoader classLoader = container.getInstance().getClass().getClassLoader();
-        URL resolved = classLoader.getResource(relative.getPath());
-        return Optional.ofNullable(resolved);
-    }
-
     public String getPluginMetadataFileName() {
         return JVMPluginLanguageService.DEFAULT_METADATA_FILE_NAME;
     }
