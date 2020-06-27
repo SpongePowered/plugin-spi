@@ -27,6 +27,8 @@ package org.spongepowered.plugin;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -69,10 +71,26 @@ public interface PluginContainer {
     Object getInstance();
 
     /**
-     * Resolves the location of a bundled resource given a relative {@link URL}.
+     * Resolves the location of a bundled resource, given a relative {@link URL}.
      *
      * @param relative The relative URL
      * @return The resolved resource location, if available
      */
     Optional<URL> locateResource(final URL relative);
+
+    /**
+     * Opens a {@link InputStream} of the location of a bundled resource, given a relative {@link URL}
+     *
+     * @param relative The relative URL
+     * @return The opened resource, if available
+     */
+    default Optional<InputStream> openResource(final URL relative) {
+        return this.locateResource(relative).flatMap(url -> {
+            try {
+                return Optional.of(url.openStream());
+            } catch (IOException e) {
+                return Optional.empty();
+            }
+        });
+    }
 }
