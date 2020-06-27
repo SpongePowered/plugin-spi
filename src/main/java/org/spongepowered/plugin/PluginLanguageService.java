@@ -24,7 +24,6 @@
  */
 package org.spongepowered.plugin;
 
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
