@@ -27,7 +27,9 @@ package org.spongepowered.plugin;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.Optional;
 
 /**
  * An object that joins a plugin's {@link PluginMetadata metadata} with it's instance.
@@ -65,4 +67,12 @@ public interface PluginContainer {
      * @return The instance
      */
     Object getInstance();
+
+    /**
+     * Resolves the location of a bundled resource given a relative {@link URL}.
+     *
+     * @param relative The relative URL
+     * @return The resolved resource location, if available
+     */
+    Optional<URL> locateResource(final URL relative);
 }
