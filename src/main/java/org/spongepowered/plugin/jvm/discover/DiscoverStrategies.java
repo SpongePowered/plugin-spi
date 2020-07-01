@@ -172,9 +172,13 @@ public enum DiscoverStrategies implements DiscoverStrategy {
             final List<Path> pluginFiles = new ArrayList<>();
 
             for (final Path pluginsDir : environment.getBlackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
+                if (Files.notExists(pluginsDir)) {
+                    environment.getLogger().debug("Plugin directory '{}' does not exist for service '{}'. Skipping...", pluginsDir, service.getName());
+                    continue;
+                }
                 try {
                     for (final Path path : Files.walk(pluginsDir).collect(Collectors.toList())) {
-                        if (path.equals(pluginsDir)) {
+                        if (!Files.isRegularFile(path)) {
                             continue;
                         }
                         try (final JarFile jf = new JarFile(path.toFile())) {
