@@ -68,7 +68,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public List<Path> discoverResources(final PluginEnvironment environment) {
+    public List<Path> discoverPluginResources(final PluginEnvironment environment) {
         final List<Path> pluginFiles = new ArrayList<>();
 
         for (final DiscoverStrategies strategy : DiscoverStrategies.values()) {
@@ -82,7 +82,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
     }
 
     @Override
-    public List<PluginCandidate> determineCandidates(final PluginEnvironment environment) {
+    public List<PluginCandidate> createPluginCandidates(final PluginEnvironment environment) {
         List<PluginCandidate> pluginCandidates = new ArrayList<>();
 
         for (final Map.Entry<String, Collection<Path>> resourcesEntry : this.pluginResources.entrySet()) {

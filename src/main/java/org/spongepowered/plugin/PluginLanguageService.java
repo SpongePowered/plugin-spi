@@ -60,7 +60,7 @@ public interface PluginLanguageService {
      * @param environment The environment
      * @return The discovered files
      */
-    List<Path> discoverResources(final PluginEnvironment environment);
+    List<Path> discoverPluginResources(final PluginEnvironment environment);
 
     /**
      * Determines the {@link PluginCandidate candidates} that will be, eventually, loaded as plugins.
@@ -70,7 +70,7 @@ public interface PluginLanguageService {
      * @param environment The environment
      * @return The discovered candidates
      */
-    List<PluginCandidate> determineCandidates(final PluginEnvironment environment);
+    List<PluginCandidate> createPluginCandidates(final PluginEnvironment environment);
 
     /**
      * Creates a {@link PluginContainer} which encapsulates the plugin and is the final representation of a plugin by this library.
