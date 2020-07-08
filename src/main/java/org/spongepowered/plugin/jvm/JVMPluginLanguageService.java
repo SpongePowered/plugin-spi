@@ -24,9 +24,9 @@
  */
 package org.spongepowered.plugin.jvm;
 
+import com.google.common.base.Preconditions;
 import org.spongepowered.plugin.InvalidPluginException;
 import org.spongepowered.plugin.PluginCandidate;
-import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.jvm.discover.DiscoverStrategies;
@@ -51,7 +51,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public abstract class JVMPluginLanguageService implements PluginLanguageService {
+public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> implements PluginLanguageService<P> {
 
     private static final String DEFAULT_METADATA_FILE_NAME = "plugins.json";
 
@@ -112,6 +112,15 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         return this.sortCandidates(pluginCandidates);
     }
 
+    @Override
+    public void loadPlugin(final PluginEnvironment environment, final JVMPluginContainer container, final ClassLoader targetClassLoader) throws InvalidPluginException {
+        Preconditions.checkNotNull(environment);
+        Preconditions.checkNotNull(container);
+        Preconditions.checkNotNull(targetClassLoader);
+
+        container.setInstance(this.createPluginInstance(environment, container, targetClassLoader));
+    }
+
     private InputStream getFileAsStream(final Path rootDirectory, final String relativePath) throws URISyntaxException, IOException {
         final URI uri = rootDirectory.toUri();
         Path jarFile = null;
@@ -128,11 +137,6 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         } else {
             return Files.newInputStream(rootDirectory.resolve(relativePath));
         }
-    }
-
-    @Override
-    public Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) throws InvalidPluginException {
-        return Optional.of(new JVMPluginContainer(candidate, this.createPluginInstance(environment, candidate, targetClassloader)));
     }
 
     public String getPluginMetadataFileName() {
@@ -166,5 +170,5 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         return pluginCandidates;
     }
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final PluginCandidate candidate, final ClassLoader targetClassLoader) throws InvalidPluginException;
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final JVMPluginContainer container, final ClassLoader targetClassLoader) throws InvalidPluginException;
 }

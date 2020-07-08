@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.jar.Manifest;
 
-public interface PluginLanguageService {
+public interface PluginLanguageService<P extends PluginContainer> {
 
     /**
      * Gets the name of this service.
@@ -73,13 +73,23 @@ public interface PluginLanguageService {
     List<PluginCandidate> createPluginCandidates(final PluginEnvironment environment);
 
     /**
-     * Creates a {@link PluginContainer} which encapsulates the plugin and is the final representation of a plugin by this library.
+     * Creates a {@link PluginContainer} which which will hold the instance of an actual plugin.
      *
      * @param candidate The candidate
      * @param environment The environment
-     * @param targetClassloader The target classloader
-     * @throws InvalidPluginException If the plugin is considered invalid by the implementation
      * @return The container
      */
-    Optional<PluginContainer> createPlugin(final PluginCandidate candidate, final PluginEnvironment environment, final ClassLoader targetClassloader) throws InvalidPluginException;
+    Optional<P> createPluginContainer(final PluginCandidate candidate, final PluginEnvironment environment);
+
+    /**
+     * Instructs the {@link PluginContainer} to actually load and create it's plugin instance.
+     *
+     * <p>The provided classloader should be used to load the any classes needed for the plugin's instance.</p>
+     *
+     * @param environment The environment
+     * @param container The container
+     * @param targetClassLoader The classloader
+     * @throws InvalidPluginException If the plugin being loaded is invalid
+     */
+    void loadPlugin(final PluginEnvironment environment, final P container, ClassLoader targetClassLoader) throws InvalidPluginException;
 }

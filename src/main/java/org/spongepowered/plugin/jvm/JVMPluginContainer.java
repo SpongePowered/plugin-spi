@@ -25,6 +25,7 @@
 package org.spongepowered.plugin.jvm;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
@@ -40,12 +41,11 @@ public final class JVMPluginContainer implements PluginContainer {
 
     private final PluginCandidate candidate;
     private final Logger logger;
-    private final Object instance;
+    private Object instance;
 
-    public JVMPluginContainer(final PluginCandidate candidate, final Object instance) {
+    public JVMPluginContainer(final PluginCandidate candidate) {
         this.candidate = candidate;
         this.logger = LogManager.getLogger(candidate.getMetadata().getId());
-        this.instance = instance;
     }
 
     @Override
@@ -66,6 +66,15 @@ public final class JVMPluginContainer implements PluginContainer {
     @Override
     public Object getInstance() {
         return this.instance;
+    }
+
+    protected void setInstance(final Object instance) {
+        if (this.instance != null) {
+            throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
+                this.candidate.getMetadata().getId()));
+        }
+        Preconditions.checkNotNull(instance);
+        this.instance = instance;
     }
 
     @Override
