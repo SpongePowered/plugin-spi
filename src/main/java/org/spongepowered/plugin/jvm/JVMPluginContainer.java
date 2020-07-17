@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class JVMPluginContainer implements PluginContainer {
+public class JVMPluginContainer implements PluginContainer {
 
     private final PluginCandidate candidate;
     private final Logger logger;
