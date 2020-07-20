@@ -64,7 +64,7 @@ public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> imp
     }
 
     @Override
-    public void initialize(PluginEnvironment environment) {
+    public void initialize(final PluginEnvironment environment) {
     }
 
     @Override
@@ -113,7 +113,7 @@ public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> imp
     }
 
     @Override
-    public void loadPlugin(final PluginEnvironment environment, final JVMPluginContainer container, final ClassLoader targetClassLoader) throws InvalidPluginException {
+    public void loadPlugin(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException {
         Preconditions.checkNotNull(environment);
         Preconditions.checkNotNull(container);
         Preconditions.checkNotNull(targetClassLoader);
@@ -170,5 +170,5 @@ public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> imp
         return pluginCandidates;
     }
 
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final JVMPluginContainer container, final ClassLoader targetClassLoader) throws InvalidPluginException;
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException;
 }
