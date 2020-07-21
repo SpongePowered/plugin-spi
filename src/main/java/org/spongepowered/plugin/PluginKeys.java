@@ -31,6 +31,15 @@ import java.util.List;
 
 public final class PluginKeys {
 
+    /**
+     * Indicates whether the target environment is a development environment.
+     * <p>
+     * The implementation may choose to interpret this flag in a number of ways,
+     * for example it may disable certain behaviour in a development environment - or
+     * even change the way it handles some behaviour entirely.
+     */
+    public static final Blackboard.Key<Boolean> DEVELOPMENT = Blackboard.Key.of("development", Boolean.class);
+
     public static final Blackboard.Key<String> VERSION = Blackboard.Key.of("version", String.class);
 
     public static final Blackboard.Key<Path> BASE_DIRECTORY = Blackboard.Key.of("base_directory", Path.class);
