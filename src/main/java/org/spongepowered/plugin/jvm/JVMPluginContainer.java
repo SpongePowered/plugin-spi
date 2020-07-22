@@ -44,8 +44,14 @@ public class JVMPluginContainer implements PluginContainer {
     private Object instance;
 
     public JVMPluginContainer(final PluginCandidate candidate) {
+        this(candidate, LogManager.getLogger(candidate.getMetadata().getId()));
+    }
+
+    public JVMPluginContainer(final PluginCandidate candidate, final Logger logger) {
+        Objects.requireNonNull(candidate, "candidate");
+        Objects.requireNonNull(logger, "logger");
         this.candidate = candidate;
-        this.logger = LogManager.getLogger(candidate.getMetadata().getId());
+        this.logger = logger;
     }
 
     @Override
