@@ -27,13 +27,20 @@ package org.spongepowered.plugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 public final class PluginEnvironment {
 
     private final Logger logger;
     private final Blackboard blackboard;
 
     public PluginEnvironment() {
-        this.logger = LogManager.getLogger("Plugin");
+        this(LogManager.getLogger("Plugin"));
+    }
+
+    public PluginEnvironment(final Logger logger) {
+        Objects.requireNonNull(logger, "logger");
+        this.logger = logger;
         this.blackboard = new Blackboard();
     }
 
