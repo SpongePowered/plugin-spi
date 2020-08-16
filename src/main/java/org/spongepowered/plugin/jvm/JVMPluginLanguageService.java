@@ -24,7 +24,6 @@
  */
 package org.spongepowered.plugin.jvm;
 
-import com.google.common.base.Preconditions;
 import org.spongepowered.plugin.InvalidPluginException;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
@@ -46,6 +45,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -114,9 +114,9 @@ public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> imp
 
     @Override
     public void loadPlugin(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException {
-        Preconditions.checkNotNull(environment);
-        Preconditions.checkNotNull(container);
-        Preconditions.checkNotNull(targetClassLoader);
+        Objects.requireNonNull(environment);
+        Objects.requireNonNull(container);
+        Objects.requireNonNull(targetClassLoader);
 
         container.setInstance(this.createPluginInstance(environment, container, targetClassLoader));
     }

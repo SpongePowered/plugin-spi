@@ -24,8 +24,6 @@
  */
 package org.spongepowered.plugin.jvm;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
@@ -36,6 +34,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 public class JVMPluginContainer implements PluginContainer {
 
@@ -79,7 +78,7 @@ public class JVMPluginContainer implements PluginContainer {
             throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
                 this.candidate.getMetadata().getId()));
         }
-        Preconditions.checkNotNull(instance);
+        Objects.requireNonNull(instance);
         this.instance = instance;
     }
 
@@ -110,9 +109,9 @@ public class JVMPluginContainer implements PluginContainer {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .addValue(this.candidate.getMetadata())
-                .add("file", this.candidate.getFile())
+        return new StringJoiner(", ", JVMPluginContainer.class.getSimpleName() + "[", "]")
+                .add(this.candidate.getMetadata().toString())
+                .add("file=" + this.candidate.getFile())
                 .toString();
     }
 }

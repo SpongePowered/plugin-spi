@@ -24,8 +24,6 @@
  */
 package org.spongepowered.plugin;
 
-import com.google.common.base.Preconditions;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -43,14 +41,14 @@ public final class Blackboard {
 
     @SuppressWarnings("unchecked")
     public <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue) {
-        Preconditions.checkNotNull(key);
-        Preconditions.checkNotNull(defaultValue);
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(defaultValue);
 
         return key.clazz.cast(this.values.computeIfAbsent((Key<Object>) key, k -> defaultValue.get()));
     }
 
     public <V> Optional<V> get(final Key<V> key) {
-        Preconditions.checkNotNull(key);
+        Objects.requireNonNull(key);
 
         return Optional.ofNullable(key.clazz.cast(this.values.get(key)));
     }
