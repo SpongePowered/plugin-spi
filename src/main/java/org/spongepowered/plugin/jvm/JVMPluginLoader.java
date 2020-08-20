@@ -22,25 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.jvm;
 
-import java.nio.file.Path;
-import java.util.List;
+import org.spongepowered.plugin.InvalidPluginException;
+import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.PluginLoader;
 
-public final class PluginKeys {
+import java.util.Objects;
 
-    /**
-     * Indicates whether the target environment is a development environment.
-     * <p>
-     * The implementation may choose to interpret this flag in a number of ways,
-     * for example it may disable certain behaviour in a development environment - or
-     * even change the way it handles some behaviour entirely.
-     */
-    public static final Blackboard.Key<Boolean> DEVELOPMENT = Blackboard.Key.of("development", Boolean.class);
+public abstract class JVMPluginLoader<P extends JVMPluginContainer> implements PluginLoader<P> {
 
-    public static final Blackboard.Key<String> VERSION = Blackboard.Key.of("version", String.class);
+    @Override
+    public void loadPlugin(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException {
+        Objects.requireNonNull(environment);
+        Objects.requireNonNull(container);
+        Objects.requireNonNull(targetClassLoader);
 
-    public static final Blackboard.Key<Path> BASE_DIRECTORY = Blackboard.Key.of("base_directory", Path.class);
+        container.setInstance(this.createPluginInstance(environment, container, targetClassLoader));
+    }
 
-    public static final Blackboard.Key<List<Path>> PLUGIN_DIRECTORIES = Blackboard.Key.of("plugin_directories", List.class);
+    protected abstract Object createPluginInstance(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader)
+        throws InvalidPluginException;
 }

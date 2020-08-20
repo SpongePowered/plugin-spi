@@ -24,23 +24,33 @@
  */
 package org.spongepowered.plugin;
 
-import java.nio.file.Path;
-import java.util.List;
+import java.util.Optional;
 
-public final class PluginKeys {
+/**
+ * A loader used to create and load {@link PluginContainer plugins}.
+ *
+ * Implementors of this class are required to have a no-args constructor
+ */
+public interface PluginLoader<P extends PluginContainer> {
 
     /**
-     * Indicates whether the target environment is a development environment.
-     * <p>
-     * The implementation may choose to interpret this flag in a number of ways,
-     * for example it may disable certain behaviour in a development environment - or
-     * even change the way it handles some behaviour entirely.
+     * Creates a {@link PluginContainer} which which will hold the instance of an actual plugin.
+     *
+     * @param candidate The candidate
+     * @param environment The environment
+     * @return The container
      */
-    public static final Blackboard.Key<Boolean> DEVELOPMENT = Blackboard.Key.of("development", Boolean.class);
+    Optional<P> createPluginContainer(final PluginCandidate candidate, final PluginEnvironment environment);
 
-    public static final Blackboard.Key<String> VERSION = Blackboard.Key.of("version", String.class);
-
-    public static final Blackboard.Key<Path> BASE_DIRECTORY = Blackboard.Key.of("base_directory", Path.class);
-
-    public static final Blackboard.Key<List<Path>> PLUGIN_DIRECTORIES = Blackboard.Key.of("plugin_directories", List.class);
+    /**
+     * Instructs the {@link PluginContainer} to actually load and create it's plugin instance.
+     *
+     * <p>The provided classloader should be used to load the any classes needed for the plugin's instance.</p>
+     *
+     * @param environment The environment
+     * @param container The container
+     * @param targetClassLoader The classloader
+     * @throws InvalidPluginException If the plugin being loaded is invalid
+     */
+    void loadPlugin(final PluginEnvironment environment, final P container, ClassLoader targetClassLoader) throws InvalidPluginException;
 }

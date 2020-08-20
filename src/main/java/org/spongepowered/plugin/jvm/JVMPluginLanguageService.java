@@ -24,7 +24,6 @@
  */
 package org.spongepowered.plugin.jvm;
 
-import org.spongepowered.plugin.InvalidPluginException;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
@@ -45,13 +44,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> implements PluginLanguageService<P> {
+public abstract class JVMPluginLanguageService implements PluginLanguageService {
 
     private static final String DEFAULT_METADATA_FILE_NAME = "plugins.json";
 
@@ -112,15 +110,6 @@ public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> imp
         return this.sortCandidates(pluginCandidates);
     }
 
-    @Override
-    public void loadPlugin(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException {
-        Objects.requireNonNull(environment);
-        Objects.requireNonNull(container);
-        Objects.requireNonNull(targetClassLoader);
-
-        container.setInstance(this.createPluginInstance(environment, container, targetClassLoader));
-    }
-
     private InputStream getFileAsStream(final Path rootDirectory, final String relativePath) throws URISyntaxException, IOException {
         final URI uri = rootDirectory.toUri();
         Path jarFile = null;
@@ -169,6 +158,4 @@ public abstract class JVMPluginLanguageService<P extends JVMPluginContainer> imp
     protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates) {
         return pluginCandidates;
     }
-
-    protected abstract Object createPluginInstance(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException;
 }
