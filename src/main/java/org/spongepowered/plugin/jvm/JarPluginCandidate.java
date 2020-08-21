@@ -22,27 +22,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.jvm;
 
+import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Collections;
 
-public class PluginCandidate {
+public final class JarPluginCandidate extends PluginCandidate {
 
-    private final PluginMetadata metadata;
-    private final Path file;
+    private final URI jarUri;
+    private FileSystem fileSystem;
 
-    public PluginCandidate(final PluginMetadata metadata, final Path file) {
-        this.metadata = metadata;
-        this.file = file;
+    public JarPluginCandidate(final PluginMetadata metadata, final Path file) {
+        super(metadata, file);
+        try {
+            this.jarUri = new URI("jar:" + file.toUri().toString());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Should be impossible!");
+        }
     }
 
-    public PluginMetadata getMetadata() {
-        return this.metadata;
-    }
+    public FileSystem getFileSystem() {
+        if (this.fileSystem == null) {
+            try {
+                this.fileSystem = FileSystems.newFileSystem(this.jarUri, Collections.emptyMap());
+            } catch (IOException e) {
+                throw new RuntimeException("Should be impossible!");
+            }
+        }
 
-    public Path getFile() {
-        return this.file;
+        return this.fileSystem;
     }
 }

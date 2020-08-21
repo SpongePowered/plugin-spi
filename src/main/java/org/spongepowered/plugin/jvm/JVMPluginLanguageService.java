@@ -84,6 +84,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         List<PluginCandidate> pluginCandidates = new ArrayList<>();
 
         for (final Map.Entry<String, Collection<Path>> resourcesEntry : this.pluginResources.entrySet()) {
+            final String strategy = resourcesEntry.getKey();
             final Collection<Path> resources = resourcesEntry.getValue();
             final List<PluginCandidate> perStrategyCandidates = new ArrayList<>();
 
@@ -94,7 +95,8 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
                     if (pluginMetadataContainer != null) {
                         for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.getAllMetadata().entrySet()) {
                             final PluginMetadata metadata = metadataEntry.getValue();
-                            final PluginCandidate candidate = new PluginCandidate(metadata, pluginFile);
+                            final PluginCandidate candidate = DiscoverStrategies.DIRECTORY.getName().equals(strategy) ?
+                                    new JarPluginCandidate(metadata, pluginFile) : new PluginCandidate(metadata, pluginFile);
                             pluginCandidates.add(candidate);
                             perStrategyCandidates.add(candidate);
                         }
@@ -104,7 +106,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
                 }
             }
 
-            this.pluginCandidates.put(resourcesEntry.getKey(), perStrategyCandidates);
+            this.pluginCandidates.put(strategy, perStrategyCandidates);
         }
 
         return this.sortCandidates(pluginCandidates);
