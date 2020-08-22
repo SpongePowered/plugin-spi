@@ -61,7 +61,7 @@ public class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
-    public Path getFile() {
+    public Path getPath() {
         return this.candidate.getResource().getPath();
     }
 

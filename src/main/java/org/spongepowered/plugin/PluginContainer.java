@@ -43,16 +43,17 @@ public interface PluginContainer {
 
     /**
      * Gets the {@link PluginMetadata metadata} used to describe this plugin.
+     *
      * @return The metadata
      */
     PluginMetadata getMetadata();
 
     /**
-     * Gets the file that should be considered the physical representation of the plugin.
+     * Gets the path that is the "root" of this plugin.
      *
-     * @return The file
+     * @return The path
      */
-    Path getFile();
+    Path getPath();
 
     /**
      * Gets a {@link Logger} with the id set to this plugin's id.
