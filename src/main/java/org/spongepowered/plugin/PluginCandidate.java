@@ -26,6 +26,8 @@ package org.spongepowered.plugin;
 
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.util.StringJoiner;
+
 public final class PluginCandidate<P extends PluginResource> {
 
     private final PluginMetadata metadata;
@@ -42,5 +44,13 @@ public final class PluginCandidate<P extends PluginResource> {
 
     public P getResource() {
         return this.resource;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", PluginCandidate.class.getSimpleName() + "[", "]")
+                .add("metadata=" + this.metadata)
+                .add("resource=" + this.resource)
+                .toString();
     }
 }

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.StringJoiner;
 
 public class PluginResource {
 
@@ -59,5 +60,17 @@ public class PluginResource {
         }
 
         return this.fileSystem;
+    }
+
+    protected StringJoiner toStringJoiner() {
+        return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
+                .add("locator='" + this.locator + "'")
+                .add("path=" + this.path)
+                .add("fileSystem=" + this.fileSystem);
+    }
+
+    @Override
+    public String toString() {
+        return this.toStringJoiner().toString();
     }
 }

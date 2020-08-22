@@ -109,11 +109,14 @@ public class JVMPluginContainer implements PluginContainer {
         return this.candidate.getMetadata().getId().equals(((PluginContainer) that).getMetadata().getId());
     }
 
+    protected StringJoiner toStringJoiner() {
+        return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
+                .add("metadata=" + this.candidate.getMetadata())
+                .add("path=" + this.candidate.getResource().getPath());
+    }
+
     @Override
     public String toString() {
-        return new StringJoiner(", ", JVMPluginContainer.class.getSimpleName() + "[", "]")
-                .add(this.candidate.getMetadata().toString())
-                .add("path=" + this.candidate.getResource().getPath())
-                .toString();
+        return this.toStringJoiner().toString();
     }
 }
