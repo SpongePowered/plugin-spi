@@ -27,6 +27,7 @@ package org.spongepowered.plugin.jvm.locator;
 import org.spongepowered.plugin.PluginResource;
 
 import java.nio.file.Path;
+import java.util.StringJoiner;
 
 public final class JVMPluginResource extends PluginResource {
 
@@ -39,5 +40,11 @@ public final class JVMPluginResource extends PluginResource {
 
     public ResourceType getType() {
         return this.type;
+    }
+
+    @Override
+    protected StringJoiner toStringJoiner() {
+        return super.toStringJoiner()
+                .add("type=" + this.type);
     }
 }
