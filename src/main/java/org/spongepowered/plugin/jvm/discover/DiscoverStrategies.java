@@ -91,23 +91,23 @@ public enum DiscoverStrategies implements DiscoverStrategy {
                         final Manifest manifest = jf.getManifest();
                         final String loader = ManifestUtils.getLoader(manifest).orElse(null);
                         if (loader == null) {
-                            environment.getLogger().debug("Manifest for '{}' does not specify a plugin loader when traversing classloader resources for plugin discovery! Skipping...", jf);
+                            environment.getLogger().debug("Manifest for '{}' does not specify a plugin loader when traversing classloader resources for plugin discovery! Skipping...", path);
                             continue;
                         }
 
                         if (!service.getName().equals(loader)) {
-                            environment.getLogger().debug("'{}' specified loader '{}' but ours is '{}'. Skipping...", jf, loader, service.getName());
+                            environment.getLogger().debug("'{}' specified loader '{}' but ours is '{}'. Skipping...", path, loader, service.getName());
                             continue;
                         }
 
                         if (!service.isValidManifest(environment, manifest)) {
-                            environment.getLogger().error("Manifest specified in '{}' is not valid for loader '{}'. Skipping...", jf, service.getName());
+                            environment.getLogger().error("Manifest specified in '{}' is not valid for loader '{}'. Skipping...", path, service.getName());
                             continue;
                         }
 
                         final JarEntry pluginMetadataJarEntry = jf.getJarEntry(JVMConstants.META_INF_LOCATION + "/" + service.getPluginMetadataFileName());
                         if (pluginMetadataJarEntry == null) {
-                            environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
+                            environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                             continue;
                         }
 
