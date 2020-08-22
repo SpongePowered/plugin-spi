@@ -24,13 +24,10 @@
  */
 package org.spongepowered.plugin;
 
-import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.jar.Manifest;
 
-public interface PluginLanguageService {
+public interface PluginLanguageService<P extends PluginResource> {
 
     /**
      * Gets the name of this service.
@@ -57,26 +54,11 @@ public interface PluginLanguageService {
     void initialize(final PluginEnvironment environment);
 
     /**
-     * Discovers {@link Path launch resources} for use with ecosystems that are pluggable
-     * with other constructs. As an example and a use case, Sponge passes off the files's {@link Manifest}
-     * to ModLauncher for Mixin interoperability.
-     *
-     * <p>Under no circumstance should plugins be classloaded in the invocation of this method.</p>
-     *
-     * <p>It is also assumed that the library user will track its plugin resources, for use when discovering candidates.</p>
+     * Asks the service if the provided {@link PluginResource resource} can become {@link PluginCandidate candidates}.
      *
      * @param environment The environment
-     * @return The discovered files
+     * @param resource The resource
+     * @return The candidate or {@link Optional#empty()} if the resource can't be a candidate
      */
-    List<Path> discoverPluginResources(final PluginEnvironment environment);
-
-    /**
-     * Determines the {@link PluginCandidate candidates} that will be, eventually, loaded as plugins.
-     *
-     * <p>Under no circumstance should plugins be classloaded in the invocation of this method.</p>
-     *
-     * @param environment The environment
-     * @return The discovered candidates
-     */
-    List<PluginCandidate> createPluginCandidates(final PluginEnvironment environment);
+    List<PluginCandidate<P>> createPluginCandidates(final PluginEnvironment environment, P resource);
 }

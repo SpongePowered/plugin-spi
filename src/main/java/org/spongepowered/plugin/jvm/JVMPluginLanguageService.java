@@ -27,7 +27,8 @@ package org.spongepowered.plugin.jvm;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
-import org.spongepowered.plugin.jvm.discover.DiscoverStrategies;
+import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
+import org.spongepowered.plugin.jvm.locator.JVMPluginResourceLocatorService;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 import org.spongepowered.plugin.metadata.PluginMetadataContainer;
 import org.spongepowered.plugin.metadata.util.PluginMetadataHelper;
@@ -40,76 +41,57 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
-public abstract class JVMPluginLanguageService implements PluginLanguageService {
-
-    private static final String DEFAULT_METADATA_FILE_NAME = "plugins.json";
-
-    private final Map<String, Collection<Path>> pluginResources;
-    private final Map<String, Collection<PluginCandidate>> pluginCandidates;
-
-    protected JVMPluginLanguageService() {
-        this.pluginResources = new HashMap<>();
-        this.pluginCandidates = new HashMap<>();
-    }
+public abstract class JVMPluginLanguageService implements PluginLanguageService<JVMPluginResource> {
 
     @Override
     public void initialize(final PluginEnvironment environment) {
     }
 
     @Override
-    public List<Path> discoverPluginResources(final PluginEnvironment environment) {
-        final List<Path> pluginFiles = new ArrayList<>();
+    public List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment, final JVMPluginResource resource) {
+        final List<PluginCandidate<JVMPluginResource>> candidates = new LinkedList<>();
 
-        for (final DiscoverStrategies strategy : DiscoverStrategies.values()) {
-            final List<Path> files = strategy.discoverResources(environment, this);
-            environment.getLogger().info("Discovered '{}' [{}] plugin resource(s) for '{}'.", files.size(), strategy.getName(), this.getName());
-            this.pluginResources.put(strategy.getName(), files);
-            pluginFiles.addAll(files);
-        }
-
-        return pluginFiles;
-    }
-
-    @Override
-    public List<PluginCandidate> createPluginCandidates(final PluginEnvironment environment) {
-        List<PluginCandidate> pluginCandidates = new ArrayList<>();
-
-        for (final Map.Entry<String, Collection<Path>> resourcesEntry : this.pluginResources.entrySet()) {
-            final String strategy = resourcesEntry.getKey();
-            final Collection<Path> resources = resourcesEntry.getValue();
-            final List<PluginCandidate> perStrategyCandidates = new ArrayList<>();
-
-            for (final Path pluginFile : resources) {
-                final String pluginMetadataFileName = this.getPluginMetadataFileName();
-                try (final InputStream stream = this.getFileAsStream(pluginFile, JVMConstants.META_INF_LOCATION + "/" + pluginMetadataFileName)) {
-                    final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, pluginMetadataFileName, stream).orElse(null);
-                    if (pluginMetadataContainer != null) {
-                        for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.getAllMetadata().entrySet()) {
-                            final PluginMetadata metadata = metadataEntry.getValue();
-                            final PluginCandidate candidate = DiscoverStrategies.DIRECTORY.getName().equals(strategy) ?
-                                    new JarPluginCandidate(metadata, pluginFile) : new PluginCandidate(metadata, pluginFile);
-                            pluginCandidates.add(candidate);
-                            perStrategyCandidates.add(candidate);
-                        }
+        try (final InputStream stream = this.getFileAsStream(resource.getPath(), this.getMetadataPath())) {
+            final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, this.getMetadataFileName(), stream)
+                    .orElse(null);
+            if (pluginMetadataContainer != null) {
+                for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.getAllMetadata().entrySet()) {
+                    final PluginMetadata metadata = metadataEntry.getValue();
+                    if (!metadata.getLoader().equals(this.getName())) {
+                        continue;
                     }
-                } catch (final Exception ex) {
-                    ex.printStackTrace();
+
+                    candidates.add(new PluginCandidate<>(metadata, resource));
                 }
             }
-
-            this.pluginCandidates.put(strategy, perStrategyCandidates);
+        } catch (final IOException | URISyntaxException ex) {
+            ex.printStackTrace();
         }
 
-        return this.sortCandidates(pluginCandidates);
+        return candidates;
+    }
+
+    public String getMetadataFileName() {
+        return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
+    }
+
+    public String getMetadataPath() {
+        return JVMConstants.META_INF_LOCATION + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
+    }
+
+    public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {
+        return true;
+    }
+
+    protected List<PluginCandidate<JVMPluginResource>> sortCandidates(final List<PluginCandidate<JVMPluginResource>> pluginCandidates) {
+        return pluginCandidates;
     }
 
     private InputStream getFileAsStream(final Path rootDirectory, final String relativePath) throws URISyntaxException, IOException {
@@ -130,11 +112,8 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
         }
     }
 
-    public String getPluginMetadataFileName() {
-        return JVMPluginLanguageService.DEFAULT_METADATA_FILE_NAME;
-    }
-
-    public Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename, final InputStream stream) {
+    private Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename,
+            final InputStream stream) {
         final PluginMetadataHelper metadataHelper = PluginMetadataHelper.builder().build();
         try {
             final List<PluginMetadata> pluginMetadata = new ArrayList<>(metadataHelper.read(stream));
@@ -147,17 +126,5 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService 
             environment.getLogger().error("An error occurred reading plugin metadata file '{}'.", filename, e);
             return Optional.empty();
         }
-    }
-
-    public boolean isValidManifest(final PluginEnvironment environment, final Manifest manifest) {
-        return true;
-    }
-
-    public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {
-        return true;
-    }
-
-    protected List<PluginCandidate> sortCandidates(final List<PluginCandidate> pluginCandidates) {
-        return pluginCandidates;
     }
 }

@@ -22,42 +22,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.jvm.locator;
 
-import org.spongepowered.plugin.PluginCandidate;
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.PluginResourceLocatorService;
+import org.spongepowered.plugin.jvm.JVMConstants;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.Collections;
+import java.util.jar.Manifest;
 
-public final class JarPluginCandidate extends PluginCandidate {
+public abstract class JVMPluginResourceLocatorService implements PluginResourceLocatorService<JVMPluginResource> {
 
-    private final URI jarUri;
-    private FileSystem fileSystem;
+    public static final String DEFAULT_METADATA_FILENAME = "plugins.json";
 
-    public JarPluginCandidate(final PluginMetadata metadata, final Path file) {
-        super(metadata, file);
-        try {
-            this.jarUri = new URI("jar:" + file.toUri().toString());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Should be impossible!");
-        }
+    public boolean isValidManifest(final PluginEnvironment environment, final Manifest manifest) {
+        return true;
     }
 
-    public FileSystem getFileSystem() {
-        if (this.fileSystem == null) {
-            try {
-                this.fileSystem = FileSystems.newFileSystem(this.jarUri, Collections.emptyMap());
-            } catch (IOException e) {
-                throw new RuntimeException("Should be impossible!");
-            }
-        }
-
-        return this.fileSystem;
+    public String getMetadataPath() {
+        return JVMConstants.META_INF_LOCATION + "/" + DEFAULT_METADATA_FILENAME;
     }
 }

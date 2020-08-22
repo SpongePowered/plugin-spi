@@ -22,25 +22,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.jvm.locator;
 
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.spongepowered.plugin.PluginResource;
 
-public final class PluginCandidate<P extends PluginResource> {
+import java.nio.file.Path;
 
-    private final PluginMetadata metadata;
-    private final P resource;
+public final class JVMPluginResource extends PluginResource {
 
-    public PluginCandidate(final PluginMetadata metadata, final P resource) {
-        this.metadata = metadata;
-        this.resource = resource;
+    private final ResourceType type;
+
+    public JVMPluginResource(final String locator, final ResourceType type, final Path path) {
+        super(locator, path);
+        this.type = type;
     }
 
-    public PluginMetadata getMetadata() {
-        return this.metadata;
-    }
-
-    public P getResource() {
-        return this.resource;
+    public ResourceType getType() {
+        return this.type;
     }
 }

@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
+import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.net.URL;
@@ -38,17 +39,18 @@ import java.util.StringJoiner;
 
 public class JVMPluginContainer implements PluginContainer {
 
-    private final PluginCandidate candidate;
+    private final PluginCandidate<JVMPluginResource> candidate;
     private final Logger logger;
     private Object instance;
 
-    public JVMPluginContainer(final PluginCandidate candidate) {
+    public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate) {
         this(candidate, LogManager.getLogger(candidate.getMetadata().getId()));
     }
 
-    public JVMPluginContainer(final PluginCandidate candidate, final Logger logger) {
-        Objects.requireNonNull(candidate, "candidate");
-        Objects.requireNonNull(logger, "logger");
+    public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate, final Logger logger) {
+        Objects.requireNonNull(candidate);
+        Objects.requireNonNull(logger);
+
         this.candidate = candidate;
         this.logger = logger;
     }
@@ -60,7 +62,7 @@ public class JVMPluginContainer implements PluginContainer {
 
     @Override
     public Path getFile() {
-        return this.candidate.getFile();
+        return this.candidate.getResource().getPath();
     }
 
     @Override
@@ -111,7 +113,7 @@ public class JVMPluginContainer implements PluginContainer {
     public String toString() {
         return new StringJoiner(", ", JVMPluginContainer.class.getSimpleName() + "[", "]")
                 .add(this.candidate.getMetadata().toString())
-                .add("file=" + this.candidate.getFile())
+                .add("path=" + this.candidate.getResource().getPath())
                 .toString();
     }
 }

@@ -22,25 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.jvm.locator;
 
-import org.spongepowered.plugin.metadata.PluginMetadata;
-
-public final class PluginCandidate<P extends PluginResource> {
-
-    private final PluginMetadata metadata;
-    private final P resource;
-
-    public PluginCandidate(final PluginMetadata metadata, final P resource) {
-        this.metadata = metadata;
-        this.resource = resource;
-    }
-
-    public PluginMetadata getMetadata() {
-        return this.metadata;
-    }
-
-    public P getResource() {
-        return this.resource;
-    }
+public enum ResourceType {
+    DIRECTORY,
+    JAR
 }

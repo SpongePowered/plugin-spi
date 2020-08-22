@@ -24,23 +24,40 @@
  */
 package org.spongepowered.plugin;
 
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
-public final class PluginCandidate<P extends PluginResource> {
+public class PluginResource {
 
-    private final PluginMetadata metadata;
-    private final P resource;
+    private final String locator;
+    private final Path path;
 
-    public PluginCandidate(final PluginMetadata metadata, final P resource) {
-        this.metadata = metadata;
-        this.resource = resource;
+    private FileSystem fileSystem;
+
+    public PluginResource(final String locator, final Path path) {
+        this.locator = locator;
+        this.path = path;
     }
 
-    public PluginMetadata getMetadata() {
-        return this.metadata;
+    public String getLocator() {
+        return this.locator;
     }
 
-    public P getResource() {
-        return this.resource;
+    public Path getPath() {
+        return this.path;
+    }
+
+    public FileSystem getFileSystem() {
+        if (this.fileSystem == null) {
+            try {
+                this.fileSystem = FileSystems.newFileSystem(this.getPath(), this.getClass().getClassLoader());
+            } catch (final IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        return this.fileSystem;
     }
 }

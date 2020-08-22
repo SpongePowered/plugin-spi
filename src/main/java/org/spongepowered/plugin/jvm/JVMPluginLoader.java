@@ -27,10 +27,11 @@ package org.spongepowered.plugin.jvm;
 import org.spongepowered.plugin.InvalidPluginException;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLoader;
+import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
 
 import java.util.Objects;
 
-public abstract class JVMPluginLoader<P extends JVMPluginContainer> implements PluginLoader<P> {
+public abstract class JVMPluginLoader<P extends JVMPluginContainer> implements PluginLoader<JVMPluginResource, P> {
 
     @Override
     public void loadPlugin(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException {

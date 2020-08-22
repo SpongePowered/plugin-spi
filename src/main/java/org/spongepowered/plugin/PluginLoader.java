@@ -31,7 +31,7 @@ import java.util.Optional;
  *
  * Implementors of this class are required to have a no-args constructor
  */
-public interface PluginLoader<P extends PluginContainer> {
+public interface PluginLoader<R extends PluginResource, P extends PluginContainer> {
 
     /**
      * Creates a {@link PluginContainer} which which will hold the instance of an actual plugin.
@@ -40,7 +40,7 @@ public interface PluginLoader<P extends PluginContainer> {
      * @param environment The environment
      * @return The container
      */
-    Optional<P> createPluginContainer(final PluginCandidate candidate, final PluginEnvironment environment);
+    Optional<P> createPluginContainer(final PluginCandidate<R> candidate, final PluginEnvironment environment);
 
     /**
      * Instructs the {@link PluginContainer} to actually load and create it's plugin instance.

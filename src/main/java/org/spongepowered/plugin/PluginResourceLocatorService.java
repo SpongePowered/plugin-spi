@@ -22,17 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm.discover;
-
-import org.spongepowered.plugin.PluginEnvironment;
-import org.spongepowered.plugin.jvm.JVMPluginLanguageService;
+package org.spongepowered.plugin;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.jar.Manifest;
 
-public interface DiscoverStrategy {
+public interface PluginResourceLocatorService<P extends PluginResource> {
 
+    /**
+     * Gets the name of this locator.
+     *
+     * @return The name
+     */
     String getName();
 
-    List<Path> discoverResources(final PluginEnvironment environment, final JVMPluginLanguageService service);
+    /**
+     * Discovers {@link Path launch resources} for use with ecosystems that are pluggable
+     * with other constructs. As an example and a use case, Sponge passes off jar
+     * {@link Manifest manifests} to ModLauncher for Mixin interoperability.
+     *
+     * @param environment The environment
+     * @return The discovered files
+     */
+    List<P> locatePluginResources(final PluginEnvironment environment);
 }
