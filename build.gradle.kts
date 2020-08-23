@@ -76,7 +76,7 @@ license {
 }
 
 dependencies {
-    api("org.spongepowered:plugin-meta:0.6.0-SNAPSHOT")
+    api("org.spongepowered:plugin-meta:0.6.0.1-SNAPSHOT")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
     implementation("org.checkerframework:checker-qual:3.4.1")
     testImplementation("junit:junit:4.12")
