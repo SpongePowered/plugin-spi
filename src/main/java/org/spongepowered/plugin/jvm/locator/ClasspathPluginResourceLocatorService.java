@@ -77,12 +77,25 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
 
             // Jars
             if (uri.getRawSchemeSpecificPart().contains("!")) {
+
+                final URI parentUri;
                 try {
-                    path = Paths.get(new URI(uri.getRawSchemeSpecificPart().split("!")[0]));
-                } catch (final URISyntaxException e) {
+                    parentUri = new URI(uri.getRawSchemeSpecificPart().split("!")[0]);
+                } catch (URISyntaxException e) {
                     environment.getLogger().error("Malformed URI for Jar '{}. Skipping...", url, e);
                     continue;
                 }
+
+                // Do not add ourselves as a jar as a classpath resource
+                try {
+                    if (parentUri.equals(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI())) {
+                        continue;
+                    }
+                } catch (final URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                path = Paths.get(parentUri);
 
                 try (final JarFile jf = new JarFile(path.toFile())) {
                     if (!this.isValidManifest(environment, jf.getManifest())) {
