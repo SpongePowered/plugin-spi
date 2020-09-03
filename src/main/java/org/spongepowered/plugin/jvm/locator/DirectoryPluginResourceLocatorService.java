@@ -77,7 +77,7 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
                             continue;
                         }
 
-                        pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path));
+                        pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path, manifest));
                     } catch (final IOException e) {
                         environment.getLogger().error("Error reading '{}' as a Jar file when traversing directory resources for plugin discovery! Skipping...", path, e);
                     }

@@ -24,22 +24,31 @@
  */
 package org.spongepowered.plugin.jvm.locator;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.plugin.PluginResource;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.jar.Manifest;
 
 public final class JVMPluginResource extends PluginResource {
 
     private final ResourceType type;
+    private final Manifest manifest;
 
-    public JVMPluginResource(final String locator, final ResourceType type, final Path path) {
+    public JVMPluginResource(final String locator, final ResourceType type, final Path path, @Nullable final Manifest manifest) {
         super(locator, path);
         this.type = type;
+        this.manifest = manifest;
     }
 
     public ResourceType getType() {
         return this.type;
+    }
+
+    public Optional<Manifest> getManifest() {
+        return Optional.ofNullable(this.manifest);
     }
 
     @Override

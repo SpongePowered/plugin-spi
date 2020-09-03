@@ -86,15 +86,6 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                     continue;
                 }
 
-                // Do not add ourselves as a jar as a classpath resource
-                try {
-                    if (parentUri.equals(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI())) {
-                        continue;
-                    }
-                } catch (final URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
                 path = Paths.get(parentUri);
 
                 try (final JarFile jf = new JarFile(path.toFile())) {
@@ -107,7 +98,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                         environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
                         continue;
                     }
-                    pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path));
+                    pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path, jf.getManifest()));
                 } catch (final IOException e) {
                     environment.getLogger().error("Error reading '{}' as a Jar file. Skipping...", url, e);
                 }
@@ -137,7 +128,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                     environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                     continue;
                 }
-                pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.DIRECTORY, path));
+                pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.DIRECTORY, path, manifest));
             }
         }
 
