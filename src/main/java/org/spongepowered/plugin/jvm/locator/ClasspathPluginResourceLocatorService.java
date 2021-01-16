@@ -90,12 +90,12 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
 
                 try (final JarFile jf = new JarFile(path.toFile())) {
                     if (!this.isValidManifest(environment, jf.getManifest())) {
-                        environment.getLogger().error("Manifest specified in '{}' is not valid. Skipping...", jf);
+                        environment.getLogger().error("Manifest specified in '{}' is not valid. Skipping...", path);
                         continue;
                     }
                     final JarEntry pluginMetadataJarEntry = jf.getJarEntry(this.getMetadataPath());
                     if (pluginMetadataJarEntry == null) {
-                        environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
+                        environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                         continue;
                     }
                     pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path, jf.getManifest()));
