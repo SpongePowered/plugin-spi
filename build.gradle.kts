@@ -1,22 +1,15 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("net.minecrell.licenser") version "0.4"
+    id("org.cadixdev.licenser") version "0.5.0"
     signing
 }
 
 defaultTasks("build")
 
 repositories {
-    mavenLocal()
-    jcenter()
-    maven {
-        name = "sponge v2"
-        setUrl("https://repo-new.spongepowered.org/repository/maven-public")
-    }
-    maven {
+    maven("https://repo.spongepowered.org/repository/maven-public") {
         name = "sponge"
-        setUrl("https://repo.spongepowered.org/maven")
     }
 }
 
@@ -38,7 +31,7 @@ val jar by tasks.existing(Jar::class) {
                 "Specification-Vendor" to "SpongePowered",
                 "Specification-Version" to specVersion, // We are version 1 of ourselves
                 "Implementation-Title" to project.name,
-                "Implementation-Version" to version,
+                "Implementation-Version" to project.version,
                 "Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
         ))
     }
@@ -76,7 +69,7 @@ license {
 }
 
 dependencies {
-    api("org.spongepowered:plugin-meta:0.6.0.1-SNAPSHOT")
+    api("org.spongepowered:plugin-meta:0.6.2")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
     implementation("org.checkerframework:checker-qual:3.4.1")
     testImplementation("junit:junit:4.12")
