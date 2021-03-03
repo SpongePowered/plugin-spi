@@ -67,13 +67,13 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
                         final Manifest manifest = jf.getManifest();
 
                         if (!this.isValidManifest(environment, manifest)) {
-                            environment.getLogger().error("Manifest specified in '{}' is not valid for locator '{}'. Skipping...", jf, this.getName());
+                            environment.getLogger().error("Manifest specified in '{}' is not valid for locator '{}'. Skipping...", path, this.getName());
                             continue;
                         }
 
                         final JarEntry pluginMetadataJarEntry = jf.getJarEntry(this.getMetadataPath());
                         if (pluginMetadataJarEntry == null) {
-                            environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", jf);
+                            environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                             continue;
                         }
 
