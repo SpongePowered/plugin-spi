@@ -33,12 +33,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -58,7 +58,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
         final List<JVMPluginResource> pluginFiles = new ArrayList<>();
         final Enumeration<URL> resources;
         try {
-            resources = ClassLoader.getSystemClassLoader().getResources(JVMConstants.Manifest.LOCATION);
+            resources = ClassLoader.getSystemClassLoader().getResources(this.getMetadataPath());
         } catch (final IOException e) {
             throw new RuntimeException("Failed to enumerate classloader resources!");
         }
@@ -81,7 +81,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                 final URI parentUri;
                 try {
                     parentUri = new URI(uri.getRawSchemeSpecificPart().split("!")[0]);
-                } catch (URISyntaxException e) {
+                } catch (final URISyntaxException e) {
                     environment.getLogger().error("Malformed URI for Jar '{}. Skipping...", url, e);
                     continue;
                 }
@@ -89,45 +89,36 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                 path = Paths.get(parentUri);
 
                 try (final JarFile jf = new JarFile(path.toFile())) {
-                    if (!this.isValidManifest(environment, jf.getManifest())) {
-                        environment.getLogger().error("Manifest specified in '{}' is not valid. Skipping...", path);
-                        continue;
-                    }
-                    final JarEntry pluginMetadataJarEntry = jf.getJarEntry(this.getMetadataPath());
-                    if (pluginMetadataJarEntry == null) {
-                        environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
-                        continue;
-                    }
                     pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path, jf.getManifest()));
                 } catch (final IOException e) {
                     environment.getLogger().error("Error reading '{}' as a Jar file. Skipping...", url, e);
                 }
             } else {
-                Manifest manifest;
-                try (final InputStream stream = url.openStream()) {
-                    manifest = new Manifest(stream);
-                } catch (final IOException e) {
-                    environment.getLogger().error("Malformed URL '{}' in locator '{}'. Skipping...", url, e);
-                    continue;
-                }
-
-                if (!this.isValidManifest(environment, manifest)) {
-                    environment.getLogger().error("Manifest specified in '{}' is not valid. Skipping...", url);
-                    continue;
-                }
-
                 try {
-                    path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (JVMConstants.Manifest.LOCATION.length()))));
+                    path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (this.getMetadataPath().length()))));
                 } catch (final URISyntaxException e) {
                     environment.getLogger().error("Error creating root URI for '{}'. Skipping...", url, e);
                     continue;
                 }
 
-                final Path pluginMetadataFile = path.resolve(this.getMetadataPath());
-                if (Files.notExists(pluginMetadataFile)) {
-                    environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
+                // Manifests may not be present in unpacked plugins
+                final Path manifestPath = path.resolve(JVMConstants.Manifest.LOCATION);
+
+                Manifest manifest = null;
+                try (final InputStream stream = Files.newInputStream(manifestPath)) {
+                    manifest = new Manifest(stream);
+                } catch (final NoSuchFileException ignored) {
+                    //
+                } catch (final IOException e) {
+                    environment.getLogger().error("Malformed URL '{}' in locator '{}'. Skipping...", url, e);
                     continue;
                 }
+
+                if (manifest != null && !this.isValidManifest(environment, manifest)) {
+                    environment.getLogger().error("Manifest specified in '{}' is not valid. Skipping...", url);
+                    continue;
+                }
+
                 pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.DIRECTORY, path, manifest));
             }
         }
