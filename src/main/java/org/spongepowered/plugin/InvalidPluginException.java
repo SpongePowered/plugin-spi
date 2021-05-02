@@ -29,6 +29,8 @@ package org.spongepowered.plugin;
  */
 public final class InvalidPluginException extends Exception {
 
+    private static final long serialVersionUID = -9198957064244669388L;
+
     public InvalidPluginException(final String message) {
         super(message);
     }

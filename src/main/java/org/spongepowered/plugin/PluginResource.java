@@ -42,18 +42,18 @@ public class PluginResource {
         this.path = path;
     }
 
-    public String getLocator() {
+    public String locator() {
         return this.locator;
     }
 
-    public Path getPath() {
+    public Path path() {
         return this.path;
     }
 
-    public FileSystem getFileSystem() {
+    public FileSystem fileSystem() {
         if (this.fileSystem == null) {
             try {
-                this.fileSystem = FileSystems.newFileSystem(this.getPath(), this.getClass().getClassLoader());
+                this.fileSystem = FileSystems.newFileSystem(this.path(), this.getClass().getClassLoader());
             } catch (final IOException ex) {
                 throw new RuntimeException(ex);
             }

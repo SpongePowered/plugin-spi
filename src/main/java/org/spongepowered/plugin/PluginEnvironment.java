@@ -44,11 +44,11 @@ public final class PluginEnvironment {
         this.blackboard = new Blackboard();
     }
 
-    public Logger getLogger() {
+    public Logger logger() {
         return this.logger;
     }
 
-    public Blackboard getBlackboard() {
+    public Blackboard blackboard() {
         return this.blackboard;
     }
 }

@@ -38,11 +38,11 @@ public final class PluginCandidate<P extends PluginResource> {
         this.resource = resource;
     }
 
-    public PluginMetadata getMetadata() {
+    public PluginMetadata metadata() {
         return this.metadata;
     }
 
-    public P getResource() {
+    public P resource() {
         return this.resource;
     }
 

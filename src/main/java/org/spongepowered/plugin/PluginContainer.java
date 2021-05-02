@@ -46,30 +46,30 @@ public interface PluginContainer {
      *
      * @return The metadata
      */
-    PluginMetadata getMetadata();
+    PluginMetadata metadata();
 
     /**
      * Gets the path that is the "root" of this plugin.
      *
      * @return The path
      */
-    Path getPath();
+    Path path();
 
     /**
      * Gets a {@link Logger} with the id set to this plugin's id.
      *
-     * <p>@see {@link PluginMetadata#getId()}</p>
+     * <p>@see {@link PluginMetadata#id()}</p>
      *
      * @return The logger
      */
-    Logger getLogger();
+    Logger logger();
 
     /**
      * Gets the instance created when loading this plugin.
      *
      * @return The instance
      */
-    Object getInstance();
+    Object instance();
 
     /**
      * Resolves the location of a bundled resource, given a relative {@link URL}.

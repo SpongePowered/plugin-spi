@@ -47,18 +47,18 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
     private static final String NAME = "java_classpath";
 
     @Override
-    public String getName() {
+    public String name() {
         return ClasspathPluginResourceLocatorService.NAME;
     }
 
     @Override
     public List<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
-        environment.getLogger().info("Locating '{}' resources...", this.getName());
+        environment.logger().info("Locating '{}' resources...", this.name());
 
         final List<JVMPluginResource> pluginFiles = new ArrayList<>();
         final Enumeration<URL> resources;
         try {
-            resources = ClassLoader.getSystemClassLoader().getResources(this.getMetadataPath());
+            resources = ClassLoader.getSystemClassLoader().getResources(this.metadataPath());
         } catch (final IOException e) {
             throw new RuntimeException("Failed to enumerate classloader resources!");
         }
@@ -70,7 +70,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
             try {
                 uri = url.toURI();
             } catch (final URISyntaxException e) {
-                environment.getLogger().error("Malformed URL '{}'. Skipping...", url, e);
+                environment.logger().error("Malformed URL '{}'. Skipping...", url, e);
                 continue;
             }
             final Path path;
@@ -82,22 +82,22 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                 try {
                     parentUri = new URI(uri.getRawSchemeSpecificPart().split("!")[0]);
                 } catch (final URISyntaxException e) {
-                    environment.getLogger().error("Malformed URI for Jar '{}. Skipping...", url, e);
+                    environment.logger().error("Malformed URI for Jar '{}. Skipping...", url, e);
                     continue;
                 }
 
                 path = Paths.get(parentUri);
 
                 try (final JarFile jf = new JarFile(path.toFile())) {
-                    pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path, jf.getManifest()));
+                    pluginFiles.add(new JVMPluginResource(this.name(), ResourceType.JAR, path, jf.getManifest()));
                 } catch (final IOException e) {
-                    environment.getLogger().error("Error reading '{}' as a Jar file. Skipping...", url, e);
+                    environment.logger().error("Error reading '{}' as a Jar file. Skipping...", url, e);
                 }
             } else {
                 try {
-                    path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (this.getMetadataPath().length()))));
+                    path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (this.metadataPath().length()))));
                 } catch (final URISyntaxException e) {
-                    environment.getLogger().error("Error creating root URI for '{}'. Skipping...", url, e);
+                    environment.logger().error("Error creating root URI for '{}'. Skipping...", url, e);
                     continue;
                 }
 
@@ -110,20 +110,20 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                 } catch (final NoSuchFileException ignored) {
                     //
                 } catch (final IOException e) {
-                    environment.getLogger().error("Malformed URL '{}' in locator '{}'. Skipping...", url, e);
+                    environment.logger().error("Malformed URL '{}' in locator '{}'. Skipping...", url, e);
                     continue;
                 }
 
                 if (manifest != null && !this.isValidManifest(environment, manifest)) {
-                    environment.getLogger().error("Manifest specified in '{}' is not valid. Skipping...", url);
+                    environment.logger().error("Manifest specified in '{}' is not valid. Skipping...", url);
                     continue;
                 }
 
-                pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.DIRECTORY, path, manifest));
+                pluginFiles.add(new JVMPluginResource(this.name(), ResourceType.DIRECTORY, path, manifest));
             }
         }
 
-        environment.getLogger().info("Located [{}] resource(s) for '{}'...", pluginFiles.size(), this.getName());
+        environment.logger().info("Located [{}] resource(s) for '{}'...", pluginFiles.size(), this.name());
 
         return pluginFiles;
     }

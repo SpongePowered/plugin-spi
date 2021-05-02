@@ -33,7 +33,7 @@ public final class JVMConstants {
 
     public static final class Manifest {
 
-        public static final String LOCATION = META_INF_LOCATION + "/MANIFEST.MF";
+        public static final String LOCATION = JVMConstants.META_INF_LOCATION + "/MANIFEST.MF";
         public static final String LOADER = "Loader";
 
         private Manifest() {

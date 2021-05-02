@@ -44,7 +44,7 @@ public class JVMPluginContainer implements PluginContainer {
     private Object instance;
 
     public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate) {
-        this(candidate, LogManager.getLogger(candidate.getMetadata().getId()));
+        this(candidate, LogManager.getLogger(candidate.metadata().id()));
     }
 
     public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate, final Logger logger) {
@@ -56,29 +56,29 @@ public class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
-    public PluginMetadata getMetadata() {
-        return this.candidate.getMetadata();
+    public PluginMetadata metadata() {
+        return this.candidate.metadata();
     }
 
     @Override
-    public Path getPath() {
-        return this.candidate.getResource().getPath();
+    public Path path() {
+        return this.candidate.resource().path();
     }
 
     @Override
-    public Logger getLogger() {
+    public Logger logger() {
         return this.logger;
     }
 
     @Override
-    public Object getInstance() {
+    public Object instance() {
         return this.instance;
     }
 
-    protected void setInstance(final Object instance) {
+    protected void initializeInstance(final Object instance) {
         if (this.instance != null) {
             throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
-                this.candidate.getMetadata().getId()));
+                this.candidate.metadata().id()));
         }
         Objects.requireNonNull(instance);
         this.instance = instance;
@@ -86,14 +86,14 @@ public class JVMPluginContainer implements PluginContainer {
 
     @Override
     public Optional<URL> locateResource(final URL relative) {
-        final ClassLoader classLoader = this.getInstance().getClass().getClassLoader();
+        final ClassLoader classLoader = this.instance().getClass().getClassLoader();
         final URL resolved = classLoader.getResource(relative.getPath());
         return Optional.ofNullable(resolved);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.candidate.getMetadata().getId());
+        return Objects.hash(this.candidate.metadata().id());
     }
 
     @Override
@@ -106,13 +106,13 @@ public class JVMPluginContainer implements PluginContainer {
             return false;
         }
 
-        return this.candidate.getMetadata().getId().equals(((PluginContainer) that).getMetadata().getId());
+        return this.candidate.metadata().id().equals(((PluginContainer) that).metadata().id());
     }
 
     protected StringJoiner toStringJoiner() {
         return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
-                .add("metadata=" + this.candidate.getMetadata())
-                .add("path=" + this.candidate.getResource().getPath());
+                .add("metadata=" + this.candidate.metadata())
+                .add("path=" + this.candidate.resource().path());
     }
 
     @Override

@@ -36,7 +36,7 @@ public interface PluginLanguageService<P extends PluginResource> {
      *
      * @return The name
      */
-    String getName();
+    String name();
 
     /**
      * Gets the fully qualified path to the {@link PluginLoader loader} that should be used to load
@@ -44,7 +44,7 @@ public interface PluginLanguageService<P extends PluginResource> {
      *
      * @return The classpath to the loader
      */
-    String getPluginLoader();
+    String pluginLoader();
 
     /**
      * Initializes this service.

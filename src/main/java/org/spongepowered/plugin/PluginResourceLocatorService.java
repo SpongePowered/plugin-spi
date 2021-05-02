@@ -35,7 +35,7 @@ public interface PluginResourceLocatorService<P extends PluginResource> {
      *
      * @return The name
      */
-    String getName();
+    String name();
 
     /**
      * Discovers {@link Path launch resources} for use with ecosystems that are pluggable

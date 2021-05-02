@@ -24,6 +24,8 @@
  */
 package org.spongepowered.plugin;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -68,21 +70,21 @@ public final class Blackboard {
             return new Key<>(name, (Class<V>) clazz);
         }
 
-        public String getName() {
+        public String name() {
             return this.name;
         }
 
-        public Class<V> getClazz() {
+        public Class<V> clazz() {
             return this.clazz;
         }
 
         @Override
-        public int compareTo(final Blackboard.Key<V> o) {
-            if (this == o) {
+        public int compareTo(final Blackboard.@NonNull Key<V> that) {
+            if (this == that) {
                 return 0;
             }
 
-            return this.name.compareTo(o.name);
+            return this.name.compareTo(that.name);
         }
 
         @Override

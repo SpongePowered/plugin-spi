@@ -43,19 +43,19 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
     private static final String NAME = "java_directory";
 
     @Override
-    public String getName() {
+    public String name() {
         return DirectoryPluginResourceLocatorService.NAME;
     }
 
     @Override
     public List<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
-        environment.getLogger().info("Locating '{}' resources...", this.getName());
+        environment.logger().info("Locating '{}' resources...", this.name());
 
         final List<JVMPluginResource> pluginFiles = new ArrayList<>();
 
-        for (final Path pluginsDir : environment.getBlackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
+        for (final Path pluginsDir : environment.blackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
             if (Files.notExists(pluginsDir)) {
-                environment.getLogger().debug("Plugin directory '{}' does not exist for locator '{}'. Skipping...", pluginsDir, this.getName());
+                environment.logger().debug("Plugin directory '{}' does not exist for locator '{}'. Skipping...", pluginsDir, this.name());
                 continue;
             }
             try {
@@ -67,28 +67,28 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
                         final Manifest manifest = jf.getManifest();
 
                         if (!this.isValidManifest(environment, manifest)) {
-                            environment.getLogger().error("Manifest specified in '{}' is not valid for locator '{}'. Skipping...", path, this.getName());
+                            environment.logger().error("Manifest specified in '{}' is not valid for locator '{}'. Skipping...", path, this.name());
                             continue;
                         }
 
-                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(this.getMetadataPath());
+                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(this.metadataPath());
                         if (pluginMetadataJarEntry == null) {
-                            environment.getLogger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
+                            environment.logger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                             continue;
                         }
 
-                        pluginFiles.add(new JVMPluginResource(this.getName(), ResourceType.JAR, path, manifest));
+                        pluginFiles.add(new JVMPluginResource(this.name(), ResourceType.JAR, path, manifest));
                     } catch (final IOException e) {
-                        environment.getLogger().error("Error reading '{}' as a Jar file when traversing directory resources for plugin discovery! Skipping...", path, e);
+                        environment.logger().error("Error reading '{}' as a Jar file when traversing directory resources for plugin discovery! Skipping...", path, e);
                     }
                 }
             }
             catch (final IOException ex) {
-                environment.getLogger().error("Error walking plugins directory {}", pluginsDir, ex);
+                environment.logger().error("Error walking plugins directory {}", pluginsDir, ex);
             }
         }
 
-        environment.getLogger().info("Located [{}] resource(s) for '{}'...", pluginFiles.size(), this.getName());
+        environment.logger().info("Located [{}] resource(s) for '{}'...", pluginFiles.size(), this.name());
 
         return pluginFiles;
     }

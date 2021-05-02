@@ -43,11 +43,11 @@ public final class JVMPluginResource extends PluginResource {
         this.manifest = manifest;
     }
 
-    public ResourceType getType() {
+    public ResourceType type() {
         return this.type;
     }
 
-    public Optional<Manifest> getManifest() {
+    public Optional<Manifest> manifest() {
         return Optional.ofNullable(this.manifest);
     }
 

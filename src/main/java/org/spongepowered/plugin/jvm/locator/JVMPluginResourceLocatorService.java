@@ -38,7 +38,7 @@ public abstract class JVMPluginResourceLocatorService implements PluginResourceL
         return true;
     }
 
-    public String getMetadataPath() {
-        return JVMConstants.META_INF_LOCATION + "/" + DEFAULT_METADATA_FILENAME;
+    public String metadataPath() {
+        return JVMConstants.META_INF_LOCATION + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
     }
 }

@@ -39,7 +39,7 @@ public abstract class JVMPluginLoader<P extends JVMPluginContainer> implements P
         Objects.requireNonNull(container);
         Objects.requireNonNull(targetClassLoader);
 
-        container.setInstance(this.createPluginInstance(environment, container, targetClassLoader));
+        container.initializeInstance(this.createPluginInstance(environment, container, targetClassLoader));
     }
 
     protected abstract Object createPluginInstance(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader)

@@ -58,13 +58,13 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
     public List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment, final JVMPluginResource resource) {
         final List<PluginCandidate<JVMPluginResource>> candidates = new LinkedList<>();
 
-        try (final InputStream stream = this.getFileAsStream(resource.getPath(), this.getMetadataPath())) {
-            final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, this.getMetadataFileName(), stream)
+        try (final InputStream stream = this.getFileAsStream(resource.path(), this.metadataPath())) {
+            final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, this.metadataFileName(), stream)
                     .orElse(null);
             if (pluginMetadataContainer != null) {
-                for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.getAllMetadata().entrySet()) {
+                for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.allMetadata().entrySet()) {
                     final PluginMetadata metadata = metadataEntry.getValue();
-                    if (!metadata.getLoader().equals(this.getName())) {
+                    if (!metadata.loader().equals(this.name())) {
                         continue;
                     }
 
@@ -78,11 +78,11 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         return candidates;
     }
 
-    public String getMetadataFileName() {
+    public String metadataFileName() {
         return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
     }
 
-    public String getMetadataPath() {
+    public String metadataPath() {
         return JVMConstants.META_INF_LOCATION + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
     }
 
@@ -123,7 +123,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
             }
             return Optional.of(new PluginMetadataContainer(pluginMetadata));
         } catch (IOException e) {
-            environment.getLogger().error("An error occurred reading plugin metadata file '{}'.", filename, e);
+            environment.logger().error("An error occurred reading plugin metadata file '{}'.", filename, e);
             return Optional.empty();
         }
     }
