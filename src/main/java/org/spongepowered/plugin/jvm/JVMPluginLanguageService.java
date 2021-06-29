@@ -58,7 +58,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
 
     @Override
     public List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment, final JVMPluginResource resource) {
-        final List<PluginCandidate<JVMPluginResource>> candidates = new ArrayList<>();
+        final List<PluginCandidate<JVMPluginResource>> candidates = new LinkedList<>();
 
         try (final InputStream stream = this.getFileAsStream(resource.path(), this.metadataPath())) {
             final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, this.metadataFileName(), stream)
