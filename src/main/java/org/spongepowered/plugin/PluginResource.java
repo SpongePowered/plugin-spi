@@ -26,6 +26,7 @@ package org.spongepowered.plugin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 
@@ -37,24 +38,24 @@ public interface PluginResource {
     String locator();
 
     /**
-     * Resolves the location of a bundled resource, given a relative {@link URL}.
+     * Resolves the location of a bundled resource, given a relative {@link URI}.
      *
-     * @param relative The relative URL
+     * @param relative The relative URI
      * @return The resolved resource location, if available
      */
-    Optional<URL> locateResource(URL relative);
+    Optional<URI> locateResource(URI relative);
 
     /**
-     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URL}.
+     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URI}.
      *
-     * @param relative The relative URL
+     * @param relative The relative URI
      * @return The opened resource, if available
      */
-    default Optional<InputStream> openResource(URL relative) {
+    default Optional<InputStream> openResource(final URI relative) {
         return this.locateResource(relative).flatMap(url -> {
             try {
-                return Optional.of(url.openStream());
-            } catch (IOException e) {
+                return Optional.of(url.toURL().openStream());
+            } catch (final IOException ignored) {
                 return Optional.empty();
             }
         });

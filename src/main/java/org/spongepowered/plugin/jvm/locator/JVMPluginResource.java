@@ -28,6 +28,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.plugin.PluginResource;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -71,10 +73,17 @@ public class JVMPluginResource implements PluginResource {
     }
 
     @Override
-    public Optional<URL> locateResource(final URL relative) {
+    public Optional<URI> locateResource(final URI relative) {
         final ClassLoader classLoader = this.getClass().getClassLoader();
         final URL resolved = classLoader.getResource(relative.getPath());
-        return Optional.ofNullable(resolved);
+        try {
+            if (resolved == null) {
+                return Optional.empty();
+            }
+            return Optional.of(resolved.toURI());
+        } catch (final URISyntaxException ignored) {
+            return Optional.empty();
+        }
     }
 
     public FileSystem fileSystem() {
