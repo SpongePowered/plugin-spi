@@ -71,7 +71,7 @@ public class JVMPluginContainer implements PluginContainer {
     protected void initializeInstance(final Object instance) {
         if (this.instance != null) {
             throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
-                    this.candidate.metadata().id()));
+                this.candidate.metadata().id()));
         }
         this.instance = Objects.requireNonNull(instance);
     }
