@@ -42,7 +42,7 @@ public interface PluginResource {
      * @param relative The relative URL
      * @return The resolved resource location, if available
      */
-    Optional<URL> locateResource(final URL relative);
+    Optional<URL> locateResource(URL relative);
 
     /**
      * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URL}.
@@ -50,7 +50,7 @@ public interface PluginResource {
      * @param relative The relative URL
      * @return The opened resource, if available
      */
-    default Optional<InputStream> openResource(final URL relative) {
+    default Optional<InputStream> openResource(URL relative) {
         return this.locateResource(relative).flatMap(url -> {
             try {
                 return Optional.of(url.openStream());

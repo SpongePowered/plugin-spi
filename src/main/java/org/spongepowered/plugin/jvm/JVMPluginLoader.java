@@ -35,11 +35,8 @@ public abstract class JVMPluginLoader<P extends JVMPluginContainer> implements P
 
     @Override
     public void loadPlugin(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader) throws InvalidPluginException {
-        Objects.requireNonNull(environment);
-        Objects.requireNonNull(container);
-        Objects.requireNonNull(targetClassLoader);
-
-        container.initializeInstance(this.createPluginInstance(environment, container, targetClassLoader));
+        container.initializeInstance(this.createPluginInstance(Objects.requireNonNull(environment, "environment"),
+                Objects.requireNonNull(container, "container"), Objects.requireNonNull(targetClassLoader, "targetClassLoader")));
     }
 
     protected abstract Object createPluginInstance(final PluginEnvironment environment, final P container, final ClassLoader targetClassLoader)

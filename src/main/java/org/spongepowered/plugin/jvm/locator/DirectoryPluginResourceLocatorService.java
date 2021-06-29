@@ -32,7 +32,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -48,10 +50,10 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
     }
 
     @Override
-    public List<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
+    public Set<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
         environment.logger().info("Locating '{}' resources...", this.name());
 
-        final List<JVMPluginResource> pluginFiles = new ArrayList<>();
+        final Set<JVMPluginResource> pluginFiles = new HashSet<>();
 
         for (final Path pluginsDir : environment.blackboard().get(PluginKeys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
             if (Files.notExists(pluginsDir)) {

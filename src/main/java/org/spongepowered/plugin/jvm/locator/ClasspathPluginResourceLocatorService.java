@@ -38,7 +38,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -52,10 +54,10 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
     }
 
     @Override
-    public List<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
+    public Set<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
         environment.logger().info("Locating '{}' resources...", this.name());
 
-        final List<JVMPluginResource> pluginFiles = new ArrayList<>();
+        final Set<JVMPluginResource> pluginFiles = new HashSet<>();
         final Enumeration<URL> resources;
         try {
             resources = ClassLoader.getSystemClassLoader().getResources(this.metadataPath());

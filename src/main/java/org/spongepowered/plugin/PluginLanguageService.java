@@ -26,6 +26,7 @@ package org.spongepowered.plugin;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface PluginLanguageService<P extends PluginResource> {
 
@@ -51,7 +52,7 @@ public interface PluginLanguageService<P extends PluginResource> {
      *
      * @param environment The environment the service is running under
      */
-    void initialize(final PluginEnvironment environment);
+    void initialize(PluginEnvironment environment);
 
     /**
      * Asks the service if the provided {@link PluginResource resource} can become {@link PluginCandidate candidates}.
@@ -60,5 +61,5 @@ public interface PluginLanguageService<P extends PluginResource> {
      * @param resource The resource
      * @return The candidate or {@link Optional#empty()} if the resource can't be a candidate
      */
-    List<PluginCandidate<P>> createPluginCandidates(final PluginEnvironment environment, P resource);
+    List<PluginCandidate<P>> createPluginCandidates(PluginEnvironment environment, P resource);
 }

@@ -41,10 +41,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -56,7 +58,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
 
     @Override
     public List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment, final JVMPluginResource resource) {
-        final List<PluginCandidate<JVMPluginResource>> candidates = new LinkedList<>();
+        final List<PluginCandidate<JVMPluginResource>> candidates = new ArrayList<>();
 
         try (final InputStream stream = this.getFileAsStream(resource.path(), this.metadataPath())) {
             final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, this.metadataFileName(), stream)

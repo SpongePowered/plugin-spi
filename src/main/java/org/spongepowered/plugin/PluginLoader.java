@@ -40,7 +40,7 @@ public interface PluginLoader<R extends PluginResource, P extends PluginContaine
      * @param environment The environment
      * @return The container
      */
-    Optional<P> createPluginContainer(final PluginCandidate<R> candidate, final PluginEnvironment environment);
+    Optional<P> createPluginContainer(PluginCandidate<R> candidate, PluginEnvironment environment);
 
     /**
      * Instructs the {@link PluginContainer} to actually load and create it's plugin instance.
@@ -52,5 +52,5 @@ public interface PluginLoader<R extends PluginResource, P extends PluginContaine
      * @param targetClassLoader The classloader
      * @throws InvalidPluginException If the plugin being loaded is invalid
      */
-    void loadPlugin(final PluginEnvironment environment, final P container, ClassLoader targetClassLoader) throws InvalidPluginException;
+    void loadPlugin(PluginEnvironment environment, P container, ClassLoader targetClassLoader) throws InvalidPluginException;
 }

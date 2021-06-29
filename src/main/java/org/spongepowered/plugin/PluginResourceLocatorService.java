@@ -26,6 +26,7 @@ package org.spongepowered.plugin;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.Manifest;
 
 public interface PluginResourceLocatorService<P extends PluginResource> {
@@ -45,5 +46,5 @@ public interface PluginResourceLocatorService<P extends PluginResource> {
      * @param environment The environment
      * @return The discovered files
      */
-    List<P> locatePluginResources(final PluginEnvironment environment);
+    Set<P> locatePluginResources(PluginEnvironment environment);
 }
