@@ -35,12 +35,11 @@ public final class PluginEnvironment {
     private final Blackboard blackboard;
 
     public PluginEnvironment() {
-        this(LogManager.getLogger("Plugin"));
+        this(LogManager.getLogger("plugin"));
     }
 
     public PluginEnvironment(final Logger logger) {
-        Objects.requireNonNull(logger, "logger");
-        this.logger = logger;
+        this.logger = Objects.requireNonNull(logger, "logger");
         this.blackboard = new Blackboard();
     }
 

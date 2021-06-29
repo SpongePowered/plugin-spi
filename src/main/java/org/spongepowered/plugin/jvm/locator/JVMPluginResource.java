@@ -27,33 +27,79 @@ package org.spongepowered.plugin.jvm.locator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.plugin.PluginResource;
 
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.jar.Manifest;
 
-public final class JVMPluginResource extends PluginResource {
+public class JVMPluginResource implements PluginResource {
 
+    private final String locator;
+    private final Path path;
     private final ResourceType type;
     private final Manifest manifest;
 
+    private FileSystem fileSystem;
+
     public JVMPluginResource(final String locator, final ResourceType type, final Path path, @Nullable final Manifest manifest) {
-        super(locator, path);
-        this.type = type;
+        this.locator = Objects.requireNonNull(locator, "locator");
+        this.path = Objects.requireNonNull(path, "path");
+        this.type = Objects.requireNonNull(type, "type");
         this.manifest = manifest;
     }
 
-    public ResourceType type() {
+    @Override
+    public final String locator() {
+        return this.locator;
+    }
+
+    public final ResourceType type() {
         return this.type;
     }
 
-    public Optional<Manifest> manifest() {
+    public final Path path() {
+        return this.path;
+    }
+
+    public final Optional<Manifest> manifest() {
         return Optional.ofNullable(this.manifest);
     }
 
     @Override
+    public Optional<URL> locateResource(final URL relative) {
+        final ClassLoader classLoader = this.getClass().getClassLoader();
+        final URL resolved = classLoader.getResource(relative.getPath());
+        return Optional.ofNullable(resolved);
+    }
+
+    public FileSystem fileSystem() {
+        if (this.fileSystem == null) {
+            try {
+                this.fileSystem = FileSystems.newFileSystem(this.path, this.getClass().getClassLoader());
+            } catch (final IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        return this.fileSystem;
+    }
+
     protected StringJoiner toStringJoiner() {
-        return super.toStringJoiner()
-                .add("type=" + this.type);
+        return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
+            .add("locator='" + this.locator + "'")
+            .add("type=" + this.type)
+            .add("path=" + this.path)
+            .add("fileSystem=" + this.fileSystem)
+        ;
+    }
+
+    @Override
+    public String toString() {
+        return this.toStringJoiner().toString();
     }
 }

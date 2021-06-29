@@ -25,52 +25,38 @@
 package org.spongepowered.plugin;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.StringJoiner;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Optional;
 
-public class PluginResource {
+public interface PluginResource {
 
-    private final String locator;
-    private final Path path;
+    /**
+     * @return The id of the {@link PluginResourceLocatorService service} that located this resource
+     */
+    String locator();
 
-    private FileSystem fileSystem;
+    /**
+     * Resolves the location of a bundled resource, given a relative {@link URL}.
+     *
+     * @param relative The relative URL
+     * @return The resolved resource location, if available
+     */
+    Optional<URL> locateResource(final URL relative);
 
-    public PluginResource(final String locator, final Path path) {
-        this.locator = locator;
-        this.path = path;
-    }
-
-    public String locator() {
-        return this.locator;
-    }
-
-    public Path path() {
-        return this.path;
-    }
-
-    public FileSystem fileSystem() {
-        if (this.fileSystem == null) {
+    /**
+     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URL}.
+     *
+     * @param relative The relative URL
+     * @return The opened resource, if available
+     */
+    default Optional<InputStream> openResource(final URL relative) {
+        return this.locateResource(relative).flatMap(url -> {
             try {
-                this.fileSystem = FileSystems.newFileSystem(this.path(), this.getClass().getClassLoader());
-            } catch (final IOException ex) {
-                throw new RuntimeException(ex);
+                return Optional.of(url.openStream());
+            } catch (IOException e) {
+                return Optional.empty();
             }
-        }
-
-        return this.fileSystem;
-    }
-
-    protected StringJoiner toStringJoiner() {
-        return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
-                .add("locator='" + this.locator + "'")
-                .add("path=" + this.path)
-                .add("fileSystem=" + this.fileSystem);
-    }
-
-    @Override
-    public String toString() {
-        return this.toStringJoiner().toString();
+        });
     }
 }

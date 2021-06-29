@@ -30,7 +30,6 @@ import org.spongepowered.plugin.metadata.PluginMetadata;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -47,13 +46,6 @@ public interface PluginContainer {
      * @return The metadata
      */
     PluginMetadata metadata();
-
-    /**
-     * Gets the path that is the "root" of this plugin.
-     *
-     * @return The path
-     */
-    Path path();
 
     /**
      * Gets a {@link Logger} with the id set to this plugin's id.

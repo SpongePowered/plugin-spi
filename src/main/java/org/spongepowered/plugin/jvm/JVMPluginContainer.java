@@ -32,7 +32,6 @@ import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -48,21 +47,13 @@ public class JVMPluginContainer implements PluginContainer {
     }
 
     public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate, final Logger logger) {
-        Objects.requireNonNull(candidate);
-        Objects.requireNonNull(logger);
-
-        this.candidate = candidate;
-        this.logger = logger;
+        this.candidate = Objects.requireNonNull(candidate);
+        this.logger = Objects.requireNonNull(logger);
     }
 
     @Override
     public PluginMetadata metadata() {
         return this.candidate.metadata();
-    }
-
-    @Override
-    public Path path() {
-        return this.candidate.resource().path();
     }
 
     @Override
@@ -80,8 +71,7 @@ public class JVMPluginContainer implements PluginContainer {
             throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
                 this.candidate.metadata().id()));
         }
-        Objects.requireNonNull(instance);
-        this.instance = instance;
+        this.instance = Objects.requireNonNull(instance);
     }
 
     @Override
@@ -111,8 +101,7 @@ public class JVMPluginContainer implements PluginContainer {
 
     protected StringJoiner toStringJoiner() {
         return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
-                .add("metadata=" + this.candidate.metadata())
-                .add("path=" + this.candidate.resource().path());
+                .add("metadata=" + this.candidate.metadata());
     }
 
     @Override
