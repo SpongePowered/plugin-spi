@@ -31,6 +31,8 @@ import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
@@ -75,10 +77,17 @@ public class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
-    public Optional<URL> locateResource(final URL relative) {
+    public Optional<URI> locateResource(final URI relative) {
         final ClassLoader classLoader = this.instance().getClass().getClassLoader();
         final URL resolved = classLoader.getResource(relative.getPath());
-        return Optional.ofNullable(resolved);
+        try {
+            if (resolved == null) {
+                return Optional.empty();
+            }
+            return Optional.of(resolved.toURI());
+        } catch (final URISyntaxException ignored) {
+            return Optional.empty();
+        }
     }
 
     @Override
