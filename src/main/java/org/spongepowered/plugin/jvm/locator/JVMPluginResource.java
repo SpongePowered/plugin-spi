@@ -33,6 +33,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -74,15 +75,23 @@ public class JVMPluginResource implements PluginResource {
 
     @Override
     public Optional<URI> locateResource(final URI relative) {
-        final ClassLoader classLoader = this.getClass().getClassLoader();
-        final URL resolved = classLoader.getResource(relative.getPath());
-        try {
-            if (resolved == null) {
-                return Optional.empty();
-            }
-            return Optional.of(resolved.toURI());
-        } catch (final URISyntaxException ignored) {
-            return Optional.empty();
+        switch (this.type) {
+            case DIRECTORY:
+                final ClassLoader classLoader = this.getClass().getClassLoader();
+                final URL resolved = classLoader.getResource(relative.getPath());
+                try {
+                    if (resolved == null) {
+                        return Optional.empty();
+                    }
+                    return Optional.of(resolved.toURI());
+                } catch (final URISyntaxException ignored) {
+                    return Optional.empty();
+                }
+            case JAR:
+                final Path file = this.fileSystem().getPath(relative.getPath());
+                return Files.exists(file) ? Optional.of(file.toUri()) : Optional.empty();
+            default:
+                throw new IllegalStateException("Unknown resource type " + this.type);
         }
     }
 
