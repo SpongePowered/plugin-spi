@@ -1,6 +1,6 @@
 plugins {
-    id("org.spongepowered.gradle.sponge.dev") version "1.1.0"
-    id("net.kyori.indra.publishing.sonatype") version "2.0.2"
+    id("org.spongepowered.gradle.sponge.dev") version "1.1.1"
+    id("net.kyori.indra.publishing.sonatype") version "2.0.6"
 }
 
 defaultTasks("build")
@@ -55,7 +55,7 @@ spongeConvention {
 dependencies {
     api("org.spongepowered:plugin-meta:0.7.0")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
-    implementation("org.checkerframework:checker-qual:3.12.0")
+    implementation("org.checkerframework:checker-qual:3.17.0")
 }
 
 
