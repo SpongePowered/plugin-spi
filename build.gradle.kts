@@ -53,7 +53,7 @@ spongeConvention {
 }
 
 dependencies {
-    api("org.spongepowered:plugin-meta:0.7.0")
+    api("org.spongepowered:plugin-meta:0.8.0-SNAPSHOT")
     implementation("org.apache.logging.log4j:log4j-api:2.8.1")
     implementation("org.checkerframework:checker-qual:3.17.0")
 }
