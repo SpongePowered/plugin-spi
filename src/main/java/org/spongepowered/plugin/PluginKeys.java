@@ -43,4 +43,7 @@ public final class PluginKeys {
     public static final Blackboard.Key<Path> BASE_DIRECTORY = Blackboard.Key.of("base_directory", Path.class);
 
     public static final Blackboard.Key<List<Path>> PLUGIN_DIRECTORIES = Blackboard.Key.of("plugin_directories", List.class);
+
+    private PluginKeys() {
+    }
 }
