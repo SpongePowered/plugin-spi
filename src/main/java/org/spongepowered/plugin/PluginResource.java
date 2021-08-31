@@ -30,6 +30,9 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Represents a resource that has been located by a {@link PluginResourceLocatorService locator}.
+ */
 public interface PluginResource {
 
     /**

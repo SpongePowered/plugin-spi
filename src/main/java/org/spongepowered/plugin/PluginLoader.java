@@ -30,8 +30,10 @@ import java.util.Optional;
 
 /**
  * A loader used to create and load {@link PluginContainer plugins}.
- *
+ * <p>
  * Implementors of this class are required to have a no-args constructor
+ * @param <R> The resource type
+ * @param <P> The container type
  */
 public interface PluginLoader<R extends PluginResource, P extends PluginContainer> {
 

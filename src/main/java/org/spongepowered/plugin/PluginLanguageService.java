@@ -27,6 +27,15 @@ package org.spongepowered.plugin;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A service that processes {@link PluginResource resources} and triggers loading of
+ * {@link PluginContainer plugins} via a specified {@link PluginLoader loader}.
+ * <p>
+ * No class loading should occur at this time
+ * <p>
+ * Implementors are required to have a no-args constructor
+ * @param <P> The resource type
+ */
 public interface PluginLanguageService<P extends PluginResource> {
 
     /**

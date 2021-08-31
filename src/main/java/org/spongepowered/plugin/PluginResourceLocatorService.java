@@ -28,6 +28,16 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.jar.Manifest;
 
+/**
+ * A service used to find {@link PluginResource resources} to be processed by
+ * {@link PluginLanguageService language services} or other fundamental operators
+ * of a given vendor implementation.
+ * <p>
+ * No class loading should occur at this time
+ * <p>
+ * Implementors of this class are required to have a no-args constructor
+ * @param <P> The resource type
+ */
 public interface PluginResourceLocatorService<P extends PluginResource> {
 
     /**
