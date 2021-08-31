@@ -27,6 +27,7 @@ package org.spongepowered.plugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -36,9 +37,24 @@ import java.util.Optional;
 public interface PluginResource {
 
     /**
-     * @return The id of the {@link PluginResourceLocatorService service} that located this resource
+     * @return The name of the {@link PluginResourceLocatorService service} that located this resource
      */
     String locator();
+
+    /**
+     * @return The path where this resource originates from
+     */
+    Path path();
+
+    /**
+     * Retrieve a {@link String property} of this resource by {@link String key}.
+     * <p>
+     * Consult the vendor of this library for expected keys
+     *
+     * @param key The key
+     * @return The value or {@link Optional#empty()} if not found
+     */
+    Optional<String> property(final String key);
 
     /**
      * Resolves the location of a bundled resource, given a relative {@link URI}.

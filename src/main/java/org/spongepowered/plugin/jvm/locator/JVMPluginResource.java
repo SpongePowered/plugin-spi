@@ -61,12 +61,18 @@ public class JVMPluginResource implements PluginResource {
         return this.locator;
     }
 
-    public final ResourceType type() {
-        return this.type;
-    }
-
+    @Override
     public final Path path() {
         return this.path;
+    }
+
+    @Override
+    public Optional<String> property(final String key) {
+        return Optional.ofNullable(this.manifest.getMainAttributes().getValue(Objects.requireNonNull(key, "key")));
+    }
+
+    public final ResourceType type() {
+        return this.type;
     }
 
     public final Optional<Manifest> manifest() {

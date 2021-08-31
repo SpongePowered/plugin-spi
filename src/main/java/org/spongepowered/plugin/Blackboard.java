@@ -43,16 +43,14 @@ public final class Blackboard {
 
     @SuppressWarnings("unchecked")
     public <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue) {
-        Objects.requireNonNull(key);
-        Objects.requireNonNull(defaultValue);
+        Objects.requireNonNull(key, "key");
+        Objects.requireNonNull(defaultValue, "defaultValue");
 
         return key.clazz.cast(this.values.computeIfAbsent((Key<Object>) key, k -> defaultValue.get()));
     }
 
     public <V> Optional<V> get(final Key<V> key) {
-        Objects.requireNonNull(key);
-
-        return Optional.ofNullable(key.clazz.cast(this.values.get(key)));
+        return Optional.ofNullable(Objects.requireNonNull(key, "key").clazz.cast(this.values.get(key)));
     }
 
     public static final class Key<V> implements Comparable<Key<V>> {
@@ -61,7 +59,7 @@ public final class Blackboard {
         private final Class<V> clazz;
 
         private Key(final String name, final Class<V> clazz) {
-            this.name = name;
+            this.name = Objects.requireNonNull(name, "name");
             this.clazz = clazz;
         }
 
