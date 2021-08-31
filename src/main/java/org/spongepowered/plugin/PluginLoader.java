@@ -24,6 +24,8 @@
  */
 package org.spongepowered.plugin;
 
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+
 import java.util.Optional;
 
 /**
@@ -32,6 +34,12 @@ import java.util.Optional;
  * Implementors of this class are required to have a no-args constructor
  */
 public interface PluginLoader<R extends PluginResource, P extends PluginContainer> {
+
+    /**
+     * Gets the version, formatted as a {@link ArtifactVersion maven artifact}.
+     * @return The version
+     */
+    ArtifactVersion version();
 
     /**
      * Creates a {@link PluginContainer} which which will hold the instance of an actual plugin.

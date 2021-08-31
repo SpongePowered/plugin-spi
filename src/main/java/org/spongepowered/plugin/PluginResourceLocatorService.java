@@ -25,7 +25,6 @@
 package org.spongepowered.plugin;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
 import java.util.jar.Manifest;
 
