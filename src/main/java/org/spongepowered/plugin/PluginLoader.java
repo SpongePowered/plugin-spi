@@ -42,7 +42,7 @@ public interface PluginLoader<R extends PluginResource, P extends PluginContaine
     ArtifactVersion version();
 
     /**
-     * Creates a {@link PluginContainer} which which will hold the instance of an actual plugin.
+     * Creates a {@link PluginContainer container} which will hold the instance of an actual plugin.
      *
      * @param candidate The candidate
      * @param environment The environment
@@ -51,7 +51,7 @@ public interface PluginLoader<R extends PluginResource, P extends PluginContaine
     Optional<P> createPluginContainer(PluginCandidate<R> candidate, PluginEnvironment environment);
 
     /**
-     * Instructs the {@link PluginContainer} to actually load and create it's plugin instance.
+     * Instructs the {@link PluginContainer container} to actually load and create its plugin instance.
      *
      * <p>The provided classloader should be used to load the any classes needed for the plugin's instance.</p>
      *

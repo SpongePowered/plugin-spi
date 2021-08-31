@@ -29,9 +29,8 @@ import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
 import org.spongepowered.plugin.jvm.locator.JVMPluginResourceLocatorService;
+import org.spongepowered.plugin.metadata.Container;
 import org.spongepowered.plugin.metadata.PluginMetadata;
-import org.spongepowered.plugin.metadata.PluginMetadataContainer;
-import org.spongepowered.plugin.metadata.util.PluginMetadataHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,13 +39,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -57,24 +53,24 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
     }
 
     @Override
-    public List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment, final JVMPluginResource resource) {
+    public final List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment,
+            final JVMPluginResource resource) throws Exception {
+        Objects.requireNonNull(environment, "environment");
+        Objects.requireNonNull(resource, "resource");
+
         final List<PluginCandidate<JVMPluginResource>> candidates = new LinkedList<>();
 
-        try (final InputStream stream = this.getFileAsStream(resource.path(), this.metadataPath())) {
-            final PluginMetadataContainer pluginMetadataContainer = this.createPluginMetadata(environment, this.metadataFileName(), stream)
+        try (final InputStream stream = this.getFileAsStream(resource.path(), this.metadataFile())) {
+            final Container container = this.loadMetadataContainer(environment, this.metadataFileName(), stream)
                     .orElse(null);
-            if (pluginMetadataContainer != null) {
-                for (final Map.Entry<String, PluginMetadata> metadataEntry : pluginMetadataContainer.allMetadata().entrySet()) {
-                    final PluginMetadata metadata = metadataEntry.getValue();
-                    if (!metadata.loader().equals(this.name())) {
-                        continue;
-                    }
-
+            if (container != null) {
+                if (!container.loader().name().equals(this.name())) {
+                    // TODO Throw exception
+                }
+                for (PluginMetadata metadata : container.metadata()) {
                     candidates.add(new PluginCandidate<>(metadata, resource));
                 }
             }
-        } catch (final IOException | URISyntaxException ex) {
-            ex.printStackTrace();
         }
 
         return candidates;
@@ -84,9 +80,11 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
     }
 
-    public String metadataPath() {
-        return JVMConstants.META_INF_LOCATION + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
+    public String metadataFile() {
+        return JVMPluginResourceLocatorService.DEFAULT_METADATA_PATH;
     }
+
+    public abstract Optional<Container> loadMetadataContainer(final PluginEnvironment environment, final String filename, final InputStream stream);
 
     public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {
         return true;
@@ -111,22 +109,6 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
             return jf.getInputStream(pluginMetadataJarEntry);
         } else {
             return Files.newInputStream(rootDirectory.resolve(relativePath));
-        }
-    }
-
-    private Optional<PluginMetadataContainer> createPluginMetadata(final PluginEnvironment environment, final String filename,
-            final InputStream stream) {
-        final PluginMetadataHelper metadataHelper = PluginMetadataHelper.builder().build();
-        try {
-            final List<PluginMetadata> pluginMetadata = new ArrayList<>(metadataHelper.read(stream));
-            pluginMetadata.removeIf(nextMetadata -> !this.isValidMetadata(environment, nextMetadata));
-            if (pluginMetadata.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(new PluginMetadataContainer(pluginMetadata));
-        } catch (IOException e) {
-            environment.logger().error("An error occurred reading plugin metadata file '{}'.", filename, e);
-            return Optional.empty();
         }
     }
 }

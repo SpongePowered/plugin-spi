@@ -27,6 +27,7 @@ package org.spongepowered.plugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 public interface PluginResource {
@@ -51,7 +52,7 @@ public interface PluginResource {
      * @return The opened resource, if available
      */
     default Optional<InputStream> openResource(final URI relative) {
-        return this.locateResource(relative).flatMap(url -> {
+        return this.locateResource(Objects.requireNonNull(relative, "relative")).flatMap(url -> {
             try {
                 return Optional.of(url.toURL().openStream());
             } catch (final IOException ignored) {

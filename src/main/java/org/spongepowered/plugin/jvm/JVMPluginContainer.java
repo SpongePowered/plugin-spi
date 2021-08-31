@@ -45,26 +45,26 @@ public class JVMPluginContainer implements PluginContainer {
     private Object instance;
 
     public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate) {
-        this(candidate, LogManager.getLogger(candidate.metadata().id()));
+        this(Objects.requireNonNull(candidate, "candidate"), LogManager.getLogger(candidate.metadata().id()));
     }
 
     public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate, final Logger logger) {
-        this.candidate = Objects.requireNonNull(candidate);
-        this.logger = Objects.requireNonNull(logger);
+        this.candidate = Objects.requireNonNull(candidate, "candidate");
+        this.logger = Objects.requireNonNull(logger, "logger");
     }
 
     @Override
-    public PluginMetadata metadata() {
+    public final PluginMetadata metadata() {
         return this.candidate.metadata();
     }
 
     @Override
-    public Logger logger() {
+    public final Logger logger() {
         return this.logger;
     }
 
     @Override
-    public Object instance() {
+    public final Object instance() {
         return this.instance;
     }
 
@@ -73,11 +73,13 @@ public class JVMPluginContainer implements PluginContainer {
             throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
                 this.candidate.metadata().id()));
         }
-        this.instance = Objects.requireNonNull(instance);
+        this.instance = Objects.requireNonNull(instance, "instance");
     }
 
     @Override
     public Optional<URI> locateResource(final URI relative) {
+        Objects.requireNonNull(relative, "relative");
+
         final ClassLoader classLoader = this.instance().getClass().getClassLoader();
         final URL resolved = classLoader.getResource(relative.getPath());
         try {
@@ -92,7 +94,7 @@ public class JVMPluginContainer implements PluginContainer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.candidate.metadata().id());
+        return Objects.hashCode(this.candidate.metadata().id());
     }
 
     @Override
@@ -114,7 +116,7 @@ public class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return this.toStringJoiner().toString();
     }
 }

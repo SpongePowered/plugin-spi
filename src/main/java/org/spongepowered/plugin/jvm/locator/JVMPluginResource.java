@@ -74,7 +74,7 @@ public class JVMPluginResource implements PluginResource {
     }
 
     @Override
-    public Optional<URI> locateResource(final URI relative) {
+    public final Optional<URI> locateResource(final URI relative) {
         switch (this.type) {
             case DIRECTORY:
                 final ClassLoader classLoader = this.getClass().getClassLoader();
@@ -117,7 +117,7 @@ public class JVMPluginResource implements PluginResource {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return this.toStringJoiner().toString();
     }
 }

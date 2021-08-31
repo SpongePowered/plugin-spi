@@ -31,8 +31,6 @@ import java.util.jar.Manifest;
 public interface PluginResourceLocatorService<P extends PluginResource> {
 
     /**
-     * Gets the name of this locator.
-     *
      * @return The name
      */
     String name();
