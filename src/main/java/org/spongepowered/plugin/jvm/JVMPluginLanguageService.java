@@ -106,10 +106,6 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         return true;
     }
 
-    protected List<PluginCandidate<JVMPluginResource>> sortCandidates(final List<PluginCandidate<JVMPluginResource>> pluginCandidates) {
-        return pluginCandidates;
-    }
-
     private InputStream getFileAsStream(final Path rootDirectory, final String relativePath) throws URISyntaxException, IOException {
         final URI uri = rootDirectory.toUri();
         Path jarFile = null;
