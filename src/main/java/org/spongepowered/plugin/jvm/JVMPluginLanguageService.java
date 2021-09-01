@@ -84,7 +84,8 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         return JVMPluginResourceLocatorService.DEFAULT_METADATA_PATH;
     }
 
-    public abstract Optional<Container> loadMetadataContainer(final PluginEnvironment environment, final String filename, final InputStream stream);
+    public abstract Optional<Container> loadMetadataContainer(final PluginEnvironment environment, final String filename, final InputStream stream)
+            throws Exception;
 
     public boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata pluginMetadata) {
         return true;
