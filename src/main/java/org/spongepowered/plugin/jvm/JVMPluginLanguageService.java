@@ -73,13 +73,20 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
             if (!this.isValidContainer(environment, container)) {
                 this.logger.debug("Container in path '{}' with loader '{}' is not valid, skipping...", resource.path(), container.loader().name());
             } else {
+                boolean containerHasMetadata = false;
                 for (final PluginMetadata metadata : container.metadata()) {
                     if (!this.isValidMetadata(environment, metadata)) {
                         this.logger.debug("PluginMetadata '{}' within Container in path '{}' with loader '{}' is not valid, skipping...",
                                 metadata.id(), resource.path(), container.loader().name());
                         continue;
                     }
+                    containerHasMetadata = true;
                     candidates.add(new PluginCandidate<>(metadata, resource));
+                }
+
+                if (!containerHasMetadata) {
+                    this.logger.debug("Container in path '{}' with loader '{}' has no plugin metadata, skipping...", resource.path(),
+                            container.loader().name());
                 }
             }
         }
@@ -92,7 +99,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
     }
 
     public String metadataFile() {
-        return JVMPluginResourceLocatorService.DEFAULT_METADATA_PATH;
+        return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILE;
     }
 
     public abstract Container loadMetadataContainer(final PluginEnvironment environment, final String filename, final InputStream stream)
