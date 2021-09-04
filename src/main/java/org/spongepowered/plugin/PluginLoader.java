@@ -49,5 +49,5 @@ public interface PluginLoader<R extends PluginResource, P extends PluginContaine
      * @param targetClassLoader The classloader
      * @throws InvalidPluginException If the candidate is invalid
      */
-    P loadPlugin(PluginEnvironment environment, PluginCandidate<R> candidate, ClassLoader targetClassLoader) throws InvalidPluginException;
+    P loadPlugin(Environment environment, PluginCandidate<R> candidate, ClassLoader targetClassLoader) throws InvalidPluginException;
 }

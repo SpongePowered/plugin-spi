@@ -22,9 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm.locator;
+package org.spongepowered.plugin.builtin.jvm.locator;
 
-import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.blackboard.Keys;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
     }
 
     @Override
-    public Set<JVMPluginResource> locatePluginResources(final PluginEnvironment environment) {
+    public Set<JVMPluginResource> locatePluginResources(final Environment environment) {
         environment.logger().info("Locating '{}' resources...", this.name());
 
         final Set<JVMPluginResource> pluginFiles = new HashSet<>();

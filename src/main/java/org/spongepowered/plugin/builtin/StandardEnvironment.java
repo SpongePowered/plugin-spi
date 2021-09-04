@@ -22,20 +22,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.builtin;
 
-public final class JVMConstants {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.spongepowered.plugin.Environment;
+import org.spongepowered.plugin.blackboard.Blackboard;
 
-    public static final String META_INF = "META-INF";
+import java.util.Objects;
 
-    private JVMConstants() {
+public final class StandardEnvironment implements Environment {
+
+    private final Logger logger;
+    private final Blackboard blackboard;
+
+    public StandardEnvironment() {
+        this(LogManager.getLogger("plugin"));
     }
 
-    public static final class Manifest {
+    public StandardEnvironment(final Logger logger) {
+        this.logger = Objects.requireNonNull(logger, "logger");
+        this.blackboard = new StandardBlackboard();
+    }
 
-        public static final String LOCATION = JVMConstants.META_INF + "/MANIFEST.MF";
+    public Logger logger() {
+        return this.logger;
+    }
 
-        private Manifest() {
-        }
+    public Blackboard blackboard() {
+        return this.blackboard;
     }
 }

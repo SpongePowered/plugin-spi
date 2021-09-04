@@ -46,5 +46,5 @@ public interface PluginResourceLocatorService<P extends PluginResource> {
      * @param environment The environment
      * @return The {@link PluginResource resources} as an unmodifiable {@link Set}
      */
-    Set<P> locatePluginResources(PluginEnvironment environment);
+    Set<P> locatePluginResources(Environment environment);
 }

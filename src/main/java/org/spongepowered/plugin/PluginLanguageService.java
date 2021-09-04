@@ -52,7 +52,7 @@ public interface PluginLanguageService<P extends PluginResource> {
      *
      * @param environment The environment the service is running under
      */
-    void initialize(PluginEnvironment environment);
+    void initialize(Environment environment);
 
     /**
      * Asks the service if the provided {@link PluginResource resource} can become {@link PluginCandidate candidates}.
@@ -65,5 +65,5 @@ public interface PluginLanguageService<P extends PluginResource> {
      * @param resource The resource
      * @return The {@link List candidates}
      */
-    List<PluginCandidate<P>> createPluginCandidates(PluginEnvironment environment, P resource) throws Exception;
+    List<PluginCandidate<P>> createPluginCandidates(Environment environment, P resource) throws Exception;
 }

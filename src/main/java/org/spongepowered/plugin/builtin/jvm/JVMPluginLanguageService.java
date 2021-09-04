@@ -22,16 +22,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.builtin.jvm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.PluginCandidate;
-import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.builtin.StandardPluginCandidate;
-import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
-import org.spongepowered.plugin.jvm.locator.JVMPluginResourceLocatorService;
+import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResource;
+import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResourceLocatorService;
 import org.spongepowered.plugin.metadata.Container;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
@@ -53,11 +53,11 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
     private final Logger logger = LogManager.getLogger(this.name());
 
     @Override
-    public void initialize(final PluginEnvironment environment) {
+    public void initialize(final Environment environment) {
     }
 
     @Override
-    public final List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final PluginEnvironment environment,
+    public final List<PluginCandidate<JVMPluginResource>> createPluginCandidates(final Environment environment,
             final JVMPluginResource resource) throws Exception {
         Objects.requireNonNull(environment, "environment");
         Objects.requireNonNull(resource, "resource");
@@ -103,14 +103,14 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILE;
     }
 
-    public abstract Container loadMetadataContainer(final PluginEnvironment environment, final String filename, final InputStream stream)
+    public abstract Container loadMetadataContainer(final Environment environment, final String filename, final InputStream stream)
             throws Exception;
 
-    private boolean isValidContainer(final PluginEnvironment environment, final Container container) {
+    private boolean isValidContainer(final Environment environment, final Container container) {
         return true;
     }
 
-    protected boolean isValidMetadata(final PluginEnvironment environment, final PluginMetadata metadata) {
+    protected boolean isValidMetadata(final Environment environment, final PluginMetadata metadata) {
         return true;
     }
 

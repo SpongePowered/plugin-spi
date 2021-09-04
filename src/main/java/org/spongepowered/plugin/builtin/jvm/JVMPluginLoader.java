@@ -22,23 +22,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.builtin.jvm;
 
-import org.apache.logging.log4j.Logger;
-import org.spongepowered.plugin.blackboard.Blackboard;
+import org.spongepowered.plugin.PluginLoader;
+import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResource;
 
-/**
- * Represents the context under which this specification is running under.
- */
-public interface PluginEnvironment {
-
-    /**
-     * @return A general purpose {@link Logger logger}
-     */
-    Logger logger();
-
-    /**
-     * @return A {@link Blackboard blackboard} which is useful for supplying properties for this environment
-     */
-    Blackboard blackboard();
+public abstract class JVMPluginLoader<T extends JVMPluginResource, U extends JVMPluginContainer> implements PluginLoader<T, U> {
 }

@@ -22,9 +22,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm.locator;
+package org.spongepowered.plugin.builtin.jvm.locator;
 
-public enum ResourceType {
-    DIRECTORY,
-    JAR
+import org.spongepowered.plugin.Environment;
+import org.spongepowered.plugin.PluginResourceLocatorService;
+import org.spongepowered.plugin.builtin.jvm.JVMConstants;
+
+import java.util.jar.Manifest;
+
+public abstract class JVMPluginResourceLocatorService implements PluginResourceLocatorService<JVMPluginResource> {
+
+    public static final String DEFAULT_METADATA_FILENAME = "plugins.json";
+
+    public static final String DEFAULT_METADATA_FILE =
+            JVMConstants.META_INF + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
+
+    public boolean isValidManifest(final Environment environment, final Manifest manifest) {
+        return true;
+    }
+
+    public String metadataPath() {
+        return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILE;
+    }
 }

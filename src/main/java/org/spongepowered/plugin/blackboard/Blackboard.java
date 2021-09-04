@@ -24,13 +24,13 @@
  */
 package org.spongepowered.plugin.blackboard;
 
-import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.Environment;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * An entity that stores various properties for an {@link PluginEnvironment environment}
+ * An entity that stores various properties for an {@link Environment environment}
  */
 public interface Blackboard {
 

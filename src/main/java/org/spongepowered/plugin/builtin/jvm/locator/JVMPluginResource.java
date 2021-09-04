@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm.locator;
+package org.spongepowered.plugin.builtin.jvm.locator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.plugin.PluginResource;

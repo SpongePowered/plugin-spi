@@ -22,13 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.builtin.jvm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
+import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.net.URI;
