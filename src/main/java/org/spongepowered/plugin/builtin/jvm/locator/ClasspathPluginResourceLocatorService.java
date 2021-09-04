@@ -26,6 +26,7 @@ package org.spongepowered.plugin.builtin.jvm.locator;
 
 import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.builtin.jvm.JVMConstants;
+import org.spongepowered.plugin.builtin.jvm.JVMKeys;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +56,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
     public Set<JVMPluginResource> locatePluginResources(final Environment environment) {
         environment.logger().info("Locating '{}' resources...", this.name());
 
-        final String metadataPath = environment.blackboard().get(JVMPluginResourceLocatorService.METADATA_FILE_PATH);
+        final String metadataPath = environment.blackboard().get(JVMKeys.METADATA_FILE_PATH);
 
         final Set<JVMPluginResource> pluginFiles = new HashSet<>();
         final Enumeration<URL> resources;

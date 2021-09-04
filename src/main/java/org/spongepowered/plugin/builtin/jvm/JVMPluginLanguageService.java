@@ -31,7 +31,6 @@ import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginLanguageService;
 import org.spongepowered.plugin.builtin.StandardPluginCandidate;
 import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResource;
-import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResourceLocatorService;
 import org.spongepowered.plugin.metadata.Container;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
@@ -62,10 +61,12 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         Objects.requireNonNull(environment, "environment");
         Objects.requireNonNull(resource, "resource");
 
+        final String metadataPath = environment.blackboard().get(JVMKeys.METADATA_FILE_PATH);
+
         final List<PluginCandidate<JVMPluginResource>> candidates = new LinkedList<>();
 
-        try (final InputStream stream = this.getFileAsStream(resource.path(), this.metadataFile())) {
-            final Container container = this.loadMetadataContainer(environment, this.metadataFileName(), stream);
+        try (final InputStream stream = this.getFileAsStream(resource.path(), metadataPath)) {
+            final Container container = this.loadMetadataContainer(environment, stream);
             if (!container.loader().name().equals(this.name())) {
                 throw new IOException(String.format("Attempt made to load Container in path '%s' with loader '%s' yet it requires '%s'!",
                         resource.path(), this.name(), container.loader().name()));
@@ -95,16 +96,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
         return candidates;
     }
 
-    public String metadataFileName() {
-        return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
-    }
-
-    public String metadataFile() {
-        return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILE;
-    }
-
-    public abstract Container loadMetadataContainer(final Environment environment, final String filename, final InputStream stream)
-            throws Exception;
+    public abstract Container loadMetadataContainer(final Environment environment, final InputStream stream) throws Exception;
 
     private boolean isValidContainer(final Environment environment, final Container container) {
         return true;

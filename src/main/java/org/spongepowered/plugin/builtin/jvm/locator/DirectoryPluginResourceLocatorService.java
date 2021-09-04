@@ -26,6 +26,7 @@ package org.spongepowered.plugin.builtin.jvm.locator;
 
 import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.blackboard.Keys;
+import org.spongepowered.plugin.builtin.jvm.JVMKeys;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,7 +54,7 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
 
         final Set<JVMPluginResource> pluginFiles = new HashSet<>();
 
-        final String metadataPath = environment.blackboard().get(JVMPluginResourceLocatorService.METADATA_FILE_PATH);
+        final String metadataPath = environment.blackboard().get(JVMKeys.METADATA_FILE_PATH);
 
         for (final Path pluginsDir : environment.blackboard().find(Keys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
             if (Files.notExists(pluginsDir)) {

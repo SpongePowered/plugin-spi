@@ -22,16 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.builtin.jvm.locator;
+package org.spongepowered.plugin.builtin.jvm;
 
-import org.spongepowered.plugin.Environment;
-import org.spongepowered.plugin.PluginResourceLocatorService;
+import org.spongepowered.plugin.blackboard.Key;
 
-import java.util.jar.Manifest;
+public final class JVMKeys {
 
-public abstract class JVMPluginResourceLocatorService implements PluginResourceLocatorService<JVMPluginResource> {
+    public static final Key<String> METADATA_FILE_PATH = Key.of("metadata_file_path", String.class);
 
-    public boolean isValidManifest(final Environment environment, final Manifest manifest) {
-        return true;
+    private JVMKeys() {
     }
 }
