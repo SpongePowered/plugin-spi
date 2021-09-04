@@ -22,32 +22,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.builtin;
 
-import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.spongepowered.plugin.PluginEnvironment;
+import org.spongepowered.plugin.blackboard.Blackboard;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Objects;
 
-/**
- * An annotation used to mark a plugin.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
+public final class StandardPluginEnvironment implements PluginEnvironment {
 
-    /**
-     * An ID that uniquely identifies this plugin.
-     * <p>
-     * This should correspond to a matching {@link PluginMetadata metadata} by {@link PluginMetadata#id()}.
-     * If not, it is up to the implementation on how that is handled. However, it should be treated as an
-     * error condition and therefore invalidate the enclosing {@link PluginContainer container}.
-     *
-     * @return The id
-     */
-    String value();
+    private final Logger logger;
+    private final Blackboard blackboard;
 
+    public StandardPluginEnvironment() {
+        this(LogManager.getLogger("plugin"));
+    }
+
+    public StandardPluginEnvironment(final Logger logger) {
+        this.logger = Objects.requireNonNull(logger, "logger");
+        this.blackboard = new StandardBlackboard();
+    }
+
+    public Logger logger() {
+        return this.logger;
+    }
+
+    public Blackboard blackboard() {
+        return this.blackboard;
+    }
 }

@@ -26,14 +26,14 @@ package org.spongepowered.plugin.jvm;
 
 public final class JVMConstants {
 
-    public static final String META_INF_LOCATION = "META-INF";
+    public static final String META_INF = "META-INF";
 
     private JVMConstants() {
     }
 
     public static final class Manifest {
 
-        public static final String LOCATION = JVMConstants.META_INF_LOCATION + "/MANIFEST.MF";
+        public static final String LOCATION = JVMConstants.META_INF + "/MANIFEST.MF";
 
         private Manifest() {
         }

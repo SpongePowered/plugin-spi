@@ -24,30 +24,21 @@
  */
 package org.spongepowered.plugin;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.plugin.blackboard.Blackboard;
 
-import java.util.Objects;
+/**
+ * Represents the context under which this specification is running under.
+ */
+public interface PluginEnvironment {
 
-public final class PluginEnvironment {
+    /**
+     * @return A general purpose {@link Logger logger}
+     */
+    Logger logger();
 
-    private final Logger logger;
-    private final Blackboard blackboard;
-
-    public PluginEnvironment() {
-        this(LogManager.getLogger("plugin"));
-    }
-
-    public PluginEnvironment(final Logger logger) {
-        this.logger = Objects.requireNonNull(logger, "logger");
-        this.blackboard = new Blackboard();
-    }
-
-    public Logger logger() {
-        return this.logger;
-    }
-
-    public Blackboard blackboard() {
-        return this.blackboard;
-    }
+    /**
+     * @return A {@link Blackboard blackboard} which is useful for supplying properties for this environment
+     */
+    Blackboard blackboard();
 }

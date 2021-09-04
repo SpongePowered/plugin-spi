@@ -22,32 +22,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin;
 
-import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.metadata.PluginMetadata;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
- * An annotation used to mark a plugin.
+ * Represents an entity that can be queried for {@link URI resources}.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
+public interface ResourceQueryable {
 
     /**
-     * An ID that uniquely identifies this plugin.
-     * <p>
-     * This should correspond to a matching {@link PluginMetadata metadata} by {@link PluginMetadata#id()}.
-     * If not, it is up to the implementation on how that is handled. However, it should be treated as an
-     * error condition and therefore invalidate the enclosing {@link PluginContainer container}.
+     * Resolves the location of a bundled resource, given a relative {@link URI}.
      *
-     * @return The id
+     * @param relative The relative URI
+     * @return The resolved resource location, if available
      */
-    String value();
+    Optional<URI> locateResource(URI relative);
 
+    /**
+     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URI}.
+     *
+     * @param relative The relative URI
+     * @return The opened resource, if available
+     */
+    default Optional<InputStream> openResource(final URI relative) {
+        return this.locateResource(Objects.requireNonNull(relative, "relative")).flatMap(url -> {
+            try {
+                return Optional.of(url.toURL().openStream());
+            } catch (final IOException ignored) {
+                return Optional.empty();
+            }
+        });
+    }
 }

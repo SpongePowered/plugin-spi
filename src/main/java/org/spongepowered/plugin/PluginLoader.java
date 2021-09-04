@@ -26,8 +26,6 @@ package org.spongepowered.plugin;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 
-import java.util.Optional;
-
 /**
  * A loader used to create and load {@link PluginContainer plugins}.
  * <p>
@@ -38,29 +36,18 @@ import java.util.Optional;
 public interface PluginLoader<R extends PluginResource, P extends PluginContainer> {
 
     /**
-     * Gets the version, formatted as a {@link ArtifactVersion maven artifact}.
-     * @return The version
+     * @return The {@link ArtifactVersion version}, as a maven artifact
      */
     ArtifactVersion version();
 
     /**
-     * Creates a {@link PluginContainer container} which will hold the instance of an actual plugin.
+     * Instructs the loader to load the {@link PluginCandidate candidate} as a {@link PluginContainer container} into the
+     * target {@link ClassLoader classloader}.
      *
+     * @param environment The environment
      * @param candidate The candidate
-     * @param environment The environment
-     * @return The container
-     */
-    Optional<P> createPluginContainer(PluginCandidate<R> candidate, PluginEnvironment environment);
-
-    /**
-     * Instructs the {@link PluginContainer container} to actually load and create its plugin instance.
-     *
-     * <p>The provided classloader should be used to load the any classes needed for the plugin's instance.</p>
-     *
-     * @param environment The environment
-     * @param container The container
      * @param targetClassLoader The classloader
-     * @throws InvalidPluginException If the plugin being loaded is invalid
+     * @throws InvalidPluginException If the candidate is invalid
      */
-    void loadPlugin(PluginEnvironment environment, P container, ClassLoader targetClassLoader) throws InvalidPluginException;
+    P loadPlugin(PluginEnvironment environment, PluginCandidate<R> candidate, ClassLoader targetClassLoader) throws InvalidPluginException;
 }

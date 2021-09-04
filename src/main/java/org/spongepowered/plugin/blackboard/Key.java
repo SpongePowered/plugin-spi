@@ -22,32 +22,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.blackboard;
 
-import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Objects;
 
-/**
- * An annotation used to mark a plugin.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
+public final class Key<V> implements Comparable<Key<V>> {
 
-    /**
-     * An ID that uniquely identifies this plugin.
-     * <p>
-     * This should correspond to a matching {@link PluginMetadata metadata} by {@link PluginMetadata#id()}.
-     * If not, it is up to the implementation on how that is handled. However, it should be treated as an
-     * error condition and therefore invalidate the enclosing {@link PluginContainer container}.
-     *
-     * @return The id
-     */
-    String value();
+    private final String name;
+    private final Class<V> clazz;
 
+    private Key(final String name, final Class<V> clazz) {
+        this.name = Objects.requireNonNull(name, "name");
+        this.clazz = clazz;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <V> Key<V> of(final String name, final Class<? super V> clazz) {
+        return new Key<>(name, (Class<V>) clazz);
+    }
+
+    public String name() {
+        return this.name;
+    }
+
+    public Class<V> clazz() {
+        return this.clazz;
+    }
+
+    @Override
+    public int compareTo(final @NonNull Key<V> that) {
+        if (this == that) {
+            return 0;
+        }
+
+        return this.name.compareTo(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Key)) {
+            return false;
+        }
+
+        return this.name.equals(((Key<?>) obj).name);
+    }
 }

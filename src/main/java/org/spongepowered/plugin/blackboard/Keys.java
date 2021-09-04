@@ -22,32 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.blackboard;
 
-import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import java.nio.file.Path;
+import java.util.List;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-/**
- * An annotation used to mark a plugin.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
+public final class Keys {
 
     /**
-     * An ID that uniquely identifies this plugin.
+     * Indicates whether the target environment is a development environment.
      * <p>
-     * This should correspond to a matching {@link PluginMetadata metadata} by {@link PluginMetadata#id()}.
-     * If not, it is up to the implementation on how that is handled. However, it should be treated as an
-     * error condition and therefore invalidate the enclosing {@link PluginContainer container}.
-     *
-     * @return The id
+     * The implementation may choose to interpret this flag in any number of ways.
+     * For example, it may disable certain behaviour in a development environment; or
+     * even change the way it handles some behaviour entirely.
      */
-    String value();
+    public static final Key<Boolean> DEVELOPMENT = Key.of("development", Boolean.class);
 
+    public static final Key<String> VERSION = Key.of("version", String.class);
+
+    public static final Key<Path> BASE_DIRECTORY = Key.of("base_directory", Path.class);
+
+    public static final Key<List<Path>> PLUGIN_DIRECTORIES = Key.of("plugin_directories", List.class);
+
+    private Keys() {
+    }
 }

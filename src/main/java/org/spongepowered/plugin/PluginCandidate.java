@@ -26,31 +26,20 @@ package org.spongepowered.plugin;
 
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
-import java.util.StringJoiner;
+/**
+ * Represents the combination of a {@link PluginMetadata metadata} and {@link PluginResource resource}
+ * that will be a candidate for a {@link PluginContainer container}.
+ * @param <P> The resource type
+ */
+public interface PluginCandidate<P extends PluginResource> {
 
-public final class PluginCandidate<P extends PluginResource> {
+    /**
+     * @return The {@link PluginMetadata metadata}
+     */
+    PluginMetadata metadata();
 
-    private final PluginMetadata metadata;
-    private final P resource;
-
-    public PluginCandidate(final PluginMetadata metadata, final P resource) {
-        this.metadata = metadata;
-        this.resource = resource;
-    }
-
-    public PluginMetadata metadata() {
-        return this.metadata;
-    }
-
-    public P resource() {
-        return this.resource;
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", PluginCandidate.class.getSimpleName() + "[", "]")
-                .add("metadata=" + this.metadata)
-                .add("resource=" + this.resource)
-                .toString();
-    }
+    /**
+     * @return The {@link PluginResource resource}
+     */
+    P resource();
 }

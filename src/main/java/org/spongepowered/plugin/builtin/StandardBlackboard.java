@@ -22,9 +22,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.builtin;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.spongepowered.plugin.blackboard.Blackboard;
+import org.spongepowered.plugin.blackboard.Key;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,12 +33,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-// Inspired by ModLauncher's TypesafeMap/Environment keys concept but simplified to one map
-public final class Blackboard {
+public final class StandardBlackboard implements Blackboard {
 
     private final Map<Key<Object>, Object> values;
 
-    public Blackboard() {
+    public StandardBlackboard() {
         this.values = new HashMap<>();
     }
 
@@ -46,61 +46,10 @@ public final class Blackboard {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(defaultValue, "defaultValue");
 
-        return key.clazz.cast(this.values.computeIfAbsent((Key<Object>) key, k -> defaultValue.get()));
+        return key.clazz().cast(this.values.computeIfAbsent((Key<Object>) key, k -> defaultValue.get()));
     }
 
     public <V> Optional<V> get(final Key<V> key) {
-        return Optional.ofNullable(Objects.requireNonNull(key, "key").clazz.cast(this.values.get(key)));
-    }
-
-    public static final class Key<V> implements Comparable<Key<V>> {
-
-        private final String name;
-        private final Class<V> clazz;
-
-        private Key(final String name, final Class<V> clazz) {
-            this.name = Objects.requireNonNull(name, "name");
-            this.clazz = clazz;
-        }
-
-        @SuppressWarnings("unchecked")
-        public static <V> Key<V> of(final String name, final Class<? super V> clazz) {
-            return new Key<>(name, (Class<V>) clazz);
-        }
-
-        public String name() {
-            return this.name;
-        }
-
-        public Class<V> clazz() {
-            return this.clazz;
-        }
-
-        @Override
-        public int compareTo(final Blackboard.@NonNull Key<V> that) {
-            if (this == that) {
-                return 0;
-            }
-
-            return this.name.compareTo(that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.name);
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (obj == this) {
-                return true;
-            }
-
-            if (!(obj instanceof Key)) {
-                return false;
-            }
-
-            return this.name.equals(((Key<?>) obj).name);
-        }
+        return Optional.ofNullable(Objects.requireNonNull(key, "key").clazz().cast(this.values.get(key)));
     }
 }

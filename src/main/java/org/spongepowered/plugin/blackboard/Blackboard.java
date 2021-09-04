@@ -22,32 +22,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.jvm;
+package org.spongepowered.plugin.blackboard;
 
-import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.metadata.PluginMetadata;
+import org.spongepowered.plugin.PluginEnvironment;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
- * An annotation used to mark a plugin.
+ * An entity that stores various properties for an {@link PluginEnvironment environment}
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Plugin {
+public interface Blackboard {
 
     /**
-     * An ID that uniquely identifies this plugin.
-     * <p>
-     * This should correspond to a matching {@link PluginMetadata metadata} by {@link PluginMetadata#id()}.
-     * If not, it is up to the implementation on how that is handled. However, it should be treated as an
-     * error condition and therefore invalidate the enclosing {@link PluginContainer container}.
-     *
-     * @return The id
+     * Retrieves a value by {@link Key key} or from the {@link Supplier default value}.
+     * @param key The key
+     * @param defaultValue The default value
+     * @param <V> The value type
+     * @return The value
      */
-    String value();
+    <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue);
 
+    /**
+     * @param key The key
+     * @param <V> The value type
+     * @return The value or {@link Optional#empty()} otherwise
+     */
+    <V> Optional<V> get(final Key<V> key);
 }

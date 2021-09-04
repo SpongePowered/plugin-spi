@@ -27,64 +27,26 @@ package org.spongepowered.plugin;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.Objects;
-import java.util.Optional;
-
 /**
- * An object that joins a plugin's {@link PluginMetadata metadata} with it's instance.
- *
- * <p>Typically becomes the fundamental operator of the implementation's registration system
- * for anything that is deemed "a plugin".</p>
+ * Represents the combination of a {@link PluginMetadata metadata} with its instance.
+ * <p>
+ * For most vendors, this becomes the representation of the concept of a plugin within
+ * their ecosystem.
  */
-public interface PluginContainer {
+public interface PluginContainer extends ResourceQueryable {
 
     /**
-     * Gets the {@link PluginMetadata metadata} used to describe this plugin.
-     *
-     * @return The metadata
+     * @return The {@link PluginMetadata plugin metadata}
      */
     PluginMetadata metadata();
 
     /**
-     * Gets a {@link Logger} with the id set to this plugin's id.
-     *
-     * <p>@see {@link PluginMetadata#id()}</p>
-     *
-     * @return The logger
+     * @return The {@link Logger} (typically mapped to {@link PluginMetadata#id()})
      */
     Logger logger();
 
     /**
-     * Gets the instance created when loading this plugin.
-     *
      * @return The instance
      */
     Object instance();
-
-    /**
-     * Resolves the location of a bundled resource, given a relative {@link URI}.
-     *
-     * @param relative The relative URI
-     * @return The resolved resource location, if available
-     */
-    Optional<URI> locateResource(URI relative);
-
-    /**
-     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URI}.
-     *
-     * @param relative The relative URI
-     * @return The opened resource, if available
-     */
-    default Optional<InputStream> openResource(final URI relative) {
-        return this.locateResource(Objects.requireNonNull(relative, "relative")).flatMap(url -> {
-            try {
-                return Optional.of(url.toURL().openStream());
-            } catch (final IOException ignored) {
-                return Optional.empty();
-            }
-        });
-    }
 }

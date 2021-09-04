@@ -24,34 +24,27 @@
  */
 package org.spongepowered.plugin;
 
-import java.nio.file.Path;
 import java.util.Set;
-import java.util.jar.Manifest;
 
 /**
  * A service used to find {@link PluginResource resources} to be processed by
- * {@link PluginLanguageService language services} or other fundamental operators
- * of a given vendor implementation.
+ * {@link PluginLanguageService language services} or other implementation constructs.
  * <p>
- * No class loading should occur at this time
+ * No class loading should occur at this time.
  * <p>
- * Implementors of this class are required to have a no-args constructor
+ * Implementors of this class are required to have a no-args constructor.
  * @param <P> The resource type
  */
 public interface PluginResourceLocatorService<P extends PluginResource> {
 
     /**
-     * @return The name
+     * @return The {@link String name}
      */
     String name();
 
     /**
-     * Discovers {@link Path launch resources} for use with ecosystems that are pluggable
-     * with other constructs. As an example and a use case, Sponge passes off jar
-     * {@link Manifest manifests} to ModLauncher for Mixin interoperability.
-     *
      * @param environment The environment
-     * @return The discovered files
+     * @return The {@link PluginResource resources} as an unmodifiable {@link Set}
      */
     Set<P> locatePluginResources(PluginEnvironment environment);
 }

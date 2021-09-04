@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginEnvironment;
 import org.spongepowered.plugin.PluginLanguageService;
+import org.spongepowered.plugin.builtin.StandardPluginCandidate;
 import org.spongepowered.plugin.jvm.locator.JVMPluginResource;
 import org.spongepowered.plugin.jvm.locator.JVMPluginResourceLocatorService;
 import org.spongepowered.plugin.metadata.Container;
@@ -81,7 +82,7 @@ public abstract class JVMPluginLanguageService implements PluginLanguageService<
                         continue;
                     }
                     containerHasMetadata = true;
-                    candidates.add(new PluginCandidate<>(metadata, resource));
+                    candidates.add(new StandardPluginCandidate<>(metadata, resource));
                 }
 
                 if (!containerHasMetadata) {

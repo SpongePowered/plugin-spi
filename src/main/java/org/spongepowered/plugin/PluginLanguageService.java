@@ -25,11 +25,10 @@
 package org.spongepowered.plugin;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A service that processes {@link PluginResource resources} and triggers loading of
- * {@link PluginContainer plugins} via a specified {@link PluginLoader loader}.
+ * {@link PluginContainer containers} via a specified {@link PluginLoader loader}.
  * <p>
  * No class loading should occur at this time
  * <p>
@@ -39,24 +38,17 @@ import java.util.Optional;
 public interface PluginLanguageService<P extends PluginResource> {
 
     /**
-     * Gets the name of this service.
-     *
-     * <p>This should be given to plugin makers using this service to indicate that intention.</p>
-     *
-     * @return The name
+     * @return The {@link String name}
      */
     String name();
 
     /**
-     * Gets the fully qualified path to the {@link PluginLoader loader} that should be used to load
-     * {@link PluginContainer plugins}.
-     *
-     * @return The classpath to the loader
+     * @return The fully qualified path to the {@link PluginLoader loader}
      */
     String pluginLoader();
 
     /**
-     * Initializes this service.
+     * Callback so that implementors can perform any necessary initialization of the service.
      *
      * @param environment The environment the service is running under
      */
@@ -64,10 +56,14 @@ public interface PluginLanguageService<P extends PluginResource> {
 
     /**
      * Asks the service if the provided {@link PluginResource resource} can become {@link PluginCandidate candidates}.
+     * <p>
+     * It is left up to implementors on when to throw exceptions (typically from parsing the resource) or to simply return
+     * {@link List lists} that are empty. Therefore it should be known that an empty list returned is not an error and should
+     * be discarded by callers of this method.
      *
      * @param environment The environment
      * @param resource The resource
-     * @return The candidate or {@link Optional#empty()} if the resource can't be a candidate
+     * @return The {@link List candidates}
      */
     List<PluginCandidate<P>> createPluginCandidates(PluginEnvironment environment, P resource) throws Exception;
 }

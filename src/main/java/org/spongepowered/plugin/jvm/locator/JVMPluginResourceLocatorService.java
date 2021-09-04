@@ -35,7 +35,7 @@ public abstract class JVMPluginResourceLocatorService implements PluginResourceL
     public static final String DEFAULT_METADATA_FILENAME = "plugins.json";
 
     public static final String DEFAULT_METADATA_FILE =
-            JVMConstants.META_INF_LOCATION + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
+            JVMConstants.META_INF + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
 
     public boolean isValidManifest(final PluginEnvironment environment, final Manifest manifest) {
         return true;

@@ -24,17 +24,13 @@
  */
 package org.spongepowered.plugin;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Represents a resource that has been located by a {@link PluginResourceLocatorService locator}.
+ * Represents a resource provided by a {@link PluginResourceLocatorService locator}.
  */
-public interface PluginResource {
+public interface PluginResource extends ResourceQueryable {
 
     /**
      * @return The name of the {@link PluginResourceLocatorService service} that located this resource
@@ -49,34 +45,10 @@ public interface PluginResource {
     /**
      * Retrieve a {@link String property} of this resource by {@link String key}.
      * <p>
-     * Consult the vendor of this library for expected keys
+     * Consult the vendor for expected keys.
      *
      * @param key The key
      * @return The value or {@link Optional#empty()} if not found
      */
     Optional<String> property(final String key);
-
-    /**
-     * Resolves the location of a bundled resource, given a relative {@link URI}.
-     *
-     * @param relative The relative URI
-     * @return The resolved resource location, if available
-     */
-    Optional<URI> locateResource(URI relative);
-
-    /**
-     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URI}.
-     *
-     * @param relative The relative URI
-     * @return The opened resource, if available
-     */
-    default Optional<InputStream> openResource(final URI relative) {
-        return this.locateResource(Objects.requireNonNull(relative, "relative")).flatMap(url -> {
-            try {
-                return Optional.of(url.toURL().openStream());
-            } catch (final IOException ignored) {
-                return Optional.empty();
-            }
-        });
-    }
 }

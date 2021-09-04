@@ -22,28 +22,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.builtin;
 
-import java.nio.file.Path;
-import java.util.List;
+import org.spongepowered.plugin.PluginCandidate;
+import org.spongepowered.plugin.PluginResource;
+import org.spongepowered.plugin.metadata.PluginMetadata;
 
-public final class PluginKeys {
+import java.util.StringJoiner;
 
-    /**
-     * Indicates whether the target environment is a development environment.
-     * <p>
-     * The implementation may choose to interpret this flag in a number of ways,
-     * for example it may disable certain behaviour in a development environment - or
-     * even change the way it handles some behaviour entirely.
-     */
-    public static final Blackboard.Key<Boolean> DEVELOPMENT = Blackboard.Key.of("development", Boolean.class);
+public final class StandardPluginCandidate<P extends PluginResource> implements PluginCandidate<P> {
 
-    public static final Blackboard.Key<String> VERSION = Blackboard.Key.of("version", String.class);
+    private final PluginMetadata metadata;
+    private final P resource;
 
-    public static final Blackboard.Key<Path> BASE_DIRECTORY = Blackboard.Key.of("base_directory", Path.class);
+    public StandardPluginCandidate(final PluginMetadata metadata, final P resource) {
+        this.metadata = metadata;
+        this.resource = resource;
+    }
 
-    public static final Blackboard.Key<List<Path>> PLUGIN_DIRECTORIES = Blackboard.Key.of("plugin_directories", List.class);
+    @Override
+    public PluginMetadata metadata() {
+        return this.metadata;
+    }
 
-    private PluginKeys() {
+    @Override
+    public P resource() {
+        return this.resource;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", StandardPluginCandidate.class.getSimpleName() + "[", "]")
+                .add("metadata=" + this.metadata)
+                .add("resource=" + this.resource)
+                .toString();
     }
 }
