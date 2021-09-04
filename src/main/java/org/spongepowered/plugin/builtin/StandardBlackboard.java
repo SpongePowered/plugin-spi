@@ -52,8 +52,7 @@ public final class StandardBlackboard implements Blackboard {
 
     @Override
     public <V> V get(final Key<V> key) {
-        Objects.requireNonNull(key, "key");
-        final Object rawValue = this.values.get(key);
+        final Object rawValue = this.values.get(Objects.requireNonNull(key, "key"));
         if (rawValue == null) {
             throw new IllegalArgumentException(String.format("Key '%s' has no value!", key.name()));
         }
@@ -62,8 +61,7 @@ public final class StandardBlackboard implements Blackboard {
 
     @Override
     public <V> Optional<V> find(final Key<V> key) {
-        Objects.requireNonNull(key, "key");
-        final Object value = this.values.get(key);
+        final Object value = this.values.get(Objects.requireNonNull(key, "key"));
         if (value == null) {
             return Optional.empty();
         }
