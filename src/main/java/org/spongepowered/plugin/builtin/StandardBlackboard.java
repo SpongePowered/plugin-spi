@@ -42,6 +42,7 @@ public final class StandardBlackboard implements Blackboard {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue) {
         Objects.requireNonNull(key, "key");
         Objects.requireNonNull(defaultValue, "defaultValue");
@@ -49,7 +50,17 @@ public final class StandardBlackboard implements Blackboard {
         return key.clazz().cast(this.values.computeIfAbsent((Key<Object>) key, k -> defaultValue.get()));
     }
 
-    public <V> Optional<V> get(final Key<V> key) {
+    @Override
+    public <V> V get(final Key<V> key) {
+        final V value = Objects.requireNonNull(key, "key").clazz().cast(this.values.get(key));
+        if (value == null) {
+            throw new IllegalArgumentException(String.format("Key '%s' has no value!", key.name()));
+        }
+        return value;
+    }
+
+    @Override
+    public <V> Optional<V> find(final Key<V> key) {
         return Optional.ofNullable(Objects.requireNonNull(key, "key").clazz().cast(this.values.get(key)));
     }
 }

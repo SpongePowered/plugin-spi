@@ -26,22 +26,15 @@ package org.spongepowered.plugin.builtin.jvm.locator;
 
 import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.PluginResourceLocatorService;
-import org.spongepowered.plugin.builtin.jvm.JVMConstants;
+import org.spongepowered.plugin.blackboard.Key;
 
 import java.util.jar.Manifest;
 
 public abstract class JVMPluginResourceLocatorService implements PluginResourceLocatorService<JVMPluginResource> {
 
-    public static final String DEFAULT_METADATA_FILENAME = "plugins.json";
-
-    public static final String DEFAULT_METADATA_FILE =
-            JVMConstants.META_INF + "/" + JVMPluginResourceLocatorService.DEFAULT_METADATA_FILENAME;
+    public static final Key<String> METADATA_FILE_PATH = Key.of("metadata_file_path", String.class);
 
     public boolean isValidManifest(final Environment environment, final Manifest manifest) {
         return true;
-    }
-
-    public String metadataPath() {
-        return JVMPluginResourceLocatorService.DEFAULT_METADATA_FILE;
     }
 }

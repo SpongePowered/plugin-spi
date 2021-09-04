@@ -55,10 +55,12 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
     public Set<JVMPluginResource> locatePluginResources(final Environment environment) {
         environment.logger().info("Locating '{}' resources...", this.name());
 
+        final String metadataPath = environment.blackboard().get(JVMPluginResourceLocatorService.METADATA_FILE_PATH);
+
         final Set<JVMPluginResource> pluginFiles = new HashSet<>();
         final Enumeration<URL> resources;
         try {
-            resources = ClassLoader.getSystemClassLoader().getResources(this.metadataPath());
+            resources = ClassLoader.getSystemClassLoader().getResources(metadataPath);
         } catch (final IOException e) {
             throw new RuntimeException("Failed to enumerate classloader resources!");
         }
@@ -95,7 +97,7 @@ public final class ClasspathPluginResourceLocatorService extends JVMPluginResour
                 }
             } else {
                 try {
-                    path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (this.metadataPath().length()))));
+                    path = Paths.get(new URI("file://" + uri.getRawSchemeSpecificPart().substring(0, uri.getRawSchemeSpecificPart().length() - (metadataPath.length()))));
                 } catch (final URISyntaxException e) {
                     environment.logger().error("Error creating root URI for '{}'. Skipping...", url, e);
                     continue;

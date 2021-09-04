@@ -46,7 +46,15 @@ public interface Blackboard {
     /**
      * @param key The key
      * @param <V> The value type
+     * @throws IllegalArgumentException if the key has no corresponding value
+     * @return The value
+     */
+    <V> V get(final Key<V> key);
+
+    /**
+     * @param key The key
+     * @param <V> The value type
      * @return The value or {@link Optional#empty()} otherwise
      */
-    <V> Optional<V> get(final Key<V> key);
+    <V> Optional<V> find(final Key<V> key);
 }

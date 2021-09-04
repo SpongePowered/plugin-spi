@@ -53,7 +53,9 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
 
         final Set<JVMPluginResource> pluginFiles = new HashSet<>();
 
-        for (final Path pluginsDir : environment.blackboard().get(Keys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
+        final String metadataPath = environment.blackboard().get(JVMPluginResourceLocatorService.METADATA_FILE_PATH);
+
+        for (final Path pluginsDir : environment.blackboard().find(Keys.PLUGIN_DIRECTORIES).orElseGet(Collections::emptyList)) {
             if (Files.notExists(pluginsDir)) {
                 environment.logger().debug("Plugin directory '{}' does not exist for locator '{}'. Skipping...", pluginsDir, this.name());
                 continue;
@@ -71,7 +73,7 @@ public final class DirectoryPluginResourceLocatorService extends JVMPluginResour
                             continue;
                         }
 
-                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(this.metadataPath());
+                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(metadataPath);
                         if (pluginMetadataJarEntry == null) {
                             environment.logger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
                             continue;
