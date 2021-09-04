@@ -52,15 +52,21 @@ public final class StandardBlackboard implements Blackboard {
 
     @Override
     public <V> V get(final Key<V> key) {
-        final V value = Objects.requireNonNull(key, "key").clazz().cast(this.values.get(key));
-        if (value == null) {
+        Objects.requireNonNull(key, "key");
+        final Object rawValue = this.values.get(key);
+        if (rawValue == null) {
             throw new IllegalArgumentException(String.format("Key '%s' has no value!", key.name()));
         }
-        return value;
+        return key.clazz().cast(rawValue);
     }
 
     @Override
     public <V> Optional<V> find(final Key<V> key) {
-        return Optional.ofNullable(Objects.requireNonNull(key, "key").clazz().cast(this.values.get(key)));
+        Objects.requireNonNull(key, "key");
+        final Object value = this.values.get(key);
+        if (value == null) {
+            return Optional.empty();
+        }
+        return Optional.of(key.clazz().cast(value));
     }
 }
