@@ -1,6 +1,7 @@
 plugins {
     id("org.spongepowered.gradle.sponge.dev") version "2.0.2"
     id("net.kyori.indra.publishing.sonatype") version "2.1.1"
+    id("net.kyori.indra.crossdoc") version "2.1.1"
 }
 
 defaultTasks("build")
@@ -50,6 +51,10 @@ spongeConvention {
         this["organization"] = "SpongePowered"
         this["url"] = "https://www.spongepowered.org"
     }
+}
+
+indraCrossdoc {
+    baseUrl(providers.gradleProperty("javadocPublishRoot"))
 }
 
 dependencies {
