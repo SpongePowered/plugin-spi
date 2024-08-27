@@ -67,21 +67,11 @@ spongeConvention {
 }
 
 indra {
-    javaVersions().minimumToolchain(17)
+    javaVersions().target(17)
 }
 
 indraCrossdoc {
     baseUrl(providers.gradleProperty("javadocPublishRoot"))
-}
-
-sourceSets {
-    main {
-        multirelease {
-            moduleName("org.spongepowered.plugin.spi")
-            alternateVersions(9)
-            applyToJavadoc(true)
-        }
-    }
 }
 
 dependencies {
