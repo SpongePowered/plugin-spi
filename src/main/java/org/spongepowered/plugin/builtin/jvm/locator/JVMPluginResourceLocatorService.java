@@ -24,14 +24,9 @@
  */
 package org.spongepowered.plugin.builtin.jvm.locator;
 
-import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.PluginResourceLocatorService;
+import org.spongepowered.plugin.builtin.jvm.JVMPluginResource;
 
-import java.util.jar.Manifest;
+public interface JVMPluginResourceLocatorService extends PluginResourceLocatorService<JVMPluginResource> {
 
-public abstract class JVMPluginResourceLocatorService implements PluginResourceLocatorService<JVMPluginResource> {
-
-    public boolean isValidManifest(final Environment environment, final Manifest manifest) {
-        return true;
-    }
 }

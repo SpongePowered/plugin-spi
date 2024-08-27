@@ -44,6 +44,8 @@ public final class Keys {
 
     public static final Key<List<Path>> PLUGIN_DIRECTORIES = Key.of("plugin_directories", List.class);
 
+    public static final Key<String> METADATA_FILE_PATH = Key.of("metadata_file_path", String.class);
+
     private Keys() {
     }
 }

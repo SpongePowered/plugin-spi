@@ -27,7 +27,6 @@ package org.spongepowered.plugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -36,21 +35,21 @@ import java.util.Optional;
 public interface ResourceQueryable {
 
     /**
-     * Resolves the location of a bundled resource, given a relative {@link URI}.
+     * Resolves the location of a bundled resource, given a relative path.
      *
-     * @param relative The relative URI
+     * @param path The relative path
      * @return The resolved resource location, if available
      */
-    Optional<URI> locateResource(URI relative);
+    Optional<URI> locateResource(final String path);
 
     /**
-     * Opens an {@link InputStream} of the location of a bundled resource, given a relative {@link URI}.
+     * Opens an {@link InputStream} of the location of a bundled resource, given a relative path.
      *
-     * @param relative The relative URI
+     * @param path The relative path
      * @return The opened resource, if available
      */
-    default Optional<InputStream> openResource(final URI relative) {
-        return this.locateResource(Objects.requireNonNull(relative, "relative")).flatMap(url -> {
+    default Optional<InputStream> openResource(final String path) {
+        return this.locateResource(path).flatMap(url -> {
             try {
                 return Optional.of(url.toURL().openStream());
             } catch (final IOException ignored) {

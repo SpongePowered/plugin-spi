@@ -22,33 +22,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.builtin.jvm;
+package org.spongepowered.plugin.builtin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResource;
+import org.spongepowered.plugin.PluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-public class JVMPluginContainer implements PluginContainer {
+public class StandardPluginContainer implements PluginContainer {
 
-    private final PluginCandidate<JVMPluginResource> candidate;
+    private final PluginCandidate<? extends PluginResource> candidate;
     private final Logger logger;
     private Object instance;
 
-    public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate) {
+    public StandardPluginContainer(final PluginCandidate<? extends PluginResource> candidate) {
         this(Objects.requireNonNull(candidate, "candidate"), LogManager.getLogger(candidate.metadata().id()));
     }
 
-    public JVMPluginContainer(final PluginCandidate<JVMPluginResource> candidate, final Logger logger) {
+    public StandardPluginContainer(final PluginCandidate<? extends PluginResource> candidate, final Logger logger) {
         this.candidate = Objects.requireNonNull(candidate, "candidate");
         this.logger = Objects.requireNonNull(logger, "logger");
     }
@@ -77,19 +75,8 @@ public class JVMPluginContainer implements PluginContainer {
     }
 
     @Override
-    public Optional<URI> locateResource(final URI relative) {
-        Objects.requireNonNull(relative, "relative");
-
-        final ClassLoader classLoader = this.instance().getClass().getClassLoader();
-        final URL resolved = classLoader.getResource(relative.getPath());
-        try {
-            if (resolved == null) {
-                return Optional.empty();
-            }
-            return Optional.of(resolved.toURI());
-        } catch (final URISyntaxException ignored) {
-            return Optional.empty();
-        }
+    public Optional<URI> locateResource(final String path) {
+        return this.candidate.resource().locateResource(path);
     }
 
     @Override

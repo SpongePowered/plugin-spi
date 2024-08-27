@@ -28,7 +28,9 @@ import org.spongepowered.plugin.blackboard.Key;
 
 public final class JVMKeys {
 
-    public static final Key<String> METADATA_FILE_PATH = Key.of("metadata_file_path", String.class);
+    public static final Key<String> ENVIRONMENT_LOCATOR_VARIABLE_NAME = Key.of("environment_locator_variable_name", String.class);
+
+    public static final Key<JVMPluginResource.Factory> JVM_PLUGIN_RESOURCE_FACTORY = Key.of("jvm_plugin_resource_factory", JVMPluginResource.Factory.class);
 
     private JVMKeys() {
     }

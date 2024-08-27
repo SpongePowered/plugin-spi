@@ -24,8 +24,8 @@
  */
 package org.spongepowered.plugin.builtin.jvm;
 
+import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.PluginLoader;
-import org.spongepowered.plugin.builtin.jvm.locator.JVMPluginResource;
 
-public abstract class JVMPluginLoader<T extends JVMPluginResource, U extends JVMPluginContainer> implements PluginLoader<T, U> {
+public interface JVMPluginLoader<T extends JVMPluginResource, U extends PluginContainer> extends PluginLoader<T, U> {
 }
