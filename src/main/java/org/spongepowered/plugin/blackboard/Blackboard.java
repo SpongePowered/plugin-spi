@@ -27,7 +27,6 @@ package org.spongepowered.plugin.blackboard;
 import org.spongepowered.plugin.Environment;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * An entity that stores various properties for an {@link Environment environment}
@@ -35,13 +34,14 @@ import java.util.function.Supplier;
 public interface Blackboard {
 
     /**
-     * Retrieves a value by {@link Key key} or from the {@link Supplier default value}.
+     * Sets a value by {@link Key key}.
+     *
      * @param key The key
-     * @param defaultValue The default value
+     * @param value The value
      * @param <V> The value type
-     * @return The value
+     * @throws IllegalStateException if the key already has a corresponding value
      */
-    <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue);
+    <V> void set(final Key<V> key, final V value);
 
     /**
      * @param key The key

@@ -31,23 +31,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public final class StandardBlackboard implements Blackboard {
 
-    private final Map<Key<Object>, Object> values;
+    private final Map<Key<?>, Object> values;
 
     public StandardBlackboard() {
         this.values = new HashMap<>();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <V> V getOrCreate(final Key<V> key, final Supplier<? super V> defaultValue) {
+    public <V> void set(final Key<V> key, final V value) {
         Objects.requireNonNull(key, "key");
-        Objects.requireNonNull(defaultValue, "defaultValue");
-
-        return key.clazz().cast(this.values.computeIfAbsent((Key<Object>) key, k -> defaultValue.get()));
+        Objects.requireNonNull(value, "value");
+        if (this.values.containsKey(key)) {
+            throw new IllegalStateException(String.format("Key '%s' already has a value!", key.name()));
+        }
+        this.values.put(key, value);
     }
 
     @Override
