@@ -9,6 +9,7 @@ module org.spongepowered.plugin.spi {
     exports org.spongepowered.plugin.builtin.jvm.locator;
 
     provides org.spongepowered.plugin.PluginResourceLocatorService with
+            org.spongepowered.plugin.builtin.jvm.locator.ClasspathPluginResourceLocatorService,
             org.spongepowered.plugin.builtin.jvm.locator.DirectoryPluginResourceLocatorService,
             org.spongepowered.plugin.builtin.jvm.locator.EnvironmentPluginResourceLocatorService;
 }
