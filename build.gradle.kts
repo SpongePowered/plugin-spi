@@ -75,7 +75,7 @@ indraCrossdoc {
 }
 
 dependencies {
-    api("org.spongepowered:plugin-meta:0.8.1")
+    api("org.spongepowered:plugin-meta:0.8.2-SNAPSHOT")
     api("org.apache.maven:maven-artifact:3.8.6")
     api("org.apache.logging.log4j:log4j-api:2.17.0")
     compileOnlyApi("org.checkerframework:checker-qual:3.26.0")
