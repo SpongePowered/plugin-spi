@@ -29,9 +29,8 @@ import org.spongepowered.plugin.metadata.PluginMetadata;
 /**
  * Represents the combination of a {@link PluginMetadata metadata} and {@link PluginResource resource}
  * that will be a candidate for a {@link PluginContainer container}.
- * @param <P> The resource type
  */
-public interface PluginCandidate<P extends PluginResource> {
+public interface PluginCandidate {
 
     /**
      * @return The {@link PluginMetadata metadata}
@@ -41,5 +40,5 @@ public interface PluginCandidate<P extends PluginResource> {
     /**
      * @return The {@link PluginResource resource}
      */
-    P resource();
+    PluginResource resource();
 }

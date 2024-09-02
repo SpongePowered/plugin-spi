@@ -28,33 +28,5 @@ import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
-import java.util.StringJoiner;
-
-public final class StandardPluginCandidate<P extends PluginResource> implements PluginCandidate<P> {
-
-    private final PluginMetadata metadata;
-    private final P resource;
-
-    public StandardPluginCandidate(final PluginMetadata metadata, final P resource) {
-        this.metadata = metadata;
-        this.resource = resource;
-    }
-
-    @Override
-    public PluginMetadata metadata() {
-        return this.metadata;
-    }
-
-    @Override
-    public P resource() {
-        return this.resource;
-    }
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", StandardPluginCandidate.class.getSimpleName() + "[", "]")
-                .add("metadata=" + this.metadata)
-                .add("resource=" + this.resource)
-                .toString();
-    }
+public record StandardPluginCandidate(PluginMetadata metadata, PluginResource resource) implements PluginCandidate {
 }

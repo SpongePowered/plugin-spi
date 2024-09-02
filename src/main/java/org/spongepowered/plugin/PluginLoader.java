@@ -30,10 +30,9 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
  * A loader used to create and load {@link PluginContainer plugins}.
  * <p>
  * Implementors of this class are required to have a no-args constructor
- * @param <R> The resource type
  * @param <P> The container type
  */
-public interface PluginLoader<R extends PluginResource, P extends PluginContainer> {
+public interface PluginLoader<P extends PluginContainer> {
 
     /**
      * @return The {@link ArtifactVersion version}, as a maven artifact
@@ -49,5 +48,5 @@ public interface PluginLoader<R extends PluginResource, P extends PluginContaine
      * @param targetClassLoader The classloader
      * @throws InvalidPluginException If the candidate is invalid
      */
-    P loadPlugin(Environment environment, PluginCandidate<R> candidate, ClassLoader targetClassLoader) throws InvalidPluginException;
+    P loadPlugin(Environment environment, PluginCandidate candidate, ClassLoader targetClassLoader) throws InvalidPluginException;
 }

@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class StandardPluginLanguageService implements PluginLanguageService<PluginResource> {
+public abstract class StandardPluginLanguageService implements PluginLanguageService {
     protected final Logger logger = LogManager.getLogger(this.name());
 
     @Override
@@ -53,16 +53,16 @@ public abstract class StandardPluginLanguageService implements PluginLanguageSer
     }
 
     @Override
-    public List<PluginCandidate<PluginResource>> createPluginCandidates(final Environment environment, final PluginResource resource) throws Exception {
+    public List<PluginCandidate> createPluginCandidates(final Environment environment, final PluginResource resource) throws Exception {
         Objects.requireNonNull(environment, "environment");
         Objects.requireNonNull(resource, "resource");
 
         final String metadataPath = environment.blackboard().get(Keys.METADATA_FILE_PATH);
 
-        final List<PluginCandidate<PluginResource>> candidates = new LinkedList<>();
+        final List<PluginCandidate> candidates = new LinkedList<>();
 
         final Optional<InputStream> optStream = resource.openResource(metadataPath);
-        if (!optStream.isPresent()) {
+        if (optStream.isEmpty()) {
             this.logger.debug("Container in path '{}' doesn't have a metadata file, skipping...", resource.path());
             return candidates;
         }
@@ -85,7 +85,7 @@ public abstract class StandardPluginLanguageService implements PluginLanguageSer
                         continue;
                     }
                     containerHasMetadata = true;
-                    candidates.add(new StandardPluginCandidate<>(metadata, resource));
+                    candidates.add(new StandardPluginCandidate(metadata, resource));
                 }
 
                 if (!containerHasMetadata) {

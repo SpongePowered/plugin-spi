@@ -33,9 +33,8 @@ import java.util.List;
  * No class loading should occur at this time
  * <p>
  * Implementors are required to have a no-args constructor
- * @param <P> The resource type
  */
-public interface PluginLanguageService<P extends PluginResource> {
+public interface PluginLanguageService {
 
     /**
      * @return The {@link String name}
@@ -65,5 +64,5 @@ public interface PluginLanguageService<P extends PluginResource> {
      * @param resource The resource
      * @return The {@link List candidates}
      */
-    List<PluginCandidate<P>> createPluginCandidates(Environment environment, P resource) throws Exception;
+    List<PluginCandidate> createPluginCandidates(Environment environment, PluginResource resource) throws Exception;
 }

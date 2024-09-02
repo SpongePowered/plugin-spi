@@ -28,7 +28,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
-import org.spongepowered.plugin.PluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.net.URI;
@@ -38,15 +37,15 @@ import java.util.StringJoiner;
 
 public class StandardPluginContainer implements PluginContainer {
 
-    private final PluginCandidate<? extends PluginResource> candidate;
+    private final PluginCandidate candidate;
     private final Logger logger;
     private Object instance;
 
-    public StandardPluginContainer(final PluginCandidate<? extends PluginResource> candidate) {
+    public StandardPluginContainer(final PluginCandidate candidate) {
         this(Objects.requireNonNull(candidate, "candidate"), LogManager.getLogger(candidate.metadata().id()));
     }
 
-    public StandardPluginContainer(final PluginCandidate<? extends PluginResource> candidate, final Logger logger) {
+    public StandardPluginContainer(final PluginCandidate candidate, final Logger logger) {
         this.candidate = Objects.requireNonNull(candidate, "candidate");
         this.logger = Objects.requireNonNull(logger, "logger");
     }
