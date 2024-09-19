@@ -37,7 +37,7 @@ tasks {
         options {
             (this as StandardJavadocDocletOptions).apply {
                 links(
-                    "https://logging.apache.org/log4j/log4j-2.17.0/log4j-api/apidocs/",
+                    "https://logging.apache.org/log4j/2.x/javadoc/log4j-api/",
                     "https://checkerframework.org/api/",
                     "https://maven.apache.org/ref/3.8.6/maven-artifact/apidocs",
                     "https://jd.spongepowered.org/plugin-meta/0.8.2/"
