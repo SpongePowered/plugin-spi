@@ -22,33 +22,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.discovery;
 
-import java.nio.file.Path;
-import java.util.Optional;
+import org.spongepowered.plugin.Environment;
+import org.spongepowered.plugin.PluginService;
+
+import java.util.Collection;
+import java.util.Objects;
 
 /**
- * Represents a resource provided by a {@link PluginResourceLocatorService locator}.
+ * A service used to find {@link PluginResource resources} to be processed by {@link PluginMetadataReader readers}.
+ * <p>
+ * The service may also return resources that contain no metadata but provide other {@link PluginResourceLocator locators} or {@link PluginMetadataReader readers}.
+ * <p>
+ * Implementors of this class are required to have a no-args constructor.
+ * <p>
+ * Jars declaring this service are loaded in an isolated classloader.
+ * They can only access the plugin-spi and cannot be accessed by plugins.
  */
-public interface PluginResource extends ResourceQueryable {
+public interface PluginResourceLocator extends PluginService {
 
     /**
-     * @return The name of the {@link PluginResourceLocatorService service} that located this resource
-     */
-    String locator();
-
-    /**
-     * @return The path where this resource originates from
-     */
-    Path path();
-
-    /**
-     * Retrieve a {@link String property} of this resource by {@link String key}.
-     * <p>
-     * Consult the vendor for expected keys.
+     * Locates plugin resources.
      *
-     * @param key The key
-     * @return The value or {@link Optional#empty()} if not found
+     * @param environment The environment
+     * @return The {@link PluginResource resources}
      */
-    Optional<String> property(final String key);
+    Collection<Result> locatePluginResources(Environment environment) throws Exception;
+
+    record Result(PluginResource resource, UnknownResourceStrategy unknownResourceStrategy) {
+        public Result {
+            Objects.requireNonNull(resource, "resource");
+            Objects.requireNonNull(unknownResourceStrategy, "unknownResourceStrategy");
+        }
+    }
 }

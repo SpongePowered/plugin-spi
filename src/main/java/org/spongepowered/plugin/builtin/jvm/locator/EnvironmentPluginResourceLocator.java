@@ -27,15 +27,19 @@ package org.spongepowered.plugin.builtin.jvm.locator;
 import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.builtin.jvm.JVMKeys;
 import org.spongepowered.plugin.builtin.jvm.JVMPluginResource;
+import org.spongepowered.plugin.discovery.PluginResourceLocator;
+import org.spongepowered.plugin.discovery.UnknownResourceStrategy;
 
+import java.io.File;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public final class EnvironmentPluginResourceLocatorService implements JVMPluginResourceLocatorService {
+public final class EnvironmentPluginResourceLocator implements PluginResourceLocator {
 
     @Override
     public String name() {
@@ -43,30 +47,26 @@ public final class EnvironmentPluginResourceLocatorService implements JVMPluginR
     }
 
     @Override
-    public Set<JVMPluginResource> locatePluginResources(final Environment environment) {
+    public Collection<Result> locatePluginResources(final Environment environment) {
         final Optional<String> envName = environment.blackboard().find(JVMKeys.ENVIRONMENT_LOCATOR_VARIABLE_NAME);
         if (envName.isEmpty()) {
             environment.logger().debug("Locator '{}' is disabled.", this.name());
             return Collections.emptySet();
         }
 
-        environment.logger().info("Locating '{}' resources...", this.name());
-
-        final Set<JVMPluginResource> resources = new HashSet<>();
         final String env = System.getenv(envName.get());
-        if (env != null) {
-            for (final String entry : env.split(";")) {
-                if (entry.isBlank()) {
-                    continue;
-                }
-
-                final Path[] paths = Stream.of(entry.split("&")).map(Path::of).toArray(Path[]::new);
-                resources.add(JVMPluginResource.create(environment, this.name(), paths));
-            }
+        if (env == null) {
+            return Collections.emptySet();
         }
 
-        environment.logger().info("Located [{}] resource(s) for '{}'...", resources.size(), this.name());
-
-        return resources;
+        final Set<Result> results = new HashSet<>();
+        for (final String entry : env.split(File.pathSeparator)) {
+            if (entry.isBlank()) {
+                continue;
+            }
+            final Path[] paths = Stream.of(entry.split("&")).map(Path::of).toArray(Path[]::new);
+            results.add(new Result(JVMPluginResource.create(environment, paths), UnknownResourceStrategy.WARN));
+        }
+        return results;
     }
 }

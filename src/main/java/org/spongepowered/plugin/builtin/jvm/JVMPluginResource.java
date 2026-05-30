@@ -25,10 +25,8 @@
 package org.spongepowered.plugin.builtin.jvm;
 
 import org.spongepowered.plugin.Environment;
-import org.spongepowered.plugin.PluginResource;
+import org.spongepowered.plugin.discovery.PluginResource;
 
-import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,23 +36,9 @@ public interface JVMPluginResource extends PluginResource {
 
     Manifest manifest();
 
-    /**
-     * Retrieves the root path containing all the resources.
-     * This may or may not be the root of the file system containing the resources.
-     *
-     * @return The root path containing all the resources.
-     */
-    Path resourcesRoot();
-
     @Override
     default Optional<String> property(final String key) {
         return Optional.ofNullable(this.manifest().getMainAttributes().getValue(Objects.requireNonNull(key, "key")));
-    }
-
-    @Override
-    default Optional<URI> locateResource(final String path) {
-        final Path p = this.resourcesRoot().resolve(path);
-        return Files.exists(p) ? Optional.of(p.toUri()) : Optional.empty();
     }
 
     /**
@@ -63,15 +47,14 @@ public interface JVMPluginResource extends PluginResource {
      * When multiple paths are given, the resulting resource is a virtual union of all files contained by these paths.
      *
      * @param environment The environment
-     * @param locator The locator that created this resource
      * @param paths The paths
      * @return The {@link JVMPluginResource}.
      */
-    static JVMPluginResource create(final Environment environment, final String locator, final Path... paths) {
-        return environment.blackboard().get(JVMKeys.JVM_PLUGIN_RESOURCE_FACTORY).create(locator, paths);
+    static JVMPluginResource create(final Environment environment, final Path... paths) {
+        return environment.blackboard().get(JVMKeys.JVM_PLUGIN_RESOURCE_FACTORY).create(paths);
     }
 
     interface Factory {
-        JVMPluginResource create(final String locator, final Path[] paths);
+        JVMPluginResource create(final Path[] paths);
     }
 }

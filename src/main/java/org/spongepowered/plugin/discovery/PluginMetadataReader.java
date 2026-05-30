@@ -22,23 +22,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.discovery;
 
+import org.spongepowered.plugin.Environment;
+import org.spongepowered.plugin.PluginService;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
- * Represents the combination of a {@link PluginMetadata metadata} and {@link PluginResource resource}
- * that will be a candidate for a {@link PluginContainer container}.
+ * A service used to read {@link PluginMetadata metadata} from {@link PluginResource resources}.
+ * <p>
+ * Implementors are required to have a no-args constructor
+ * <p>
+ * Jars declaring this service are loaded in an isolated classloader.
+ * They can only access the plugin-spi and cannot be accessed by plugins.
  */
-public interface PluginCandidate {
+public interface PluginMetadataReader extends PluginService {
 
     /**
-     * @return The {@link PluginMetadata metadata}
+     * Reads a list of {@link PluginMetadata plugin metadata} from the given {@link PluginResource resource}.
+     *
+     * @param environment The environment
+     * @param resource The resource
+     * @param locators The services that located the resource
+     * @return The {@link List candidates}
      */
-    PluginMetadata metadata();
-
-    /**
-     * @return The {@link PluginResource resource}
-     */
-    PluginResource resource();
+    Collection<? extends PluginMetadata> readPluginMetadata(Environment environment, PluginResource resource, List<PluginResourceLocator> locators) throws Exception;
 }

@@ -22,21 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.blackboard;
+package org.spongepowered.plugin.discovery;
+
+import org.spongepowered.plugin.ResourceQueryable;
 
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Optional;
 
-public final class Keys {
+/**
+ * Represents a resource provided by a {@link PluginResourceLocator locator}.
+ */
+public interface PluginResource extends ResourceQueryable {
 
-    public static final Key<String> VERSION = Key.of("version", String.class);
+    /**
+     * @return The path where this resource originates from
+     */
+    Path path();
 
-    public static final Key<Path> BASE_DIRECTORY = Key.of("base_directory", Path.class);
-
-    public static final Key<List<Path>> PLUGIN_DIRECTORIES = Key.of("plugin_directories", List.class);
-
-    public static final Key<List<String>> METADATA_FILE_PATHS = Key.of("metadata_file_paths", List.class);
-
-    private Keys() {
-    }
+    /**
+     * Retrieve a {@link String property} of this resource by {@link String key}.
+     * <p>
+     * Consult the vendor for expected keys.
+     *
+     * @param key The key
+     * @return The value or {@link Optional#empty()} if not found
+     */
+    Optional<String> property(final String key);
 }

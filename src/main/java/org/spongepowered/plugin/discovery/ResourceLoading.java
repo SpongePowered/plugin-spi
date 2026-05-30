@@ -22,29 +22,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.discovery;
 
-import java.util.Set;
-
-/**
- * A service used to find {@link PluginResource resources} to be processed by
- * {@link PluginLanguageService language services} or other implementation constructs.
- * <p>
- * No class loading should occur at this time.
- * <p>
- * Implementors of this class are required to have a no-args constructor.
- * @param <P> The resource type
- */
-public interface PluginResourceLocatorService<P extends PluginResource> {
+public enum ResourceLoading {
+    /**
+     * The resource doesn't need to be loaded.
+     * The resource will not be loaded unless another locator provided a different loading strategy.
+     */
+    IGNORED,
+    /**
+     * Assuming the resource is a jar, it will be added to a classloader and accessible by plugins.
+     * The library doesn't need to access the game or to be class-transformable.
+     */
+    LIBRARY,
+    /**
+     * Assuming the resource is a jar, it will be added to a classloader and accessible by plugins.
+     * The library needs access to the game or to be class-transformable.
+     */
+    GAME_LIBRARY;
 
     /**
-     * @return The {@link String name}
+     * Assuming two locators returned different loading strategies,
+     * this will return a strategy that can satisfy both needs.
+     *
+     * @param other The other strategy
+     * @return The resulting strategy
      */
-    String name();
-
-    /**
-     * @param environment The environment
-     * @return The {@link PluginResource resources} as an unmodifiable {@link Set}
-     */
-    Set<P> locatePluginResources(Environment environment);
+    public ResourceLoading merge(final ResourceLoading other) {
+        return this.ordinal() > other.ordinal() ? this : other;
+    }
 }
