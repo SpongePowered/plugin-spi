@@ -46,7 +46,7 @@ public interface PluginLoader extends PluginService {
      * @param environment The environment
      * @param resource The candidate resource
      * @param metadata The candidate metadata
-     * @throws InvalidPluginException If the candidate is invalid
+     * @return The {@link PluginContainer container}
      */
-    PluginContainer loadPlugin(Environment environment, PluginResource resource, PluginMetadata metadata) throws InvalidPluginException;
+    PluginContainer loadPlugin(Environment environment, PluginResource resource, PluginMetadata metadata) throws Exception;
 }
