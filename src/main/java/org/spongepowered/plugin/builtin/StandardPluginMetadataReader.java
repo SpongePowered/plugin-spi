@@ -37,10 +37,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public final class StandardPluginMetadataReader implements PluginMetadataReader {
 
@@ -51,15 +51,17 @@ public final class StandardPluginMetadataReader implements PluginMetadataReader 
 
     @Override
     public Collection<? extends PluginMetadata> readPluginMetadata(final Environment environment, final PluginResource resource, final List<PluginResourceLocator> locators) throws Exception {
-        final Set<PluginMetadata> result = new LinkedHashSet<>();
+        final Map<String, PluginMetadata> result = new LinkedHashMap<>();
         for (final String metadataPath : environment.blackboard().get(Keys.METADATA_FILE_PATHS)) {
             final Optional<InputStream> stream = resource.openResource(metadataPath);
             if (stream.isPresent()) {
                 try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream.get(), StandardCharsets.UTF_8))) {
-                    result.addAll(MetadataParser.read(reader).metadata());
+                    for (final PluginMetadata metadata : MetadataParser.read(reader).plugins()) {
+                        result.put(metadata.id(), metadata);
+                    }
                 }
             }
         }
-        return result;
+        return result.values();
     }
 }

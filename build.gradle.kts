@@ -39,7 +39,7 @@ tasks {
                 links(
                     "https://logging.apache.org/log4j/2.x/javadoc/log4j-api/",
                     "https://checkerframework.org/api/",
-                    "https://maven.apache.org/ref/3.8.6/maven-artifact/apidocs",
+                    "https://maven.apache.org/ref/3.9.16/maven-artifact/apidocs",
                     "https://jd.spongepowered.org/plugin-meta/0.8.2/"
                 )
             }
@@ -75,8 +75,7 @@ indraCrossdoc {
 }
 
 dependencies {
-    api("org.spongepowered:plugin-meta:0.8.2")
-    api("org.apache.maven:maven-artifact:3.8.6")
+    api("org.spongepowered:plugin-meta:0.9.0-SNAPSHOT")
     api("org.apache.logging.log4j:log4j-api:2.17.0")
     compileOnlyApi("org.checkerframework:checker-qual:3.26.0")
 }
