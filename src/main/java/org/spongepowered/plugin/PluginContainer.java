@@ -27,6 +27,9 @@ package org.spongepowered.plugin;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * Represents the combination of a {@link PluginMetadata metadata} with its instance.
  * <p>
@@ -46,7 +49,20 @@ public interface PluginContainer extends ResourceQueryable {
     Logger logger();
 
     /**
+     * @deprecated Use {@link #instances()} instead.
+     *
      * @return The instance
      */
-    Object instance();
+    @Deprecated(forRemoval = true, since = "0.5.0")
+    default Object instance() {
+        final Set<Object> instances = this.instances();
+        return instances.isEmpty() ? this : instances.iterator().next();
+    }
+
+    /**
+     * @return The instances (may change at any time for some loaders)
+     */
+    default Set<Object> instances() {
+        return Collections.emptySet();
+    }
 }

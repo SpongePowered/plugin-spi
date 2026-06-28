@@ -40,7 +40,6 @@ public class StandardPluginContainer implements PluginContainer {
     private final PluginResource resource;
     private final PluginMetadata metadata;
     private final Logger logger;
-    private Object instance;
 
     public StandardPluginContainer(final PluginResource resource, final PluginMetadata metadata) {
         this(resource, metadata, LogManager.getLogger(metadata.id()));
@@ -60,18 +59,6 @@ public class StandardPluginContainer implements PluginContainer {
     @Override
     public final Logger logger() {
         return this.logger;
-    }
-
-    @Override
-    public final Object instance() {
-        return this.instance;
-    }
-
-    protected void initializeInstance(final Object instance) {
-        if (this.instance != null) {
-            throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!", this.metadata.id()));
-        }
-        this.instance = Objects.requireNonNull(instance, "instance");
     }
 
     @Override
