@@ -48,5 +48,8 @@ public interface PluginContainer extends ResourceQueryable {
     /**
      * @return The instance
      */
-    Object instance();
+    @Deprecated(forRemoval = true, since = "0.5.0")
+    default Object instance() {
+        return this;
+    }
 }
