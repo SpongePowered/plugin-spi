@@ -25,14 +25,15 @@
 package org.spongepowered.plugin;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.spongepowered.plugin.discovery.PluginResource;
+import org.spongepowered.plugin.metadata.PluginMetadata;
 
 /**
- * A loader used to create and load {@link PluginContainer plugins}.
+ * A service used to create and load {@link PluginContainer plugins}.
  * <p>
  * Implementors of this class are required to have a no-args constructor
- * @param <P> The container type
  */
-public interface PluginLoader<P extends PluginContainer> {
+public interface PluginLoader extends PluginService {
 
     /**
      * @return The {@link ArtifactVersion version}, as a maven artifact
@@ -40,13 +41,12 @@ public interface PluginLoader<P extends PluginContainer> {
     ArtifactVersion version();
 
     /**
-     * Instructs the loader to load the {@link PluginCandidate candidate} as a {@link PluginContainer container} into the
-     * target {@link ClassLoader classloader}.
+     * Loads the plugin candidate as a {@link PluginContainer container}.
      *
      * @param environment The environment
-     * @param candidate The candidate
-     * @param targetClassLoader The classloader
-     * @throws InvalidPluginException If the candidate is invalid
+     * @param resource The candidate resource
+     * @param metadata The candidate metadata
+     * @return The {@link PluginContainer container}
      */
-    P loadPlugin(Environment environment, PluginCandidate candidate, ClassLoader targetClassLoader) throws InvalidPluginException;
+    PluginContainer loadPlugin(Environment environment, PluginResource resource, PluginMetadata metadata) throws Exception;
 }

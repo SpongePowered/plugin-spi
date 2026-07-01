@@ -22,11 +22,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin.builtin.jvm.locator;
+package org.spongepowered.plugin;
 
-import org.spongepowered.plugin.PluginResourceLocatorService;
-import org.spongepowered.plugin.builtin.jvm.JVMPluginResource;
+public interface PluginService {
 
-public interface JVMPluginResourceLocatorService extends PluginResourceLocatorService<JVMPluginResource> {
-
+    /**
+     * @return The {@link String name} of this service.
+     */
+    String name();
 }

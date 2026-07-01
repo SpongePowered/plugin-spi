@@ -1,3 +1,10 @@
+import org.spongepowered.plugin.builtin.StandardPluginMetadataReader;
+import org.spongepowered.plugin.discovery.PluginMetadataReader;
+import org.spongepowered.plugin.discovery.PluginResourceLocator;
+import org.spongepowered.plugin.builtin.jvm.locator.ClasspathPluginResourceLocator;
+import org.spongepowered.plugin.builtin.jvm.locator.DirectoryPluginResourceLocator;
+import org.spongepowered.plugin.builtin.jvm.locator.EnvironmentPluginResourceLocator;
+
 module org.spongepowered.plugin.spi {
     requires transitive org.spongepowered.plugin.metadata;
     requires transitive org.apache.logging.log4j;
@@ -7,9 +14,12 @@ module org.spongepowered.plugin.spi {
     exports org.spongepowered.plugin.builtin;
     exports org.spongepowered.plugin.builtin.jvm;
     exports org.spongepowered.plugin.builtin.jvm.locator;
+    exports org.spongepowered.plugin.discovery;
 
-    provides org.spongepowered.plugin.PluginResourceLocatorService with
-            org.spongepowered.plugin.builtin.jvm.locator.ClasspathPluginResourceLocatorService,
-            org.spongepowered.plugin.builtin.jvm.locator.DirectoryPluginResourceLocatorService,
-            org.spongepowered.plugin.builtin.jvm.locator.EnvironmentPluginResourceLocatorService;
+    provides PluginResourceLocator with
+            ClasspathPluginResourceLocator,
+            DirectoryPluginResourceLocator,
+            EnvironmentPluginResourceLocator;
+
+    provides PluginMetadataReader with StandardPluginMetadataReader;
 }

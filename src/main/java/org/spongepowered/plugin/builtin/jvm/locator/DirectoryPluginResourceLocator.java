@@ -27,19 +27,21 @@ package org.spongepowered.plugin.builtin.jvm.locator;
 import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.blackboard.Keys;
 import org.spongepowered.plugin.builtin.jvm.JVMPluginResource;
+import org.spongepowered.plugin.discovery.PluginResourceLocator;
+import org.spongepowered.plugin.discovery.UnknownResourceStrategy;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.stream.Stream;
 
-public final class DirectoryPluginResourceLocatorService implements JVMPluginResourceLocatorService {
+public final class DirectoryPluginResourceLocator implements PluginResourceLocator {
 
     @Override
     public String name() {
@@ -47,49 +49,28 @@ public final class DirectoryPluginResourceLocatorService implements JVMPluginRes
     }
 
     @Override
-    public Set<JVMPluginResource> locatePluginResources(final Environment environment) {
+    public Collection<Result> locatePluginResources(final Environment environment) {
         final Optional<List<Path>> dirs = environment.blackboard().find(Keys.PLUGIN_DIRECTORIES);
         if (dirs.isEmpty()) {
             environment.logger().debug("Locator '{}' is disabled.", this.name());
             return Collections.emptySet();
         }
 
-        environment.logger().info("Locating '{}' resources...", this.name());
-
-        final Set<JVMPluginResource> resources = new HashSet<>();
-        final String metadataPath = environment.blackboard().get(Keys.METADATA_FILE_PATH);
-
+        final Set<Result> results = new HashSet<>();
         for (final Path pluginsDir : dirs.get()) {
             if (Files.notExists(pluginsDir)) {
-                environment.logger().debug("Plugin directory '{}' does not exist for locator '{}'. Skipping...", pluginsDir, this.name());
+                environment.logger().debug("Plugin directory '{}' does not exist. Skipping...", pluginsDir);
                 continue;
             }
 
-            try {
-                for (final Path path : Files.walk(pluginsDir).toList()) {
-                    if (!Files.isRegularFile(path) || !path.getFileName().toString().endsWith(".jar")) {
-                        continue;
-                    }
-
-                    try (final JarFile jf = new JarFile(path.toFile())) {
-                        final JarEntry pluginMetadataJarEntry = jf.getJarEntry(metadataPath);
-                        if (pluginMetadataJarEntry == null) {
-                            environment.logger().debug("'{}' does not contain any plugin metadata so it is not a plugin. Skipping...", path);
-                            continue;
-                        }
-
-                        resources.add(JVMPluginResource.create(environment, this.name(), path));
-                    } catch (final IOException e) {
-                        environment.logger().error("Error reading '{}' as a Jar file when traversing directory resources for plugin discovery! Skipping...", path, e);
-                    }
-                }
+            try (final Stream<Path> st = Files.walk(pluginsDir)) {
+                st.filter(path -> Files.isRegularFile(path) && path.getFileName().toString().endsWith(".jar"))
+                        .map(path -> new Result(JVMPluginResource.create(environment, path), UnknownResourceStrategy.WARN))
+                        .forEach(results::add);
             } catch (final IOException ex) {
                 environment.logger().error("Error walking plugins directory {}", pluginsDir, ex);
             }
         }
-
-        environment.logger().info("Located [{}] resource(s) for '{}'...", resources.size(), this.name());
-
-        return resources;
+        return results;
     }
 }

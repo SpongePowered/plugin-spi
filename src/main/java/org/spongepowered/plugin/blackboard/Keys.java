@@ -29,22 +29,13 @@ import java.util.List;
 
 public final class Keys {
 
-    /**
-     * Indicates whether the target environment is a development environment.
-     * <p>
-     * The implementation may choose to interpret this flag in any number of ways.
-     * For example, it may disable certain behaviour in a development environment; or
-     * even change the way it handles some behaviour entirely.
-     */
-    public static final Key<Boolean> DEVELOPMENT = Key.of("development", Boolean.class);
-
     public static final Key<String> VERSION = Key.of("version", String.class);
 
     public static final Key<Path> BASE_DIRECTORY = Key.of("base_directory", Path.class);
 
     public static final Key<List<Path>> PLUGIN_DIRECTORIES = Key.of("plugin_directories", List.class);
 
-    public static final Key<String> METADATA_FILE_PATH = Key.of("metadata_file_path", String.class);
+    public static final Key<List<String>> METADATA_FILE_PATHS = Key.of("metadata_file_paths", List.class);
 
     private Keys() {
     }

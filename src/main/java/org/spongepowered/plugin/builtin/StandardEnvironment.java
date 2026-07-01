@@ -24,7 +24,6 @@
  */
 package org.spongepowered.plugin.builtin;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.plugin.Environment;
 import org.spongepowered.plugin.blackboard.Blackboard;
@@ -35,10 +34,6 @@ public final class StandardEnvironment implements Environment {
 
     private final Logger logger;
     private final Blackboard blackboard;
-
-    public StandardEnvironment() {
-        this(LogManager.getLogger("plugin"));
-    }
 
     public StandardEnvironment(final Logger logger) {
         this.logger = Objects.requireNonNull(logger, "logger");

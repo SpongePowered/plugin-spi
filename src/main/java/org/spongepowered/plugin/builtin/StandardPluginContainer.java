@@ -26,8 +26,8 @@ package org.spongepowered.plugin.builtin;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.plugin.PluginCandidate;
 import org.spongepowered.plugin.PluginContainer;
+import org.spongepowered.plugin.discovery.PluginResource;
 import org.spongepowered.plugin.metadata.PluginMetadata;
 
 import java.net.URI;
@@ -37,22 +37,23 @@ import java.util.StringJoiner;
 
 public class StandardPluginContainer implements PluginContainer {
 
-    private final PluginCandidate candidate;
+    private final PluginResource resource;
+    private final PluginMetadata metadata;
     private final Logger logger;
-    private Object instance;
 
-    public StandardPluginContainer(final PluginCandidate candidate) {
-        this(Objects.requireNonNull(candidate, "candidate"), LogManager.getLogger(candidate.metadata().id()));
+    public StandardPluginContainer(final PluginResource resource, final PluginMetadata metadata) {
+        this(resource, metadata, LogManager.getLogger(metadata.id()));
     }
 
-    public StandardPluginContainer(final PluginCandidate candidate, final Logger logger) {
-        this.candidate = Objects.requireNonNull(candidate, "candidate");
+    public StandardPluginContainer(final PluginResource resource, final PluginMetadata metadata, final Logger logger) {
+        this.resource = Objects.requireNonNull(resource, "resource");
+        this.metadata = Objects.requireNonNull(metadata, "metadata");
         this.logger = Objects.requireNonNull(logger, "logger");
     }
 
     @Override
     public final PluginMetadata metadata() {
-        return this.candidate.metadata();
+        return this.metadata;
     }
 
     @Override
@@ -61,26 +62,13 @@ public class StandardPluginContainer implements PluginContainer {
     }
 
     @Override
-    public final Object instance() {
-        return this.instance;
-    }
-
-    protected void initializeInstance(final Object instance) {
-        if (this.instance != null) {
-            throw new RuntimeException(String.format("Attempt made to set the plugin within container '%s' twice!",
-                this.candidate.metadata().id()));
-        }
-        this.instance = Objects.requireNonNull(instance, "instance");
-    }
-
-    @Override
     public Optional<URI> locateResource(final String path) {
-        return this.candidate.resource().locateResource(path);
+        return this.resource.locateResource(path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.candidate.metadata().id());
+        return Objects.hashCode(this.metadata.id());
     }
 
     @Override
@@ -93,12 +81,12 @@ public class StandardPluginContainer implements PluginContainer {
             return false;
         }
 
-        return this.candidate.metadata().id().equals(((PluginContainer) that).metadata().id());
+        return this.metadata.id().equals(((PluginContainer) that).metadata().id());
     }
 
     protected StringJoiner toStringJoiner() {
         return new StringJoiner(", ", this.getClass().getSimpleName() + "[", "]")
-                .add("metadata=" + this.candidate.metadata());
+                .add("metadata=" + this.metadata);
     }
 
     @Override

@@ -22,24 +22,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.spongepowered.plugin;
+package org.spongepowered.plugin.discovery;
+
+import org.spongepowered.plugin.ResourceQueryable;
+
+import java.nio.file.Path;
+import java.util.Optional;
 
 /**
- * Thrown when a plugin cannot be constructed and should be considered invalid.
+ * Represents a resource provided by a {@link PluginResourceLocator locator}.
  */
-public final class InvalidPluginException extends Exception {
+public interface PluginResource extends ResourceQueryable {
 
-    private static final long serialVersionUID = -9198957064244669388L;
+    /**
+     * @return The path where this resource originates from
+     */
+    Path path();
 
-    public InvalidPluginException(final String message) {
-        super(message);
-    }
-
-    public InvalidPluginException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidPluginException(final Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Retrieve a {@link String property} of this resource by {@link String key}.
+     * <p>
+     * Consult the vendor for expected keys.
+     *
+     * @param key The key
+     * @return The value or {@link Optional#empty()} if not found
+     */
+    Optional<String> property(final String key);
 }
