@@ -27,6 +27,7 @@ package org.spongepowered.plugin.discovery;
 import org.spongepowered.plugin.ResourceQueryable;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,9 +36,18 @@ import java.util.Optional;
 public interface PluginResource extends ResourceQueryable {
 
     /**
+     * @deprecated Use {@link #paths()} instead
      * @return The path where this resource originates from
      */
-    Path path();
+    @Deprecated(forRemoval = true, since = "0.5.0")
+    default Path path() {
+        return this.paths().getFirst();
+    }
+
+    /**
+     * @return The paths where this resource originates from
+     */
+    List<Path> paths();
 
     /**
      * Retrieve a {@link String property} of this resource by {@link String key}.
