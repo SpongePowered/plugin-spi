@@ -24,31 +24,25 @@
  */
 package org.spongepowered.plugin.discovery;
 
-import java.util.Objects;
-
 /**
- * Defines what happen to a resource that has not been recognized by any {@link PluginMetadataReader readers}
+ * Defines what happens to a resource that has not been recognized by any {@link PluginMetadataReader reader}
  * and does not contain {@link PluginResourceLocator locators} or {@link PluginMetadataReader readers}.
  *
  * @param warn Whether the platform should warn when the associated resource is not recognized.
- * @param loading The loading strategy to apply when the associated resource is not recognized.
+ * @param load Whether the resource will be added to the game classloader, assuming it is a jar.
  */
-public record UnknownResourceStrategy(boolean warn, ResourceLoading loading) {
-
-    public UnknownResourceStrategy {
-        Objects.requireNonNull(loading, "loading");
-    }
+public record UnknownResourceStrategy(boolean warn, boolean load) {
 
     /**
      * The unknown resource will be ignored and a warning logged.
      * The default strategy most locators should stick to.
      */
-    public static final UnknownResourceStrategy WARN = new UnknownResourceStrategy(true, ResourceLoading.IGNORED);
+    public static final UnknownResourceStrategy WARN = new UnknownResourceStrategy(true, false);
 
     /**
      * The unknown resource will be ignored silently.
      */
-    public static final UnknownResourceStrategy IGNORE = new UnknownResourceStrategy(false, ResourceLoading.IGNORED);
+    public static final UnknownResourceStrategy IGNORE = new UnknownResourceStrategy(false, false);
 
     /**
      * Assuming two locators returned different strategies,
@@ -58,6 +52,6 @@ public record UnknownResourceStrategy(boolean warn, ResourceLoading loading) {
      * @return The resulting strategy
      */
     public UnknownResourceStrategy merge(final UnknownResourceStrategy other) {
-        return new UnknownResourceStrategy(this.warn || other.warn, this.loading.merge(other.loading));
+        return new UnknownResourceStrategy(this.warn || other.warn, this.load || other.load);
     }
 }
